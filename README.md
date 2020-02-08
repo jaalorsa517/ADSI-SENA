@@ -1,16 +1,23 @@
-# ventagralac
+# PROYECTO ventagralac
 
-A new Flutter project.
+Proyecto para el desarrollo de una aplicación de ventas.
 
-## Getting Started
+La aplicación lo que se hará es:
 
-This project is a starting point for a Flutter application.
+* Registrar clientes, persistiendo datos básicos como número de identificación (cédula o NIT), nombre y apellido, teléfono, dirección, email, nombre del negocio.
+* Registrar inventario con opción de agregar fechas y notificaciones para los productos que estén próximos a vencer.
+* Registrar ventas.
+* Enviar las ventas, incluido el resumen de las mismas, a la oficina.
 
-A few resources to get you started if this is your first Flutter project:
+## Herramientas a usar
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+El proyecto va dirigido a Android y Web.
+Se usará el desarrollo híbrido con flutter, usando la herramienta Firebase.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Estructura de datos
+
+La estructura básica:
+
+* Manipular registro de clientes (id, nombre, telefono, nombre del negocio,etc).
+* Manipular registro de los municipios atendidos.
+* Manipular registro de los productos.
