@@ -6,23 +6,26 @@ class wcombo extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _wcombo(list);
+    return _wcombo(this.list);
   }
 }
 
 class _wcombo extends State<wcombo> {
   List<String> list;
-  _wcombo(this.list);
-  String dropdownValue = 'One';
+  String dropdownValue;
+  
+  _wcombo(this.list) {
+    this.dropdownValue = list[0];
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return DropdownButton<String>(
-      value: dropdownValue,
+      value: this.dropdownValue,
       icon: Icon(Icons.arrow_downward),
       onChanged: (String newValue) {
         setState(() {
-          dropdownValue = newValue;
+          this.dropdownValue = newValue;
         });
       },
       items: this.list.map<DropdownMenuItem<String>>((String value) {

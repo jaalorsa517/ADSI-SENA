@@ -7,7 +7,7 @@ class sc_producto extends StatelessWidget{
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: const Text('Segunda'),),
-      body: wcalendar()
+      
     );
   }
 
