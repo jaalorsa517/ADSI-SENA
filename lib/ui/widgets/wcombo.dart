@@ -1,39 +1,40 @@
 import "package:flutter/material.dart";
 
 class wcombo extends StatefulWidget {
-  List<String> list;
+  final List<String> list;
+
   wcombo(this.list);
+
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _wcombo(this.list);
   }
 }
 
 class _wcombo extends State<wcombo> {
-  List<String> list;
-  String dropdownValue;
-  
+  final List<String> list;
+  String _selection;
+
   _wcombo(this.list) {
-    this.dropdownValue = list[0];
+    this._selection = this.list.first;
   }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return DropdownButton<String>(
-      value: this.dropdownValue,
-      icon: Icon(Icons.arrow_downward),
-      onChanged: (String newValue) {
-        setState(() {
-          this.dropdownValue = newValue;
+    return DropdownButton(
+        hint: Text('Productos'),
+        icon: Icon(Icons.arrow_downward),
+        items: this
+            .list
+            .map((String item) =>
+                new DropdownMenuItem(child: Text(item), value: item))
+            .toList(),
+        value: this._selection,
+        onChanged: (value) {
+          setState(() {
+            this._selection = value;
+            print(this._selection);
+          });
         });
-      },
-      items: this.list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
   }
 }

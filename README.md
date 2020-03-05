@@ -1,4 +1,4 @@
-# PROYECTO ventagralac
+# PROYECTO venta
 
 Proyecto para el desarrollo de una aplicación de ventas.
 
@@ -12,7 +12,7 @@ La aplicación lo que se hará es:
 ## Herramientas a usar
 
 El proyecto va dirigido a Android y Web.
-Se usará el desarrollo híbrido con flutter, usando la herramienta Firebase.
+Se usará el desarrollo híbrido con flutter.
 
 ## Estructura de datos
 
@@ -21,3 +21,4 @@ La estructura básica:
 * Manipular registro de clientes (id, nombre, telefono, nombre del negocio,etc).
 * Manipular registro de los municipios atendidos.
 * Manipular registro de los productos.
+* Manipular registro de pedidos.

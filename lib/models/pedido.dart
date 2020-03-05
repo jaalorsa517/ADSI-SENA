@@ -1,13 +1,13 @@
 import 'package:ventas/models/conexion.dart';
 
-class Pedido implements Conexion{
-  int id;
-  String fecha_pedido;
-  String fecha_entrega;
-  int id_producto;
-  int cantidad;
-  int valor;
-  int fk_id_cliente;
+class Pedido extends Conexion{
+  final int id;
+  final String fecha_pedido;
+  final String fecha_entrega;
+  final int id_producto;
+  final int cantidad;
+  final int valor;
+  final int fk_id_cliente;
   Pedido(
       [this.id,
       this.fecha_pedido,
@@ -16,40 +16,4 @@ class Pedido implements Conexion{
       this.cantidad,
       this.valor,
       this.fk_id_cliente]);
-
-  @override
-  bool actualizar() {
-    // TODO: implement actualizar
-    return null;
-  }
-
-  @override
-  bool borrar() {
-    // TODO: implement borrar
-    return null;
-  }
-
-  @override
-  bool conectar() {
-    // TODO: implement conectar
-    return null;
-  }
-
-  @override
-  bool desconectar() {
-    // TODO: implement desconectar
-    return null;
-  }
-
-  @override
-  bool insertar() {
-    // TODO: implement insertar
-    return null;
-  }
-
-  @override
-  List select() {
-    // TODO: implement select
-    return null;
-  }
 }

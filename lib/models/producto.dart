@@ -1,10 +1,40 @@
 import 'package:ventas/models/conexion.dart';
 
-class Producto implements Conexion {
+class Producto extends Conexion implements Crud {
+  String TABLE = 'producto';
   int id;
   String nombre;
   int precio;
+
   Producto([this.id, this.nombre, this.precio]);
+  
+  Producto.fromMap(Map<String,dynamic> map){
+    this.id=map['id'];
+    this.nombre=map['nombre'];
+    this.precio =map ['precio'];
+  }
+
+  @override
+  Future <List<Producto>> select() async{
+    List _list;
+    try{
+    _list= await this.db.rawQuery("Select * from producto;");
+    }
+    catch(Exception){
+      print(Exception.toString());
+    }
+    // [{nom:dato,nom2:dato2},{nom:dato,nom2:dato2}]
+    List <Producto>_query=[];
+    for (int i=0;i<_list.length;i++){
+      _query.add(Producto.fromMap(_list[i]));
+    }
+    return _query;
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'nombre': nombre, 'precio': precio};
+  }
 
   @override
   bool actualizar() {
@@ -19,26 +49,13 @@ class Producto implements Conexion {
   }
 
   @override
-  bool conectar() {
-    // TODO: implement conectar
-    return null;
-  }
-
-  @override
-  bool desconectar() {
-    // TODO: implement desconectar
-    return null;
-  }
-
-  @override
-  bool insertar() {
-    // TODO: implement insertar
-    return null;
-  }
-
-  @override
-  List select() {
-    // TODO: implement select
-    return null;
+  bool insertar(producto) {
+    try {
+      this.db.insert(producto.TABLE, producto.toMap());
+      return true;
+    } catch (Exception) {
+      this.mensaje = 'Error al insertar';
+      return false;
+    }
   }
 }
