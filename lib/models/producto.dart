@@ -32,11 +32,6 @@ class Producto extends Conexion implements Crud {
   }
 
   @override
-  Map<String, dynamic> toMap() {
-    return {'id': id, 'nombre': nombre, 'precio': precio};
-  }
-
-  @override
   bool actualizar() {
     // TODO: implement actualizar
     return null;

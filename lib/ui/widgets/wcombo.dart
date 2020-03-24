@@ -1,39 +1,40 @@
 import "package:flutter/material.dart";
+import "dart:async";
 
 class wcombo extends StatefulWidget {
-  final List<String> list;
+  List<String> list;
+  StreamController _stream;
+  List items;
 
-  wcombo(this.list);
+  wcombo(this.list, this._stream, {Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return _wcombo(this.list);
-  }
+  State<StatefulWidget> createState() => new _wcombo(this.list, this._stream);
 }
 
 class _wcombo extends State<wcombo> {
   final List<String> list;
   String _selection;
+  StreamController _stream;
+  List items;
 
-  _wcombo(this.list) {
-    this._selection = this.list.first;
+  _wcombo(this.list, this._stream) {
+    //this._selection = this.list.first;
   }
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton(
-        hint: Text('Productos'),
-        icon: Icon(Icons.arrow_downward),
+    return new DropdownButton(
+        hint: Text('SELECCIONE UNO'),
+        value: this._selection,
         items: this
             .list
-            .map((String item) =>
-                new DropdownMenuItem(child: Text(item), value: item))
+            .map((d) => new DropdownMenuItem(child: Text(d), value: d))
             .toList(),
-        value: this._selection,
         onChanged: (value) {
           setState(() {
             this._selection = value;
-            print(this._selection);
+            this._stream.add(value);
           });
         });
   }

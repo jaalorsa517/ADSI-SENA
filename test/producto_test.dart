@@ -7,11 +7,11 @@ import 'package:sqflite/sqflite.dart';
 import 'package:ventas/models/producto.dart';
 
 void main() {
-  test('Conexion db', () async {
-    TestWidgetsFlutterBinding.ensureInitialized();
-    Producto p = Producto();
-    p.conectar('pedidoDB.db');
-    print(p.db);
+   test('Conexion db', () async {
+     TestWidgetsFlutterBinding.ensureInitialized();
+//     Producto p = Producto();
+//     p.conectar('pedidoDB.db');
+//     print(p.db);
     // List l = p.select();
-  });
+   });
 }

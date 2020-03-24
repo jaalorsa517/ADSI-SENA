@@ -18,13 +18,16 @@ class Principal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return MaterialApp(localizationsDelegates: [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate
-    ], supportedLocales: [
-      const Locale('es')
-    ], routes: <String, WidgetBuilder>{
-      '/producto': (BuildContext context) => sc_producto()
-    }, home: sc_venta());
+    return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: [const Locale('es')],
+      routes: <String, WidgetBuilder>{
+        '/producto': (BuildContext context) => sc_producto()
+      },
+      home: sc_venta(),
+    );
   }
 }

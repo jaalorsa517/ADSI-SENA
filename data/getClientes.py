@@ -37,7 +37,7 @@ def load():
         cursor = con.cursor()
 
         cursor.execute("DELETE FROM cliente")
-        cursor.execute("DELETE FROM 'ciudad-cliente'")
+        cursor.execute("DELETE FROM 'ciudad_cliente'")
         con.commit()
 
     except sqlite3.Error as e:
@@ -99,7 +99,7 @@ def load():
                     var = cursor.fetchone()
 
                     cursor.execute(
-                        "INSERT INTO 'ciudad-cliente' VALUES ({},{});".format(
+                        "INSERT INTO 'ciudad_cliente' VALUES ({},{});".format(
                             var[0], (_PATHS_XLSX.index(xlsx) + 1)))
 
                     con.commit()
@@ -109,7 +109,6 @@ def load():
 
                 finally:
                     con.close()
-        print('ARCHIVO TERMINADO')
     print('FIN PROCESO CLIENTES')
 
 def datosInComment(coment):
