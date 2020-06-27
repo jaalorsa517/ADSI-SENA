@@ -11,20 +11,19 @@ INNER JOIN cliente ON cliente.id1=inventario.fk_id_cliente
 WHERE cliente.id1=5;
 */
 
-class Pedido extends Conexion{
+class Pedido extends Conexion {
   final int id;
   final String fecha_pedido;
   final String fecha_entrega;
-  final int id_producto;
+  final int id_inventario;
   final int cantidad;
   final int valor;
-  final int fk_id_cliente;
+  
   Pedido(
       [this.id,
       this.fecha_pedido,
       this.fecha_entrega,
-      this.id_producto,
+      this.id_inventario,
       this.cantidad,
-      this.valor,
-      this.fk_id_cliente]);
+      this.valor]);
 }

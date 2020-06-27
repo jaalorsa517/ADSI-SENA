@@ -2,7 +2,12 @@ import "conexion.dart";
 
 class Inventario extends Conexion implements Crud{
 
-  Inventario();
+  int id;
+  int cantidad;
+  DateTime fecha;
+  int id_cliente;
+  
+  Inventario([this.id,this.cantidad,this.fecha,this.id_cliente]);
 
   @override
   bool actualizar() {

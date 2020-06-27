@@ -42,9 +42,9 @@ abstract class Conexion {
 abstract class Crud {
   Future<List> select();
 
-  bool actualizar();
+  // bool actualizar();
 
-  bool borrar();
+  // bool borrar();
 
-  bool insertar(dynamic objeto);
+  // bool insertar(dynamic objeto);
 }

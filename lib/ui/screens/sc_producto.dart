@@ -6,7 +6,8 @@ class sc_producto extends StatelessWidget{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: const Text('Segunda'),),
+      appBar: AppBar(title: Text('PRODUCTOS'), backgroundColor: Colors.green),
+      body: Text('PRODUCTOS'),
       
     );
   }

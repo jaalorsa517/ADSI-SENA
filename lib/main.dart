@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ventas/ui/screens/sc_cliente.dart';
 import 'package:ventas/ui/screens/sc_producto.dart';
 import 'package:ventas/ui/screens/sc_venta.dart';
+import 'package:ventas/ui/screens/sc_main.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 /*
@@ -25,9 +27,11 @@ class Principal extends StatelessWidget {
       ],
       supportedLocales: [const Locale('es')],
       routes: <String, WidgetBuilder>{
-        '/producto': (BuildContext context) => sc_producto()
+        '/cliente': (context) => sc_cliente(),
+        '/producto': (context) => sc_producto(),
+        '/venta': (context) => sc_venta(),
       },
-      home: sc_venta(),
+      home: sc_main(),
     );
   }
 }

@@ -12,8 +12,29 @@ class loadData {
   StreamController sCiudad = new StreamController.broadcast();
   StreamController sCliente = new StreamController.broadcast();
   StreamController sInventario = new StreamController();
+  Clientes _clientes;
+  Ciudades _ciudades;
+  List <String> ciudades;
 
-  loadData(this.asset) {}
+  loadData(this.asset) {
+    _clientes = new Clientes();
+    _ciudades = new Ciudades();
+  }
+
+  Future<List> getCliente() async {
+    if (_clientes.db == null) {
+      await _clientes.conectar(this.DB, this.asset);
+    }
+    return _clientes.select();
+  }
+
+  Future <List> getCiudades()async{
+    if(_ciudades.db==null){
+    await _ciudades.conectar(this.DB, this.asset);
+    }
+    return _ciudades.select();
+    
+  }
 
   @override
   void dispose() {
@@ -21,45 +42,7 @@ class loadData {
     sCliente.close();
   }
 
-  String getDateNow() {
+  static String getDateNow() {
     return '${DateTime.now().day.toString()}-${DateTime.now().month.toString()}-${DateTime.now().year.toString()}';
-  }
-
-  Future<List<String>> getProductos_name() async {
-    return _getLista(Producto());
-  }
-
-  Future<List<String>> getInventario() {
-    return _getLista(Inventario());
-  }
-
-  Future<List<String>> getCiudad_name() async {
-    return _getLista(Ciudad());
-  }
-
-  Future<List<String>> getCliente_name(String ciudad) async {
-    List<String> list = [];
-    Cliente c = Cliente();
-    var result = await c.conectar(DB, this.asset);
-    print(c.mensaje);
-    if (result) {
-      List<Cliente> cliente = await c.selectForCiudad(ciudad);
-      c.desconectar();
-      cliente.forEach((d) => list.add(d.nombre));
-      return list;
-    }
-    return null;
-  }
-
-  Future<List<String>> _getLista(var o, {String where}) async {
-    List<String> list = [];
-    var result = await o.conectar(DB, this.asset);
-    if (result) {
-      List<Ciudad> ciudad = await o.select();
-      o.desconectar();
-      ciudad.forEach((d) => list.add(d.nombre));
-      return list;
-    }
-    return null;
   }
 }

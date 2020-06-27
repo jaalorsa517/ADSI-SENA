@@ -18,9 +18,7 @@ class _wcombo extends State<wcombo> {
   StreamController _stream;
   List items;
 
-  _wcombo(this.list, this._stream) {
-    //this._selection = this.list.first;
-  }
+  _wcombo(this.list, this._stream);
 
   @override
   Widget build(BuildContext context) {
