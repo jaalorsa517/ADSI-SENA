@@ -9,8 +9,8 @@ from openpyxl import load_workbook
 
 
 class getClientes:
-    def __init__(self, id='', nom='', neg='', tel='', email='', dir=''):
-        self.id = id
+    def __init__(self, nit='', nom='', neg='', tel='', email='', dir=''):
+        self.nit = nit
         self.nom = nom
         self.neg = neg
         self.tel = tel
@@ -37,7 +37,7 @@ def load():
         cursor = con.cursor()
 
         cursor.execute("DELETE FROM cliente")
-        cursor.execute("DELETE FROM 'ciudad_cliente'")
+        cursor.execute("DELETE FROM ciudad_cliente")
         con.commit()
 
     except sqlite3.Error as e:
@@ -75,8 +75,8 @@ def load():
 
                 if ('nom' in dic):
                     _c.nom = dic['nom']
-                if ('id' in dic):
-                    _c.nom = dic['id']
+                if ('nit' in dic):
+                    _c.nit = dic['nit']
                 if ('neg' in dic):
                     _c.neg = dic['neg']
                 if ('tel' in dic):
@@ -89,12 +89,12 @@ def load():
                     cursor = con.cursor()
 
                     cursor.execute(
-                        "INSERT INTO cliente (id,nombre,representante,telefono,email,direccion) VALUES('{}','{}','{}','{}','{}','{}')"
-                        .format(_c.id, _c.neg, _c.nom, _c.tel, _c.email,
+                        "INSERT INTO cliente (nit,nombre,representante,telefono,email,direccion) VALUES('{}','{}','{}','{}','{}','{}')"
+                        .format(_c.nit, _c.neg, _c.nom, _c.tel, _c.email,
                                 _c.dir))
 
                     cursor.execute(
-                        "SELECT id1 FROM cliente WHERE nombre='{}'".format(
+                        "SELECT id FROM cliente WHERE nombre='{}'".format(
                             _c.neg))
                     var = cursor.fetchone()
 

@@ -42,10 +42,10 @@ def load():
             idProducto = r.randint(i, f + 1)
 
             cursor.execute(
-                '''SELECT id1 FROM cliente ORDER BY id1 ASC LIMIT 1''')
+                '''SELECT id FROM cliente ORDER BY id ASC LIMIT 1''')
             i = cursor.fetchone()[0]
             cursor.execute(
-                '''SELECT id1 FROM cliente ORDER BY id1 DESC LIMIT 1''')
+                '''SELECT id FROM cliente ORDER BY id DESC LIMIT 1''')
             f = cursor.fetchone()[0]
 
             fkIdCliente = r.randint(i, f + 1)
