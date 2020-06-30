@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ventas/logic/cliente/cliente_provider.dart';
+import 'package:ventas/ui/variables.dart';
 
 class sc_cliente extends StatefulWidget {
   @override

@@ -6,6 +6,7 @@ class Cliente {
   String _direccion;
   String _telefono;
   String _email;
+  String _ciudad;
 
   Cliente(
       [this._id,
@@ -14,11 +15,12 @@ class Cliente {
       this._representante,
       this._direccion,
       this._telefono,
-      this._email]);
+      this._email,
+      this._ciudad]);
 
-  int get getId => _id;
+  int get id => _id;
 
-  set setId(int id) => this._id = id;
+  set id(int id) => this._id = id;
 
   String get nit => _nit;
 
@@ -43,4 +45,8 @@ class Cliente {
   String get email => _email;
 
   set email(String value) => _email = value;
+
+  String get ciudad => _ciudad;
+
+  set ciudad(String value) => _ciudad = value;
 }

@@ -11,7 +11,7 @@ class Clientes implements Crud {
   static Future<bool> create(Cliente cliente) async {
     Database db = await Crud.conectar();
     try {
-      db.insert(Setup.CLIENT_TABLE, _clienteToMap(cliente));
+      await db.insert(Setup.CLIENT_TABLE, _clienteToMap(cliente));
       return true;
     } catch (e) {
       print(e.toString());
@@ -21,8 +21,16 @@ class Clientes implements Crud {
 
   static Future<List<Cliente>> read() async {
     Database db = await Crud.conectar();
+    String sentence = '';
+    Setup.COLUMN_CLIENTE.forEach((column) => sentence += ',$column');
+    sentence += ',${Setup.COLUMN_CIUDAD[1]} AS ciudad';
     try {
-      List<Map<String, dynamic>> list = await db.query(Setup.CLIENT_TABLE);
+      List<Map<String, dynamic>> list = await db.rawQuery(sentence +
+          'from ${Setup.CLIENT_TABLE} ' +
+          'JOIN ${Setup.CIUDAD_CLIENTE_TABLE} ' +
+          'ON ${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ${Setup.COLUMN_CLIENTE[0]} ' +
+          'JOIN ${Setup.CIUDAD_TABLE} ' +
+          'ON ${Setup.COLUMN_CIUDAD[0]} = ${Setup.COLUMN_CIUDAD_CLIENTE[1]}');
       return _mapToCliente(list);
     } catch (e) {
       print(e.toString());
@@ -32,9 +40,17 @@ class Clientes implements Crud {
 
   static Future<List<Cliente>> readById(int idCliente) async {
     Database db = await Crud.conectar();
+    String sentence = '';
+    Setup.COLUMN_CLIENTE.forEach((column) => sentence += ',$column');
+    sentence += ',${Setup.COLUMN_CIUDAD[1]} AS ciudad';
     try {
-      List<Map<String, dynamic>> list = await db.query(Setup.CLIENT_TABLE,
-          where: '${Setup.COLUMN_CLIENTE[0]}= $idCliente');
+      List<Map<String, dynamic>> list = await db.rawQuery(sentence +
+          'FROM ${Setup.CLIENT_TABLE} ' +
+          'JOIN ${Setup.CIUDAD_CLIENTE_TABLE} ' +
+          'ON ${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ${Setup.COLUMN_CLIENTE[0]} ' +
+          'JOIN ${Setup.CIUDAD_TABLE} ' +
+          'ON ${Setup.COLUMN_CIUDAD[0]} = ${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
+          'WHERE ${Setup.COLUMN_CLIENTE[0]}= $idCliente');
       return _mapToCliente(list);
     } catch (e) {
       print(e.toString());
@@ -44,9 +60,37 @@ class Clientes implements Crud {
 
   static Future<List<Cliente>> readByName(String nameCliente) async {
     Database db = await Crud.conectar();
+    String sentence = '';
+    Setup.COLUMN_CLIENTE.forEach((column) => sentence += ',$column');
+    sentence += ',${Setup.COLUMN_CIUDAD[1]} AS ciudad';
     try {
-      List<Map<String, dynamic>> list = await db.query(Setup.CLIENT_TABLE,
-          where: '${Setup.COLUMN_CLIENTE[2]} = $nameCliente');
+      List<Map<String, dynamic>> list = await db.rawQuery(sentence +
+          'from ${Setup.CLIENT_TABLE} ' +
+          'JOIN ${Setup.CIUDAD_CLIENTE_TABLE} ' +
+          'ON ${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ${Setup.COLUMN_CLIENTE[0]} ' +
+          'JOIN ${Setup.CIUDAD_TABLE} ' +
+          'ON ${Setup.COLUMN_CIUDAD[0]} = ${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
+          'WHERE ${Setup.COLUMN_CLIENTE[0]}=$nameCliente');
+      return _mapToCliente(list);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  static Future<List<Cliente>> readByCity(String nameCity) async {
+    Database db = await Crud.conectar();
+    String sentence = '';
+    Setup.COLUMN_CLIENTE.forEach((column) => sentence += ',$column');
+    sentence += ',${Setup.COLUMN_CIUDAD[1]} AS ciudad';
+    try {
+      List<Map<String, dynamic>> list = await db.rawQuery(sentence +
+          'from ${Setup.CLIENT_TABLE} ' +
+          'JOIN ${Setup.CIUDAD_CLIENTE_TABLE} ' +
+          'ON ${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ${Setup.COLUMN_CLIENTE[0]} ' +
+          'JOIN ${Setup.CIUDAD_TABLE} ' +
+          'ON ${Setup.COLUMN_CIUDAD[0]} = ${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
+          'WHERE ${Setup.COLUMN_CIUDAD[1]}=$nameCity');
       return _mapToCliente(list);
     } catch (e) {
       print(e.toString());
@@ -57,7 +101,7 @@ class Clientes implements Crud {
   static Future<bool> update(Cliente cliente) async {
     Database db = await Crud.conectar();
     try {
-      db.update(Setup.CLIENT_TABLE, _clienteToMap(cliente));
+      await db.update(Setup.CLIENT_TABLE, _clienteToMap(cliente));
       return true;
     } catch (e) {
       print(e.toString());
@@ -68,7 +112,7 @@ class Clientes implements Crud {
   static Future<bool> delete(int idObject) async {
     Database db = await Crud.conectar();
     try {
-      db.delete(Setup.CLIENT_TABLE, where: 'id=$idObject');
+      await db.delete(Setup.CLIENT_TABLE, where: 'id=$idObject');
       return true;
     } catch (e) {
       print(e.toString());
@@ -87,6 +131,7 @@ class Clientes implements Crud {
       cliente.telefono = element[Setup.COLUMN_CLIENTE[4]];
       cliente.email = element[Setup.COLUMN_CLIENTE[5]];
       cliente.direccion = element[Setup.COLUMN_CLIENTE[6]];
+      cliente.ciudad = element[Setup.COLUMN_CIUDAD[1]];
       clientes.add(cliente);
     });
     return clientes;
@@ -100,6 +145,7 @@ class Clientes implements Crud {
     mapCliente[Setup.COLUMN_CLIENTE[4]] = cliente.telefono;
     mapCliente[Setup.COLUMN_CLIENTE[5]] = cliente.email;
     mapCliente[Setup.COLUMN_CLIENTE[6]] = cliente.direccion;
+    mapCliente[Setup.COLUMN_CIUDAD[1]] = cliente.ciudad;
     return mapCliente;
   }
 }
