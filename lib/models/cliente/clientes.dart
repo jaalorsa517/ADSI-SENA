@@ -109,10 +109,11 @@ class Clientes implements Crud {
     }
   }
 
-  static Future<bool> delete(int idObject) async {
+  static Future<bool> delete(int idCliente) async {
     Database db = await Crud.conectar();
     try {
-      await db.delete(Setup.CLIENT_TABLE, where: 'id=$idObject');
+      await db.delete(Setup.CLIENT_TABLE,
+          where: '${Setup.COLUMN_CLIENTE[0]} =$idCliente');
       return true;
     } catch (e) {
       print(e.toString());
@@ -139,6 +140,7 @@ class Clientes implements Crud {
 
   static Map<String, dynamic> _clienteToMap(Cliente cliente) {
     Map<String, dynamic> mapCliente = {};
+    mapCliente[Setup.COLUMN_CLIENTE[0]] = cliente.id;
     mapCliente[Setup.COLUMN_CLIENTE[1]] = cliente.nit;
     mapCliente[Setup.COLUMN_CLIENTE[2]] = cliente.nombre;
     mapCliente[Setup.COLUMN_CLIENTE[3]] = cliente.representante;
