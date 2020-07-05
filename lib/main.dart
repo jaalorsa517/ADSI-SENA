@@ -6,15 +6,7 @@ import 'package:ventas/ui/screens/sc_producto.dart';
 import 'package:ventas/ui/screens/sc_venta.dart';
 import 'package:ventas/ui/screens/sc_main.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-/*
-Casos de uso:
-  *Una lista historial de productos en gridview. Al seleccionar un elemento, se lanza la
-    el dialogo para agregar la cantidad
-  *En un boton, Agregar nuevo producto.
-  *Ver en un gridview el resumen del pedido, incluido el total
-  *
-*/
+import 'package:ventas/ui/variables.dart';
 
 void main() => runApp(Principal());
 
@@ -22,7 +14,9 @@ class Principal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [ChangeNotifierProvider(create: (_) => ClienteProvider())],
+        providers: [
+          ChangeNotifierProvider<ClienteProvider>(create: (context) => cliente)
+        ],
         child: MaterialApp(
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,

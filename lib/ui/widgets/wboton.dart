@@ -1,6 +1,4 @@
 import "package:flutter/material.dart";
-import 'package:ventas/ui/screens/sc_producto.dart';
-import 'package:ventas/ui/widgets/wcalendar.dart';
 
 class wboton extends StatefulWidget {
   String nom;
@@ -19,14 +17,13 @@ class _wboton extends State<wboton> {
   _wboton(this.nom, this.event);
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return new FlatButton(
-      onPressed: (){
+      onPressed: () {
         Navigator.pushNamed(context, this.event);
       },
       child: Text(this.nom),
       color: Colors.green,
       textColor: Colors.white,
-      );
+    );
   }
 }

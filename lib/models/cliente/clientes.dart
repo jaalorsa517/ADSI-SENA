@@ -22,15 +22,18 @@ class Clientes implements Crud {
   static Future<List<Cliente>> read() async {
     Database db = await Crud.conectar();
     String sentence = '';
-    Setup.COLUMN_CLIENTE.forEach((column) => sentence += ',$column');
-    sentence += ',${Setup.COLUMN_CIUDAD[1]} AS ciudad';
+    Setup.COLUMN_CLIENTE
+        .forEach((column) => sentence += '${Setup.CLIENT_TABLE}.$column,');
+    sentence += '${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]} AS ciudad ';
     try {
-      List<Map<String, dynamic>> list = await db.rawQuery(sentence +
-          'from ${Setup.CLIENT_TABLE} ' +
+      List<Map<String, dynamic>> list = await db.rawQuery('SELECT $sentence' +
+          'FROM ${Setup.CLIENT_TABLE} ' +
           'JOIN ${Setup.CIUDAD_CLIENTE_TABLE} ' +
-          'ON ${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ${Setup.COLUMN_CLIENTE[0]} ' +
+          'ON ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ' +
+          '${Setup.CLIENT_TABLE}.${Setup.COLUMN_CLIENTE[0]} ' +
           'JOIN ${Setup.CIUDAD_TABLE} ' +
-          'ON ${Setup.COLUMN_CIUDAD[0]} = ${Setup.COLUMN_CIUDAD_CLIENTE[1]}');
+          'ON   ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[1]} = ' +
+          '${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[0]}');
       return _mapToCliente(list);
     } catch (e) {
       print(e.toString());
@@ -41,16 +44,19 @@ class Clientes implements Crud {
   static Future<List<Cliente>> readById(int idCliente) async {
     Database db = await Crud.conectar();
     String sentence = '';
-    Setup.COLUMN_CLIENTE.forEach((column) => sentence += ',$column');
-    sentence += ',${Setup.COLUMN_CIUDAD[1]} AS ciudad';
+    Setup.COLUMN_CLIENTE
+        .forEach((column) => sentence += '${Setup.CLIENT_TABLE}.$column,');
+    sentence += '${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]} AS ciudad ';
     try {
-      List<Map<String, dynamic>> list = await db.rawQuery(sentence +
+      List<Map<String, dynamic>> list = await db.rawQuery('SELECT $sentence' +
           'FROM ${Setup.CLIENT_TABLE} ' +
           'JOIN ${Setup.CIUDAD_CLIENTE_TABLE} ' +
-          'ON ${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ${Setup.COLUMN_CLIENTE[0]} ' +
+          'ON ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ' +
+          '${Setup.CLIENT_TABLE}.${Setup.COLUMN_CLIENTE[0]} ' +
           'JOIN ${Setup.CIUDAD_TABLE} ' +
-          'ON ${Setup.COLUMN_CIUDAD[0]} = ${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
-          'WHERE ${Setup.COLUMN_CLIENTE[0]}= $idCliente');
+          'ON ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[0]} = ' +
+          '${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
+          'WHERE ${Setup.CLIENT_TABLE}.${Setup.COLUMN_CLIENTE[0]}= $idCliente');
       return _mapToCliente(list);
     } catch (e) {
       print(e.toString());
@@ -61,16 +67,19 @@ class Clientes implements Crud {
   static Future<List<Cliente>> readByName(String nameCliente) async {
     Database db = await Crud.conectar();
     String sentence = '';
-    Setup.COLUMN_CLIENTE.forEach((column) => sentence += ',$column');
-    sentence += ',${Setup.COLUMN_CIUDAD[1]} AS ciudad';
+    Setup.COLUMN_CLIENTE
+        .forEach((column) => sentence += '${Setup.CLIENT_TABLE}.$column,');
+    sentence += '${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]} AS ciudad ';
     try {
-      List<Map<String, dynamic>> list = await db.rawQuery(sentence +
-          'from ${Setup.CLIENT_TABLE} ' +
+      List<Map<String, dynamic>> list = await db.rawQuery('SELECT $sentence' +
+          'FROM ${Setup.CLIENT_TABLE} ' +
           'JOIN ${Setup.CIUDAD_CLIENTE_TABLE} ' +
-          'ON ${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ${Setup.COLUMN_CLIENTE[0]} ' +
+          'ON ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ' +
+          '${Setup.CLIENT_TABLE}.${Setup.COLUMN_CLIENTE[0]} ' +
           'JOIN ${Setup.CIUDAD_TABLE} ' +
-          'ON ${Setup.COLUMN_CIUDAD[0]} = ${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
-          'WHERE ${Setup.COLUMN_CLIENTE[0]}=$nameCliente');
+          'ON ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[0]} = ' +
+          '${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
+          'WHERE ${Setup.CLIENT_TABLE}.${Setup.COLUMN_CLIENTE[2]} LIKE\'%$nameCliente%\'');
       return _mapToCliente(list);
     } catch (e) {
       print(e.toString());
@@ -81,16 +90,19 @@ class Clientes implements Crud {
   static Future<List<Cliente>> readByCity(String nameCity) async {
     Database db = await Crud.conectar();
     String sentence = '';
-    Setup.COLUMN_CLIENTE.forEach((column) => sentence += ',$column');
-    sentence += ',${Setup.COLUMN_CIUDAD[1]} AS ciudad';
+    Setup.COLUMN_CLIENTE
+        .forEach((column) => sentence += '${Setup.CLIENT_TABLE}.$column,');
+    sentence += '${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]} AS ciudad ';
     try {
-      List<Map<String, dynamic>> list = await db.rawQuery(sentence +
-          'from ${Setup.CLIENT_TABLE} ' +
+      List<Map<String, dynamic>> list = await db.rawQuery('SELECT $sentence' +
+          'FROM ${Setup.CLIENT_TABLE} ' +
           'JOIN ${Setup.CIUDAD_CLIENTE_TABLE} ' +
-          'ON ${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ${Setup.COLUMN_CLIENTE[0]} ' +
+          'ON ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[0]} = ' +
+          '${Setup.CLIENT_TABLE}.${Setup.COLUMN_CLIENTE[0]} ' +
           'JOIN ${Setup.CIUDAD_TABLE} ' +
-          'ON ${Setup.COLUMN_CIUDAD[0]} = ${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
-          'WHERE ${Setup.COLUMN_CIUDAD[1]}=$nameCity');
+          'ON ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[0]} = ' +
+          '${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
+          'WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}=\'$nameCity\'');
       return _mapToCliente(list);
     } catch (e) {
       print(e.toString());
@@ -125,7 +137,7 @@ class Clientes implements Crud {
     List<Cliente> clientes = [];
     list.forEach((element) {
       Cliente cliente = Cliente();
-      cliente.id = element[Setup.COLUMN_CLIENTE[0]];
+      cliente.id = element[Setup.COLUMN_CLIENTE[0].toString()];
       cliente.nit = element[Setup.COLUMN_CLIENTE[1]];
       cliente.nombre = element[Setup.COLUMN_CLIENTE[2]];
       cliente.representante = element[Setup.COLUMN_CLIENTE[3]];
