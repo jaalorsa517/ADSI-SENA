@@ -28,16 +28,21 @@ class _sc_cliente extends State<sc_cliente> {
   bool _isSelect = false;
   List<bool> _clienteSelect =
       List.generate(cliente.clientes.length, (index) => false);
-  int _selectItemBottomNavigator = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text('Cliente'),
-          backgroundColor: Colors.green,
+          backgroundColor: colorGenerico,
         ),
-        bottomNavigationBar: _navigatorBottom(),
         body: _listView(context),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            await wDialog(context, true).modificar();
+          },
+          child: Icon(Icons.add),
+          backgroundColor: colorGenerico,
+        ),
         drawer: _drawer());
   }
 
@@ -53,7 +58,7 @@ class _sc_cliente extends State<sc_cliente> {
           itemCount: cliente.clientes.length,
           itemBuilder: (context, index) {
             return Container(
-                color: _clienteSelect[index] ? Colors.green : Colors.white,
+                color: _clienteSelect[index] ? colorGenerico : Colors.white,
                 child: ListTile(
                   enabled: true,
                   title: Text(cliente.clientes[index].nombre),
@@ -64,6 +69,11 @@ class _sc_cliente extends State<sc_cliente> {
                         _indexSelected = index;
                         _clienteSelect[index] = true;
                         _isSelect = true;
+                      } else if (!_clienteSelect[index] && _isSelect) {
+                        cliente.cliente = cliente.clientes[index];
+                        _clienteSelect[_indexSelected] = false;
+                        _clienteSelect[index] = true;
+                        _indexSelected = index;
                       } else if (_clienteSelect[index] && _isSelect) {
                         _clienteSelect[index] = false;
                         _isSelect = false;
@@ -71,9 +81,70 @@ class _sc_cliente extends State<sc_cliente> {
                       }
                     });
                   },
+                  onLongPress: () {
+                    if (_isSelect && _clienteSelect[index]) {
+                      _bottomSheet(context);
+                    }
+                  },
                 ));
           });
     });
+  }
+
+  Future<Widget> _bottomSheet(BuildContext context) async {
+    return await showModalBottomSheet(
+        builder: (BuildContext context) {
+          return Container(
+            child: Wrap(children: <Widget>[
+              new ListTile(
+                  title: Text('Ver información'),
+                  leading: Icon(Icons.view_agenda),
+                  onTap: () async {
+                    await wDialog(context).mostrar();
+                  }),
+              new ListTile(
+                title: Text('Actualizar'),
+                leading: Icon(Icons.update),
+                onTap: () async {
+                  await wDialog(context).modificar();
+                },
+              ),
+              new ListTile(
+                title: Text('Eliminar'),
+                leading: Icon(Icons.delete),
+                onTap: () async {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('CONFIRMACION'),
+                          actions: <Widget>[
+                            FlatButton(
+                                onPressed: () async {
+                                  await cliente
+                                          .clienteBorrar(cliente.cliente.id)
+                                      ? SnackBar(
+                                          content: Text('Cliente borrado'))
+                                      : SnackBar(
+                                          content: Text('No se pudo borrar'));
+                                },
+                                child: Text('SI')),
+                            FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('NO'))
+                          ],
+                          content:
+                              Text('¿Seguro que quieres eliminar el cliente?'),
+                        );
+                      });
+                },
+              ),
+            ]),
+          );
+        },
+        context: context);
   }
 
   Widget _drawer() {
@@ -83,17 +154,25 @@ class _sc_cliente extends State<sc_cliente> {
           flex: 2,
           child: Stack(
             children: <Widget>[
-              Container(decoration: BoxDecoration(color: Colors.green)),
+              Container(decoration: BoxDecoration(color: colorGenerico)),
               Center(
                 child: TextField(
                     onSubmitted: (String value) async {
                       await cliente.clienteForName(value);
+                      _clienteSelect = List.generate(
+                          cliente.clientes.length, (index) => false);
+                      _isSelect = false;
                     },
                     decoration: InputDecoration(hintText: 'Buscar')),
               )
             ],
           )),
-      Flexible(flex: 2, child: Text('FILTRAR CIUDAD')),
+      Flexible(
+          flex: 2,
+          child: Text(
+            'FILTRAR CIUDAD',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          )),
       Flexible(
           child: ListTile(
         title: Text('Todos'),
@@ -102,6 +181,9 @@ class _sc_cliente extends State<sc_cliente> {
             groupValue: _ciudad,
             onChanged: (Ciudades value) async {
               await cliente.loadCliente();
+              _clienteSelect =
+                  List.generate(cliente.clientes.length, (index) => false);
+              _isSelect = false;
               setState(() {
                 _ciudad = value;
               });
@@ -115,6 +197,9 @@ class _sc_cliente extends State<sc_cliente> {
             groupValue: _ciudad,
             onChanged: (Ciudades value) async {
               await cliente.clienteForCity('ANDES');
+              _clienteSelect =
+                  List.generate(cliente.clientes.length, (index) => false);
+              _isSelect = false;
               setState(() {
                 _ciudad = value;
               });
@@ -128,6 +213,9 @@ class _sc_cliente extends State<sc_cliente> {
             groupValue: _ciudad,
             onChanged: (Ciudades value) {
               cliente.clienteForCity('BETANIA');
+              _clienteSelect =
+                  List.generate(cliente.clientes.length, (index) => false);
+              _isSelect = false;
               setState(() {
                 _ciudad = value;
               });
@@ -143,6 +231,9 @@ class _sc_cliente extends State<sc_cliente> {
               setState(() {
                 _ciudad = value;
                 cliente.clienteForCity('HISPANIA');
+                _clienteSelect =
+                    List.generate(cliente.clientes.length, (index) => false);
+                _isSelect = false;
               });
             }),
       )),
@@ -156,6 +247,9 @@ class _sc_cliente extends State<sc_cliente> {
               setState(() {
                 _ciudad = value;
                 cliente.clienteForCity('JARDIN');
+                _clienteSelect =
+                    List.generate(cliente.clientes.length, (index) => false);
+                _isSelect = false;
               });
             }),
       )),
@@ -169,6 +263,9 @@ class _sc_cliente extends State<sc_cliente> {
               setState(() {
                 _ciudad = value;
                 cliente.clienteForCity('SANTA INES');
+                _clienteSelect =
+                    List.generate(cliente.clientes.length, (index) => false);
+                _isSelect = false;
               });
             }),
       )),
@@ -182,6 +279,9 @@ class _sc_cliente extends State<sc_cliente> {
               setState(() {
                 _ciudad = value;
                 cliente.clienteForCity('SANTA RITA');
+                _clienteSelect =
+                    List.generate(cliente.clientes.length, (index) => false);
+                _isSelect = false;
               });
             }),
       )),
@@ -195,38 +295,12 @@ class _sc_cliente extends State<sc_cliente> {
               setState(() {
                 _ciudad = value;
                 cliente.clienteForCity('TAPARTO');
+                _clienteSelect =
+                    List.generate(cliente.clientes.length, (index) => false);
+                _isSelect = false;
               });
             }),
       )),
     ]));
-  }
-
-  Widget _navigatorBottom() {
-    return BottomNavigationBar(
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add),
-          title: Text('Nuevo'),
-        ),
-        BottomNavigationBarItem(icon: Icon(Icons.info), title: Text('Info')),
-      ],
-      currentIndex: _selectItemBottomNavigator,
-      selectedItemColor: Colors.blueGrey,
-      unselectedItemColor: Colors.blueGrey,
-      onTap: (int index) async {
-        if (index == 0) await wDialog(context).mostrar();
-        if (index == 1) {
-          await wDialog(
-            context,
-            nit: cliente.cliente.nit,
-            nombre: cliente.cliente.nombre,
-            admin: cliente.cliente.representante,
-            telefono: cliente.cliente.telefono,
-            email: cliente.cliente.email,
-            direccion: cliente.cliente.direccion,
-          ).mostrar();
-        }
-      },
-    );
   }
 }

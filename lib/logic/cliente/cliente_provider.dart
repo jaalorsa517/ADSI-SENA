@@ -4,7 +4,7 @@ import 'package:ventas/models/cliente/clientes.dart';
 
 class ClienteProvider extends ChangeNotifier {
   List<Cliente> _clientes = [];
-  Cliente _cliente = Cliente();
+  Cliente _cliente;
 
   get cliente => _cliente;
   set cliente(client) {
@@ -36,5 +36,17 @@ class ClienteProvider extends ChangeNotifier {
   Future<void> clienteForName(String name) async {
     _clientes = await Clientes.readByName(name);
     notifyListeners();
+  }
+
+  Future<bool> clienteCrear() async {
+    return await Clientes.create(_cliente) ? true : false;
+  }
+
+  Future<bool> clienteModificar() async {
+    return await Clientes.update(_cliente) ? true : false;
+  }
+
+  Future<bool> clienteBorrar(int id) async {
+    return await Clientes.delete(id) ? true : false;
   }
 }
