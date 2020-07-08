@@ -3,15 +3,25 @@ import 'package:ventas/config/setup.dart';
 import 'package:ventas/models/cliente/cliente.dart';
 import 'package:ventas/models/crud.dart';
 
-/**
- * Clase driver del modelo cliente
- */
+/// Clase driver del modelo cliente
 
 class Clientes implements Crud {
   static Future<bool> create(Cliente cliente) async {
     Database db = await Crud.conectar();
+    String sentence = '';
+    for (int i = 1; i < Setup.COLUMN_CLIENTE.length; i++) {
+      sentence += '${Setup.COLUMN_CLIENTE[i]} ,';
+    }
+    sentence = sentence.substring(0, sentence.length - 1);
     try {
-      await db.insert(Setup.CLIENT_TABLE, _clienteToMap(cliente));
+      await db.rawInsert(
+          "INSERT INTO ${Setup.CLIENT_TABLE} ($sentence) VALUES ('${cliente.nit}'," +
+              "'${cliente.nombre}','${cliente.representante}','${cliente.telefono}'," +
+              "'${cliente.email}','${cliente.direccion}') ");
+      await db.rawInsert("INSERT INTO ${Setup.CIUDAD_CLIENTE_TABLE} " +
+          "VALUES (${cliente.id},(SELECT ${Setup.COLUMN_CIUDAD[0]} " +
+          "FROM ${Setup.CIUDAD_TABLE} " +
+          "WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}='$cliente.ciudad'))");
       return true;
     } catch (e) {
       print(e.toString());
@@ -113,8 +123,19 @@ class Clientes implements Crud {
   static Future<bool> update(Cliente cliente) async {
     Database db = await Crud.conectar();
     try {
-      await db.update(Setup.CLIENT_TABLE, _clienteToMap(cliente),
-          where: 'cliente.id=${cliente.id}');
+      await db.rawUpdate(
+          "UPDATE ${Setup.CLIENT_TABLE} SET ${Setup.COLUMN_CLIENTE[1]}='${cliente.nit}'," +
+              "${Setup.COLUMN_CLIENTE[2]}='${cliente.nombre}'" +
+              ",${Setup.COLUMN_CLIENTE[3]}='${cliente.representante}'" +
+              ",${Setup.COLUMN_CLIENTE[4]}='${cliente.telefono}'," +
+              "${Setup.COLUMN_CLIENTE[5]}='${cliente.email}'," +
+              "${Setup.COLUMN_CLIENTE[6]}='${cliente.direccion}'" +
+              "WHERE ${Setup.COLUMN_CLIENTE[0]}=${cliente.id} ");
+      await db.rawUpdate("UPDATE ${Setup.CIUDAD_CLIENTE_TABLE} " +
+          "SET ${Setup.COLUMN_CIUDAD_CLIENTE[0]}=${cliente.id}," +
+          "${Setup.COLUMN_CIUDAD_CLIENTE[1]}=(SELECT ${Setup.COLUMN_CIUDAD[0]} " +
+          "FROM ${Setup.CIUDAD_TABLE} " +
+          "WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}='$cliente.ciudad')");
       return true;
     } catch (e) {
       print(e.toString());
@@ -153,7 +174,7 @@ class Clientes implements Crud {
 
   static Map<String, dynamic> _clienteToMap(Cliente cliente) {
     Map<String, dynamic> mapCliente = {};
-    //mapCliente[Setup.COLUMN_CLIENTE[0]] = cliente.id;
+    mapCliente[Setup.COLUMN_CLIENTE[0]] = cliente.id;
     mapCliente[Setup.COLUMN_CLIENTE[1]] = cliente.nit;
     mapCliente[Setup.COLUMN_CLIENTE[2]] = cliente.nombre;
     mapCliente[Setup.COLUMN_CLIENTE[3]] = cliente.representante;

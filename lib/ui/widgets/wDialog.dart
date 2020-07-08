@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../variables.dart';
+import '../../config/variables.dart';
 
 class wDialog extends Dialog {
   BuildContext _context;

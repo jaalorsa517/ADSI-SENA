@@ -6,11 +6,11 @@ import 'package:sqflite/sqflite.dart';
 import 'package:ventas/config/setup.dart';
 
 abstract class Crud {
-  static bool create(Object object) {}
-  static List<Object> read() {}
-  static bool update(Object object) {}
-  static bool delete(int idObject) {}
-  static List<Object> readById(Object object) {}
+  static Future<bool> create(Object object) {}
+  static Future<List<Object>> read() {}
+  static Future<bool> update(Object object) {}
+  static Future<bool> delete(int idObject) {}
+  static Future<List<Object>> readById(Object object) {}
   static Future<Database> conectar() async {
     String _name = Setup.DB_NAME;
     try {

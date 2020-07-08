@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ventas/logic/cliente/cliente_provider.dart';
-import 'package:ventas/ui/variables.dart';
+import 'package:ventas/config/variables.dart';
 import 'package:ventas/ui/widgets/wDialog.dart';
 
 class sc_cliente extends StatefulWidget {
@@ -121,12 +121,15 @@ class _sc_cliente extends State<sc_cliente> {
                           actions: <Widget>[
                             FlatButton(
                                 onPressed: () async {
-                                  await cliente
-                                          .clienteBorrar(cliente.cliente.id)
-                                      ? SnackBar(
-                                          content: Text('Cliente borrado'))
-                                      : SnackBar(
-                                          content: Text('No se pudo borrar'));
+                                  await cliente.clienteBorrar(
+                                          cliente.cliente.id)
+                                      ? Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                              content: Text('Cliente borrado')))
+                                      : Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                              content:
+                                                  Text('No se pudo borrar')));
                                 },
                                 child: Text('SI')),
                             FlatButton(

@@ -6,7 +6,7 @@ import 'package:ventas/ui/screens/sc_producto.dart';
 import 'package:ventas/ui/screens/sc_venta.dart';
 import 'package:ventas/ui/screens/sc_main.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:ventas/ui/variables.dart';
+import 'package:ventas/config/variables.dart';
 
 void main() => runApp(Principal());
 
