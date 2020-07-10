@@ -5,7 +5,13 @@ import '../../config/variables.dart';
 class wDialog extends Dialog {
   BuildContext _context;
   bool _isNew;
-  TextEditingController _nit, _nombre, _admin, _telefono, _email, _direccion;
+  TextEditingController _nit,
+      _nombre,
+      _admin,
+      _telefono,
+      _email,
+      _direccion,
+      _ciudad;
   wDialog(this._context, [this._isNew = false]) {
     this._nit = TextEditingController(text: cliente.cliente.nit ?? '');
     this._nombre = TextEditingController(text: cliente.cliente.nombre ?? '');
@@ -16,6 +22,7 @@ class wDialog extends Dialog {
     this._email = TextEditingController(text: cliente.cliente.email ?? '');
     this._direccion =
         TextEditingController(text: cliente.cliente.direccion ?? '');
+    this._ciudad = TextEditingController(text: cliente.cliente.ciudad ?? '');
   }
   Future modificar() async {
     return await showDialog(
@@ -48,40 +55,53 @@ class wDialog extends Dialog {
                 controller: this._direccion,
                 decoration: InputDecoration(hintText: 'DIRECCION'),
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <
-                  Widget>[
-                FlatButton(
-                  color: colorGenerico,
-                  child: Text('Confirmar'),
-                  onPressed: () async {
-                    if (_nombre.text != '') {
-                      cliente.cliente.nit = this._nit.text;
-                      cliente.cliente.nombre = this._nombre.text;
-                      cliente.cliente.representante = this._admin.text;
-                      cliente.cliente.telefono = this._telefono.text;
-                      cliente.cliente.email = this._email.text;
-                      cliente.cliente.direccion = this._direccion.text;
-                      this._isNew
-                          ? await cliente.clienteCrear()
-                              ? SnackBar(content: Text('Cliente creado'))
-                              : SnackBar(
-                                  content: Text('Error al crear cliente'))
-                          : await cliente.clienteModificar()
-                              ? SnackBar(content: Text('Cliente modificado'))
-                              : SnackBar(
-                                  content: Text('Error al modificar cliente'));
-                    } else {
-                      SnackBar(content: Text('Agregue un nombre'));
-                    }
-                  },
-                ),
-                FlatButton(
-                    color: colorGenerico,
-                    child: Text('Cancelar'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
-              ])
+              TextField(
+                controller: this._ciudad,
+                decoration: InputDecoration(hintText: 'CIUDAD'),
+              ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    FlatButton(
+                      color: colorGenerico,
+                      child: Text('Confirmar'),
+                      onPressed: () async {
+                        if (_nombre.text != '' && _ciudad.text != '') {
+                          cliente.cliente.nit = this._nit.text;
+                          cliente.cliente.nombre = this._nombre.text;
+                          cliente.cliente.representante = this._admin.text;
+                          cliente.cliente.telefono = this._telefono.text;
+                          cliente.cliente.email = this._email.text;
+                          cliente.cliente.direccion = this._direccion.text;
+                          cliente.cliente.ciudad =
+                              this._ciudad.text.toUpperCase();
+                          if (this._isNew) {
+                            if (await cliente.clienteCrear()) {
+                              print('Cliente creado');
+                            } else {
+                              print('Error al crear el cliente');
+                            }
+                          } else {
+                            if (await cliente.clienteModificar()) {
+                              print('cliente modificado');
+                            } else {
+                              print('Error al modificar el cliente');
+                            }
+                          }
+                        } else {
+                          print(
+                              'Hay que pedirle al cliente agregar un nombre y una ciudad');
+                        }
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    FlatButton(
+                        color: colorGenerico,
+                        child: Text('Cancelar'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        }),
+                  ])
             ],
           );
         });
@@ -127,6 +147,11 @@ class wDialog extends Dialog {
                 style: titulo,
               ),
               Text(cliente.cliente.direccion, style: subtitulo),
+              Text(
+                'CIUDAD',
+                style: titulo,
+              ),
+              Text(cliente.cliente.ciudad, style: subtitulo),
             ],
           );
         });

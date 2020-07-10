@@ -20,7 +20,11 @@ class ClienteProvider extends ChangeNotifier {
 
   ClienteProvider() {
     loadCliente();
-    _cliente = Cliente();
+    nuevoCliente();
+  }
+
+  void nuevoCliente() {
+    _cliente = new Cliente();
   }
 
   Future<void> loadCliente() async {
@@ -29,24 +33,38 @@ class ClienteProvider extends ChangeNotifier {
   }
 
   Future<void> clienteForCity(String city) async {
+    _clientes = [];
     _clientes = await Clientes.readByCity(city);
     notifyListeners();
   }
 
   Future<void> clienteForName(String name) async {
+    _clientes = [];
     _clientes = await Clientes.readByName(name);
     notifyListeners();
   }
 
   Future<bool> clienteCrear() async {
-    return await Clientes.create(_cliente) ? true : false;
+    bool respuesta = await Clientes.create(_cliente) ? true : false;
+    if (respuesta) {
+      await loadCliente();
+    }
+    return respuesta;
   }
 
   Future<bool> clienteModificar() async {
-    return await Clientes.update(_cliente) ? true : false;
+    bool respuesta = await Clientes.update(_cliente) ? true : false;
+    if (respuesta) {
+      await loadCliente();
+    }
+    return respuesta;
   }
 
   Future<bool> clienteBorrar(int id) async {
-    return await Clientes.delete(id) ? true : false;
+    bool respuesta = await Clientes.delete(id) ? true : false;
+    if (respuesta) {
+      await loadCliente();
+    }
+    return respuesta;
   }
 }

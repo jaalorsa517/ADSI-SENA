@@ -14,14 +14,16 @@ class Clientes implements Crud {
     }
     sentence = sentence.substring(0, sentence.length - 1);
     try {
-      await db.rawInsert(
+      int result = await db.rawInsert(
           "INSERT INTO ${Setup.CLIENT_TABLE} ($sentence) VALUES ('${cliente.nit}'," +
               "'${cliente.nombre}','${cliente.representante}','${cliente.telefono}'," +
               "'${cliente.email}','${cliente.direccion}') ");
-      await db.rawInsert("INSERT INTO ${Setup.CIUDAD_CLIENTE_TABLE} " +
+      print('Tabla ${Setup.CLIENT_TABLE} nueva con $result registros');
+      result = await db.rawInsert("INSERT INTO ${Setup.CIUDAD_CLIENTE_TABLE} " +
           "VALUES (${cliente.id},(SELECT ${Setup.COLUMN_CIUDAD[0]} " +
           "FROM ${Setup.CIUDAD_TABLE} " +
-          "WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}='$cliente.ciudad'))");
+          "WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}='${cliente.ciudad}'))");
+      print('Tabla ${Setup.CIUDAD_CLIENTE_TABLE} nueva con $result registros');
       return true;
     } catch (e) {
       print(e.toString());
@@ -123,7 +125,7 @@ class Clientes implements Crud {
   static Future<bool> update(Cliente cliente) async {
     Database db = await Crud.conectar();
     try {
-      await db.rawUpdate(
+      int result = await db.rawUpdate(
           "UPDATE ${Setup.CLIENT_TABLE} SET ${Setup.COLUMN_CLIENTE[1]}='${cliente.nit}'," +
               "${Setup.COLUMN_CLIENTE[2]}='${cliente.nombre}'" +
               ",${Setup.COLUMN_CLIENTE[3]}='${cliente.representante}'" +
@@ -131,11 +133,14 @@ class Clientes implements Crud {
               "${Setup.COLUMN_CLIENTE[5]}='${cliente.email}'," +
               "${Setup.COLUMN_CLIENTE[6]}='${cliente.direccion}'" +
               "WHERE ${Setup.COLUMN_CLIENTE[0]}=${cliente.id} ");
-      await db.rawUpdate("UPDATE ${Setup.CIUDAD_CLIENTE_TABLE} " +
+      print('Tabla ${Setup.CLIENT_TABLE} modificada con $result registros');
+      result = await db.rawUpdate("UPDATE ${Setup.CIUDAD_CLIENTE_TABLE} " +
           "SET ${Setup.COLUMN_CIUDAD_CLIENTE[0]}=${cliente.id}," +
           "${Setup.COLUMN_CIUDAD_CLIENTE[1]}=(SELECT ${Setup.COLUMN_CIUDAD[0]} " +
           "FROM ${Setup.CIUDAD_TABLE} " +
-          "WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}='$cliente.ciudad')");
+          "WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}='${cliente.ciudad}')");
+      print(
+          'Tabla ${Setup.CIUDAD_CLIENTE_TABLE} modificada con $result registros');
       return true;
     } catch (e) {
       print(e.toString());
@@ -166,7 +171,7 @@ class Clientes implements Crud {
       cliente.telefono = element[Setup.COLUMN_CLIENTE[4]];
       cliente.email = element[Setup.COLUMN_CLIENTE[5]];
       cliente.direccion = element[Setup.COLUMN_CLIENTE[6]];
-      cliente.ciudad = element[Setup.COLUMN_CIUDAD[1]];
+      cliente.ciudad = element['ciudad'];
       clientes.add(cliente);
     });
     return clientes;

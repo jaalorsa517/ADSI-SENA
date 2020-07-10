@@ -38,7 +38,11 @@ class _sc_cliente extends State<sc_cliente> {
         body: _listView(context),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
+            cliente.nuevoCliente();
             await wDialog(context, true).modificar();
+            setState(() {
+              _ciudad = Ciudades.Todos;
+            });
           },
           child: Icon(Icons.add),
           backgroundColor: colorGenerico,
@@ -107,6 +111,9 @@ class _sc_cliente extends State<sc_cliente> {
                 leading: Icon(Icons.update),
                 onTap: () async {
                   await wDialog(context).modificar();
+                  setState(() {
+                    _ciudad = Ciudades.Todos;
+                  });
                 },
               ),
               new ListTile(
@@ -121,15 +128,13 @@ class _sc_cliente extends State<sc_cliente> {
                           actions: <Widget>[
                             FlatButton(
                                 onPressed: () async {
-                                  await cliente.clienteBorrar(
-                                          cliente.cliente.id)
-                                      ? Scaffold.of(context).showSnackBar(
-                                          SnackBar(
-                                              content: Text('Cliente borrado')))
-                                      : Scaffold.of(context).showSnackBar(
-                                          SnackBar(
-                                              content:
-                                                  Text('No se pudo borrar')));
+                                  await cliente
+                                          .clienteBorrar(cliente.cliente.id)
+                                      ? print('cliente borrado')
+                                      : print('No se pudo borrar');
+                                  setState(() {
+                                    _ciudad = Ciudades.Todos;
+                                  });
                                 },
                                 child: Text('SI')),
                             FlatButton(
@@ -214,11 +219,11 @@ class _sc_cliente extends State<sc_cliente> {
         leading: Radio(
             value: Ciudades.Betania,
             groupValue: _ciudad,
-            onChanged: (Ciudades value) {
-              cliente.clienteForCity('BETANIA');
+            onChanged: (Ciudades value) async {
               _clienteSelect =
                   List.generate(cliente.clientes.length, (index) => false);
               _isSelect = false;
+              await cliente.clienteForCity('BETANIA');
               setState(() {
                 _ciudad = value;
               });
@@ -230,13 +235,13 @@ class _sc_cliente extends State<sc_cliente> {
         leading: Radio(
             value: Ciudades.Hispania,
             groupValue: _ciudad,
-            onChanged: (Ciudades value) {
+            onChanged: (Ciudades value) async {
+              _clienteSelect =
+                  List.generate(cliente.clientes.length, (index) => false);
+              _isSelect = false;
+              await cliente.clienteForCity('HISPANIA');
               setState(() {
                 _ciudad = value;
-                cliente.clienteForCity('HISPANIA');
-                _clienteSelect =
-                    List.generate(cliente.clientes.length, (index) => false);
-                _isSelect = false;
               });
             }),
       )),
@@ -246,13 +251,13 @@ class _sc_cliente extends State<sc_cliente> {
         leading: Radio(
             value: Ciudades.Jardin,
             groupValue: _ciudad,
-            onChanged: (Ciudades value) {
+            onChanged: (Ciudades value) async {
+              await cliente.clienteForCity('JARDIN');
+              _clienteSelect =
+                  List.generate(cliente.clientes.length, (index) => false);
+              _isSelect = false;
               setState(() {
                 _ciudad = value;
-                cliente.clienteForCity('JARDIN');
-                _clienteSelect =
-                    List.generate(cliente.clientes.length, (index) => false);
-                _isSelect = false;
               });
             }),
       )),
@@ -262,13 +267,13 @@ class _sc_cliente extends State<sc_cliente> {
         leading: Radio(
             value: Ciudades.SantaInes,
             groupValue: _ciudad,
-            onChanged: (Ciudades value) {
+            onChanged: (Ciudades value) async {
+              await cliente.clienteForCity('SANTA INES');
+              _clienteSelect =
+                  List.generate(cliente.clientes.length, (index) => false);
+              _isSelect = false;
               setState(() {
                 _ciudad = value;
-                cliente.clienteForCity('SANTA INES');
-                _clienteSelect =
-                    List.generate(cliente.clientes.length, (index) => false);
-                _isSelect = false;
               });
             }),
       )),
@@ -278,13 +283,13 @@ class _sc_cliente extends State<sc_cliente> {
         leading: Radio(
             value: Ciudades.SantaRita,
             groupValue: _ciudad,
-            onChanged: (Ciudades value) {
+            onChanged: (Ciudades value) async {
+              await cliente.clienteForCity('SANTA RITA');
+              _clienteSelect =
+                  List.generate(cliente.clientes.length, (index) => false);
+              _isSelect = false;
               setState(() {
                 _ciudad = value;
-                cliente.clienteForCity('SANTA RITA');
-                _clienteSelect =
-                    List.generate(cliente.clientes.length, (index) => false);
-                _isSelect = false;
               });
             }),
       )),
@@ -294,13 +299,13 @@ class _sc_cliente extends State<sc_cliente> {
         leading: Radio(
             value: Ciudades.Taparto,
             groupValue: _ciudad,
-            onChanged: (Ciudades value) {
+            onChanged: (Ciudades value) async {
+              await cliente.clienteForCity('TAPARTO');
+              _clienteSelect =
+                  List.generate(cliente.clientes.length, (index) => false);
+              _isSelect = false;
               setState(() {
                 _ciudad = value;
-                cliente.clienteForCity('TAPARTO');
-                _clienteSelect =
-                    List.generate(cliente.clientes.length, (index) => false);
-                _isSelect = false;
               });
             }),
       )),
