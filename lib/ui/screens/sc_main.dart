@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ventas/logic/cliente/cliente_provider.dart';
 import 'package:ventas/config/variables.dart';
+import 'package:ventas/logic/producto/producto_provider.dart';
 import 'package:ventas/ui/widgets/wboton.dart';
 
 class ScMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     cliente = ClienteProvider();
+    producto = ProductoProvider();
     return Scaffold(
         appBar: AppBar(title: Text('INICIO'), backgroundColor: Colors.green),
         body: Center(

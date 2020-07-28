@@ -46,25 +46,19 @@ class ClienteProvider extends ChangeNotifier {
 
   Future<bool> clienteCrear() async {
     bool respuesta = await Clientes.create(_cliente) ? true : false;
-    if (respuesta) {
-      await loadCliente();
-    }
+    if (respuesta) await loadCliente();
     return respuesta;
   }
 
   Future<bool> clienteModificar() async {
     bool respuesta = await Clientes.update(_cliente) ? true : false;
-    if (respuesta) {
-      await loadCliente();
-    }
+    if (respuesta) await loadCliente();
     return respuesta;
   }
 
   Future<bool> clienteBorrar(int id) async {
     bool respuesta = await Clientes.delete(id) ? true : false;
-    if (respuesta) {
-      await loadCliente();
-    }
+    if (respuesta) await loadCliente();
     return respuesta;
   }
 }

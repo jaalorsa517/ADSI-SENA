@@ -26,6 +26,8 @@ class Productos implements Crud {
     }
   }
 
+  static Future<List<Producto>> readById(int id) {}
+
   static Future<bool> update(Producto producto) async {
     Database db = await Crud.conectar();
     try {
@@ -48,8 +50,6 @@ class Productos implements Crud {
       return false;
     }
   }
-
-  static List<Object> readById(Object object) {}
 
   static List<Producto> _mapToProducto(List<Map<String, dynamic>> list) {
     List<Producto> productos = [];

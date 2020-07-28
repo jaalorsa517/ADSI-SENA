@@ -14,16 +14,10 @@ class Clientes implements Crud {
     }
     sentence = sentence.substring(0, sentence.length - 1);
     try {
-      int result = await db.rawInsert(
-          "INSERT INTO ${Setup.CLIENT_TABLE} ($sentence) VALUES ('${cliente.nit}'," +
-              "'${cliente.nombre}','${cliente.representante}','${cliente.telefono}'," +
-              "'${cliente.email}','${cliente.direccion}') ");
-      print('Tabla ${Setup.CLIENT_TABLE} nueva con $result registros');
-      result = await db.rawInsert("INSERT INTO ${Setup.CIUDAD_CLIENTE_TABLE} " +
+      await db.rawInsert("INSERT INTO ${Setup.CIUDAD_CLIENTE_TABLE} " +
           "VALUES (${cliente.id},(SELECT ${Setup.COLUMN_CIUDAD[0]} " +
           "FROM ${Setup.CIUDAD_TABLE} " +
           "WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}='${cliente.ciudad}'))");
-      print('Tabla ${Setup.CIUDAD_CLIENTE_TABLE} nueva con $result registros');
       return true;
     } catch (e) {
       print(e.toString());

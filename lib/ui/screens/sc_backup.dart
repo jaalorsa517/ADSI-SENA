@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ventas/config/variables.dart';
 import 'package:ventas/logic/backup/backup_logic.dart';
 
 class ScBackup extends StatefulWidget {
@@ -12,12 +13,14 @@ class _ScBackup extends State<ScBackup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Backup'), backgroundColor: colorGenerico),
       body: RaisedButton(
           child: Text('Backup'),
+          color: colorGenerico,
           onPressed: () async {
-            BackUpLogic.backUpDo()
+            await BackUpLogic.backUpDo()
                 .then((value) => print('Copia correcta'))
-                .catchError((onError) => print(onError));
+                .catchError((onError) => print('Error $onError'));
           }),
     );
   }
