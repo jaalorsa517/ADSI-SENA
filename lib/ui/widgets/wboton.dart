@@ -6,7 +6,6 @@ class wboton extends StatefulWidget {
   wboton(this.nom, this.event);
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _wboton(this.nom, this.event);
   }
 }

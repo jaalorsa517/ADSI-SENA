@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:ventas/logic/cliente/cliente_provider.dart';
 import 'package:ventas/config/variables.dart';
 import 'package:ventas/ui/widgets/wboton.dart';
 
-class sc_main extends StatelessWidget {
+class ScMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     cliente = ClienteProvider();
@@ -14,7 +13,8 @@ class sc_main extends StatelessWidget {
             child: Column(children: <Widget>[
           new wboton('CLIENTES', '/cliente'),
           new wboton('PRODUCTOS', '/producto'),
-          new wboton('VENTA', '/venta')
+          new wboton('VENTA', '/venta'),
+          new wboton('BACKUP', '/backup')
         ])));
   }
 }

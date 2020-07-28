@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-class sc_venta extends StatelessWidget {
+class ScVenta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return null;

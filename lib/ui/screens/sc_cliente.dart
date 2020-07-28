@@ -4,10 +4,10 @@ import 'package:ventas/logic/cliente/cliente_provider.dart';
 import 'package:ventas/config/variables.dart';
 import 'package:ventas/ui/widgets/wDialog.dart';
 
-class sc_cliente extends StatefulWidget {
+class ScCliente extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _sc_cliente();
+    return _ScCliente();
   }
 }
 
@@ -22,7 +22,7 @@ enum Ciudades {
   Taparto
 }
 
-class _sc_cliente extends State<sc_cliente> {
+class _ScCliente extends State<ScCliente> {
   Ciudades _ciudad = Ciudades.Todos;
   int _indexSelected = -1;
   bool _isSelect = false;
