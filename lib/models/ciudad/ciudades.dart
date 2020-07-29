@@ -90,10 +90,10 @@ class Ciudades implements Crud {
     return ciudades;
   }
 
-  static Map<String, dynamic> _ciudadToMap(Ciudad ciudad) {
+  /* static Map<String, dynamic> _ciudadToMap(Ciudad ciudad) {
     Map<String, dynamic> mapCiudad = {};
     mapCiudad[Setup.COLUMN_CLIENTE[0]] = ciudad.id;
     mapCiudad[Setup.COLUMN_CLIENTE[1]] = ciudad.nombre;
     return mapCiudad;
-  }
+  } */
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ventas/config/variables.dart';
+import 'package:ventas/config/utilidades.dart';
 import 'package:ventas/logic/backup/backup_logic.dart';
 
 class ScBackup extends StatefulWidget {

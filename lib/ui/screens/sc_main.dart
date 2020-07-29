@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ventas/logic/cliente/cliente_provider.dart';
-import 'package:ventas/config/variables.dart';
+import 'package:ventas/config/utilidades.dart';
 import 'package:ventas/logic/producto/producto_provider.dart';
 import 'package:ventas/ui/widgets/wboton.dart';
 
 class ScMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    cliente = ClienteProvider();
+    widthScreen = MediaQuery.of(context).size.width;
+    heightScreen = MediaQuery.of(context).size.height;
     producto = ProductoProvider();
+    cliente = Provider.of<ClienteProvider>(context);
+    contextoPrincipal = context;
     return Scaffold(
         appBar: AppBar(title: Text('INICIO'), backgroundColor: Colors.green),
         body: Center(
             child: Column(children: <Widget>[
-          new wboton('CLIENTES', '/cliente'),
-          new wboton('PRODUCTOS', '/producto'),
-          new wboton('VENTA', '/venta'),
-          new wboton('BACKUP', '/backup')
+          new WBoton('CLIENTES', '/cliente'),
+          new WBoton('PRODUCTOS', '/producto'),
+          new WBoton('VENTA', '/venta'),
+          new WBoton('BACKUP', '/backup')
         ])));
   }
 }

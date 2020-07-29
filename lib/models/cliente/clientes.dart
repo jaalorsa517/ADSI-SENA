@@ -14,14 +14,24 @@ class Clientes implements Crud {
     }
     sentence = sentence.substring(0, sentence.length - 1);
     try {
+      await db.rawInsert("INSERT INTO ${Setup.CLIENT_TABLE} " +
+          "(${Setup.COLUMN_CLIENTE[1]},${Setup.COLUMN_CLIENTE[2]}," +
+          "${Setup.COLUMN_CLIENTE[3]},${Setup.COLUMN_CLIENTE[4]}," +
+          "${Setup.COLUMN_CLIENTE[5]},${Setup.COLUMN_CLIENTE[6]}) " +
+          "VALUES('${cliente.nit}','${cliente.nombre}','${cliente.representante}'," +
+          "'${cliente.telefono}','${cliente.email}','${cliente.direccion}')");
       await db.rawInsert("INSERT INTO ${Setup.CIUDAD_CLIENTE_TABLE} " +
-          "VALUES (${cliente.id},(SELECT ${Setup.COLUMN_CIUDAD[0]} " +
-          "FROM ${Setup.CIUDAD_TABLE} " +
-          "WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}='${cliente.ciudad}'))");
+          "VALUES ((SELECT ${Setup.COLUMN_CLIENTE[0]} FROM ${Setup.CLIENT_TABLE} " +
+          "WHERE ${Setup.COLUMN_CLIENTE[2]}= \'${cliente.nombre}\')," +
+          "(SELECT ${Setup.COLUMN_CIUDAD[0]} FROM ${Setup.CIUDAD_TABLE} " +
+          "WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}=\'${cliente.ciudad}\'))");
+
       return true;
     } catch (e) {
       print(e.toString());
       return false;
+    } finally {
+      db.close();
     }
   }
 
@@ -39,11 +49,14 @@ class Clientes implements Crud {
           '${Setup.CLIENT_TABLE}.${Setup.COLUMN_CLIENTE[0]} ' +
           'JOIN ${Setup.CIUDAD_TABLE} ' +
           'ON   ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[1]} = ' +
-          '${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[0]}');
+          '${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[0]} ' +
+          'ORDER BY ciudad');
       return _mapToCliente(list);
     } catch (e) {
       print(e.toString());
       return null;
+    } finally {
+      db.close();
     }
   }
 
@@ -62,11 +75,14 @@ class Clientes implements Crud {
           'JOIN ${Setup.CIUDAD_TABLE} ' +
           'ON ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[0]} = ' +
           '${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
-          'WHERE ${Setup.CLIENT_TABLE}.${Setup.COLUMN_CLIENTE[0]}= $idCliente');
+          'WHERE ${Setup.CLIENT_TABLE}.${Setup.COLUMN_CLIENTE[0]}= $idCliente' +
+          'ORDER BY ciudad');
       return _mapToCliente(list);
     } catch (e) {
       print(e.toString());
       return null;
+    } finally {
+      db.close();
     }
   }
 
@@ -85,11 +101,14 @@ class Clientes implements Crud {
           'JOIN ${Setup.CIUDAD_TABLE} ' +
           'ON ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[0]} = ' +
           '${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
-          'WHERE ${Setup.CLIENT_TABLE}.${Setup.COLUMN_CLIENTE[2]} LIKE\'%$nameCliente%\'');
+          'WHERE ${Setup.CLIENT_TABLE}.${Setup.COLUMN_CLIENTE[2]} LIKE\'%$nameCliente%\'' +
+          'ORDER BY ciudad');
       return _mapToCliente(list);
     } catch (e) {
       print(e.toString());
       return null;
+    } finally {
+      db.close();
     }
   }
 
@@ -108,18 +127,21 @@ class Clientes implements Crud {
           'JOIN ${Setup.CIUDAD_TABLE} ' +
           'ON ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[0]} = ' +
           '${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE[1]} ' +
-          'WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}=\'$nameCity\'');
+          'WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}=\'$nameCity\'' +
+          'ORDER BY ciudad');
       return _mapToCliente(list);
     } catch (e) {
       print(e.toString());
       return null;
+    } finally {
+      db.close();
     }
   }
 
   static Future<bool> update(Cliente cliente) async {
     Database db = await Crud.conectar();
     try {
-      int result = await db.rawUpdate(
+      await db.rawUpdate(
           "UPDATE ${Setup.CLIENT_TABLE} SET ${Setup.COLUMN_CLIENTE[1]}='${cliente.nit}'," +
               "${Setup.COLUMN_CLIENTE[2]}='${cliente.nombre}'" +
               ",${Setup.COLUMN_CLIENTE[3]}='${cliente.representante}'" +
@@ -127,18 +149,17 @@ class Clientes implements Crud {
               "${Setup.COLUMN_CLIENTE[5]}='${cliente.email}'," +
               "${Setup.COLUMN_CLIENTE[6]}='${cliente.direccion}'" +
               "WHERE ${Setup.COLUMN_CLIENTE[0]}=${cliente.id} ");
-      print('Tabla ${Setup.CLIENT_TABLE} modificada con $result registros');
-      result = await db.rawUpdate("UPDATE ${Setup.CIUDAD_CLIENTE_TABLE} " +
-          "SET ${Setup.COLUMN_CIUDAD_CLIENTE[0]}=${cliente.id}," +
-          "${Setup.COLUMN_CIUDAD_CLIENTE[1]}=(SELECT ${Setup.COLUMN_CIUDAD[0]} " +
+      await db.rawUpdate("UPDATE ${Setup.CIUDAD_CLIENTE_TABLE} " +
+          "SET ${Setup.COLUMN_CIUDAD_CLIENTE[1]}=(SELECT ${Setup.COLUMN_CIUDAD[0]} " +
           "FROM ${Setup.CIUDAD_TABLE} " +
-          "WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}='${cliente.ciudad}')");
-      print(
-          'Tabla ${Setup.CIUDAD_CLIENTE_TABLE} modificada con $result registros');
+          "WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD[1]}='${cliente.ciudad}') " +
+          "WHERE ${Setup.COLUMN_CIUDAD_CLIENTE[0]}=${cliente.id}");
       return true;
     } catch (e) {
       print(e.toString());
       return false;
+    } finally {
+      db.close();
     }
   }
 
@@ -147,10 +168,14 @@ class Clientes implements Crud {
     try {
       await db.delete(Setup.CLIENT_TABLE,
           where: '${Setup.COLUMN_CLIENTE[0]} =$idCliente');
+      await db.delete(Setup.CIUDAD_CLIENTE_TABLE,
+          where: '${Setup.COLUMN_CIUDAD_CLIENTE[0]}=$idCliente');
       return true;
     } catch (e) {
       print(e.toString());
       return false;
+    } finally {
+      db.close();
     }
   }
 
@@ -171,7 +196,7 @@ class Clientes implements Crud {
     return clientes;
   }
 
-  static Map<String, dynamic> _clienteToMap(Cliente cliente) {
+  /* static Map<String, dynamic> _clienteToMap(Cliente cliente) {
     Map<String, dynamic> mapCliente = {};
     mapCliente[Setup.COLUMN_CLIENTE[0]] = cliente.id;
     mapCliente[Setup.COLUMN_CLIENTE[1]] = cliente.nit;
@@ -182,5 +207,5 @@ class Clientes implements Crud {
     mapCliente[Setup.COLUMN_CLIENTE[6]] = cliente.direccion;
     mapCliente[Setup.COLUMN_CIUDAD[1]] = cliente.ciudad;
     return mapCliente;
-  }
+  } */
 }

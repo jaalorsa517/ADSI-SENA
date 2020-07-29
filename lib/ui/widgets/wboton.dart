@@ -1,19 +1,19 @@
 import "package:flutter/material.dart";
 
-class wboton extends StatefulWidget {
-  String nom;
-  var event;
-  wboton(this.nom, this.event);
+class WBoton extends StatefulWidget {
+  final String nom;
+  final event;
+  WBoton(this.nom, this.event);
   @override
   State<StatefulWidget> createState() {
-    return _wboton(this.nom, this.event);
+    return _WBoton(this.nom, this.event);
   }
 }
 
-class _wboton extends State<wboton> {
+class _WBoton extends State<WBoton> {
   String nom;
   var event;
-  _wboton(this.nom, this.event);
+  _WBoton(this.nom, this.event);
   @override
   Widget build(BuildContext context) {
     return new FlatButton(

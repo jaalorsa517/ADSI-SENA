@@ -7,7 +7,7 @@ import 'package:ventas/ui/screens/sc_producto.dart';
 import 'package:ventas/ui/screens/sc_venta.dart';
 import 'package:ventas/ui/screens/sc_main.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:ventas/config/variables.dart';
+import 'package:ventas/config/utilidades.dart';
 import 'logic/producto/producto_provider.dart';
 
 void main() => runApp(Principal());
@@ -17,7 +17,8 @@ class Principal extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider<ClienteProvider>(create: (context) => cliente),
+          ChangeNotifierProvider<ClienteProvider>(
+              create: (context) => ClienteProvider()),
           ChangeNotifierProvider<ProductoProvider>(
               create: (context) => producto),
         ],

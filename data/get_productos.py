@@ -6,7 +6,7 @@ from sqlite3 import Error
 import sqlite3
 
 
-class getProductos:
+class GetProductos:
 
     def __init__(self, nom=None, precio=None, iva=None):
         self.nom = nom
@@ -44,7 +44,7 @@ def load():
             if (cell.column == 2 or cell.column == 4 or cell.column == 9):
 
                 if (cell.column == 2):
-                    _list_producto.append(getProductos())
+                    _list_producto.append(GetProductos())
                     _list_producto[cell.row - _MIN_ROW].name = cell.value
 
                 if (cell.column == 4):

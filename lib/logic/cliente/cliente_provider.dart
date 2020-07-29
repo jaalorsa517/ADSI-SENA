@@ -13,8 +13,8 @@ class ClienteProvider extends ChangeNotifier {
   }
 
   get clientes => _clientes;
-  set clientes(client) {
-    _clientes = client;
+  set clientes(clients) {
+    _clientes = clients;
     notifyListeners();
   }
 
@@ -24,34 +24,41 @@ class ClienteProvider extends ChangeNotifier {
   }
 
   void nuevoCliente() {
-    _cliente = new Cliente();
+    cliente = new Cliente();
   }
 
   Future<void> loadCliente() async {
-    _clientes = await Clientes.read();
+    clientes = await Clientes.read();
+  }
+
+  void updateCliente(String nit, String nombre, String representante,
+      String telefono, String email, String direccion, String ciudad) {
+    _cliente.nit = nit;
+    _cliente.nombre = nombre;
+    _cliente.representante = representante;
+    _cliente.telefono = telefono;
+    _cliente.email = email;
+    _cliente.direccion = direccion;
+    _cliente.ciudad = ciudad;
     notifyListeners();
   }
 
   Future<void> clienteForCity(String city) async {
-    _clientes = [];
-    _clientes = await Clientes.readByCity(city);
-    notifyListeners();
+    clientes = await Clientes.readByCity(city);
   }
 
   Future<void> clienteForName(String name) async {
-    _clientes = [];
-    _clientes = await Clientes.readByName(name);
-    notifyListeners();
+    clientes = await Clientes.readByName(name);
   }
 
   Future<bool> clienteCrear() async {
-    bool respuesta = await Clientes.create(_cliente) ? true : false;
+    bool respuesta = await Clientes.create(cliente) ? true : false;
     if (respuesta) await loadCliente();
     return respuesta;
   }
 
   Future<bool> clienteModificar() async {
-    bool respuesta = await Clientes.update(_cliente) ? true : false;
+    bool respuesta = await Clientes.update(cliente) ? true : false;
     if (respuesta) await loadCliente();
     return respuesta;
   }
@@ -59,6 +66,7 @@ class ClienteProvider extends ChangeNotifier {
   Future<bool> clienteBorrar(int id) async {
     bool respuesta = await Clientes.delete(id) ? true : false;
     if (respuesta) await loadCliente();
+    notifyListeners();
     return respuesta;
   }
 }

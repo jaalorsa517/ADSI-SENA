@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 
-import getCiudades as ciudad
-import getClientes as cliente
-import getProductos as producto
-import getInventario as inventario
-import getPedido as pedido
+import get_ciudades as ciudad
+import get_clientes as cliente
+import get_productos as producto
+import get_inventario as inventario
+import get_pedido as pedido
 
 if __name__ == "__main__":
     producto.load()

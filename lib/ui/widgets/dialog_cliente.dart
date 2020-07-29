@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../config/variables.dart';
+import '../../config/utilidades.dart';
 
-class wDialog extends Dialog {
+class DialogCliente {
   BuildContext _context;
-  bool _isNew;
   TextEditingController _nit,
       _nombre,
       _admin,
@@ -12,7 +11,8 @@ class wDialog extends Dialog {
       _email,
       _direccion,
       _ciudad;
-  wDialog(this._context, [this._isNew = false]) {
+
+  DialogCliente(this._context) {
     this._nit = TextEditingController(text: cliente.cliente.nit ?? '');
     this._nombre = TextEditingController(text: cliente.cliente.nombre ?? '');
     this._admin =
@@ -24,12 +24,19 @@ class wDialog extends Dialog {
         TextEditingController(text: cliente.cliente.direccion ?? '');
     this._ciudad = TextEditingController(text: cliente.cliente.ciudad ?? '');
   }
-  Future modificar() async {
-    return await showDialog(
-        context: _context,
-        builder: (context) {
-          return SimpleDialog(
-            title: Center(child: Text('CLIENTE')),
+
+  modificar(context) {
+    var _styleButton = TextStyle(
+      backgroundColor: colorGenerico,
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+      letterSpacing: 1,
+    );
+    return SimpleDialog(
+        contentPadding: EdgeInsets.all(0),
+        title: Center(child: Text('CLIENTE')),
+        children: <Widget>[
+          Column(
             children: <Widget>[
               TextField(
                 controller: this._nit,
@@ -60,51 +67,61 @@ class wDialog extends Dialog {
                 decoration: InputDecoration(hintText: 'CIUDAD'),
               ),
               Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  // mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    FlatButton(
-                      color: colorGenerico,
-                      child: Text('Confirmar'),
+                    Expanded(
+                        child: SimpleDialogOption(
+                      padding: EdgeInsets.all(0),
+                      child: Text(
+                        'Aceptar',
+                        style: _styleButton,
+                      ),
                       onPressed: () async {
                         if (_nombre.text != '' && _ciudad.text != '') {
-                          cliente.cliente.nit = this._nit.text;
-                          cliente.cliente.nombre = this._nombre.text;
-                          cliente.cliente.representante = this._admin.text;
-                          cliente.cliente.telefono = this._telefono.text;
-                          cliente.cliente.email = this._email.text;
-                          cliente.cliente.direccion = this._direccion.text;
-                          cliente.cliente.ciudad =
-                              this._ciudad.text.toUpperCase();
-                          if (this._isNew) {
-                            if (await cliente.clienteCrear()) {
-                              print('Cliente creado');
-                            } else {
-                              print('Error al crear el cliente');
-                            }
-                          } else {
-                            if (await cliente.clienteModificar()) {
-                              print('cliente modificado');
-                            } else {
-                              print('Error al modificar el cliente');
-                            }
-                          }
+                          cliente.updateCliente(
+                              _nit.text,
+                              capitalize(_nombre.text),
+                              capitalize(_admin.text),
+                              _telefono.text,
+                              _email.text,
+                              _direccion.text,
+                              _ciudad.text.toUpperCase());
+                          Navigator.pop(_context, Response.ok);
                         } else {
-                          print(
-                              'Hay que pedirle al cliente agregar un nombre y una ciudad');
+                          await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Campos vacíos'),
+                                  content: Text(
+                                      'El campo NOMBRE y el campo CIUDAD no puede ser vacío'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                        child: Text('OK'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        })
+                                  ],
+                                );
+                              });
                         }
-                        Navigator.of(context).pop();
                       },
-                    ),
-                    FlatButton(
-                        color: colorGenerico,
-                        child: Text('Cancelar'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        }),
+                    )),
+                    Expanded(
+                      child: SimpleDialogOption(
+                          child: Text(
+                            'Cancelar',
+                            style: _styleButton,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(_context, Response.cancel);
+                          }),
+                    )
                   ])
             ],
-          );
-        });
+          )
+        ]);
   }
 
   Future mostrar() async {

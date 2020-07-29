@@ -9,6 +9,7 @@ class BackUp {
   static Future<void> backUp() async {
     String _name = Setup.DB_NAME;
     String dbPath = join(await getDatabasesPath(), _name);
+    await deleteDatabase(dbPath);
     //COPIAR LA BASE DE DATOS DESDE EL RECURSO
     ByteData data = await rootBundle.load(join('data', _name));
     List<int> bytes =

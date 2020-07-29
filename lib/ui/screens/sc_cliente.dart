@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ventas/logic/cliente/cliente_provider.dart';
-import 'package:ventas/config/variables.dart';
-import 'package:ventas/ui/widgets/wDialog.dart';
+import 'package:ventas/config/utilidades.dart';
+import 'package:ventas/ui/widgets/dialog_cliente.dart';
 
 class ScCliente extends StatefulWidget {
+  ScCliente();
   @override
   State<StatefulWidget> createState() {
     return _ScCliente();
@@ -23,14 +24,35 @@ enum Ciudades {
 }
 
 class _ScCliente extends State<ScCliente> {
+  final GlobalKey<ScaffoldState> _keyScaffold = GlobalKey<ScaffoldState>();
   Ciudades _ciudad = Ciudades.Todos;
   int _indexSelected = -1;
   bool _isSelect = false;
-  List<bool> _clienteSelect =
-      List.generate(cliente.clientes.length, (index) => false);
+  List<bool> _clienteSelect;
+
+  _ScCliente() {
+    _clienteSelect = cliente.clientes.length != 0
+        ? List.generate(cliente.clientes.length, (index) => false)
+        : [];
+  }
+
+  void _initialSelection() {
+    _clienteSelect = List.generate(cliente.clientes.length, (index) => false);
+    _isSelect = false;
+  }
+
+  void _snackbar(String message) {
+    final snackbar = SnackBar(
+        content: Text(message),
+        backgroundColor: colorGenerico,
+        duration: Duration(seconds: 3));
+    _keyScaffold.currentState.showSnackBar(snackbar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _keyScaffold,
         appBar: AppBar(
           title: Text('Cliente'),
           backgroundColor: colorGenerico,
@@ -39,7 +61,20 @@ class _ScCliente extends State<ScCliente> {
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             cliente.nuevoCliente();
-            await wDialog(context, true).modificar();
+            switch (await showDialog<Response>(
+                context: context,
+                builder: (context) {
+                  return DialogCliente(context).modificar(context);
+                })) {
+              case Response.ok:
+                await cliente.clienteCrear();
+                _initialSelection();
+                _snackbar('Cliente creado!');
+                break;
+              case Response.cancel:
+                _snackbar('Creación cliente cancelado');
+                break;
+            }
             setState(() {
               _ciudad = Ciudades.Todos;
             });
@@ -47,17 +82,18 @@ class _ScCliente extends State<ScCliente> {
           child: Icon(Icons.add),
           backgroundColor: colorGenerico,
         ),
-        drawer: _drawer());
+        drawer: _drawer(context));
   }
 
   Widget _listView(BuildContext context) {
-    return Consumer<ClienteProvider>(builder: (_, cliente, __) {
+    return Consumer<ClienteProvider>(builder: (context, cliente, child) {
       if (cliente.clientes == null) {
         return CircularProgressIndicator();
       }
       if (cliente.clientes.length == 0) {
         return Text('SIN DATOS');
       }
+
       return ListView.builder(
           itemCount: cliente.clientes.length,
           itemBuilder: (context, index) {
@@ -68,17 +104,23 @@ class _ScCliente extends State<ScCliente> {
                   title: Text(cliente.clientes[index].nombre),
                   onTap: () {
                     setState(() {
+                      //false and false = Sin seleccion
                       if (!_clienteSelect[index] && !_isSelect) {
                         cliente.cliente = cliente.clientes[index];
                         _indexSelected = index;
                         _clienteSelect[index] = true;
                         _isSelect = true;
-                      } else if (!_clienteSelect[index] && _isSelect) {
+                      }
+                      //false and true= Seleccionar otro
+                      else if (!_clienteSelect[index] && _isSelect) {
                         cliente.cliente = cliente.clientes[index];
                         _clienteSelect[_indexSelected] = false;
                         _clienteSelect[index] = true;
                         _indexSelected = index;
-                      } else if (_clienteSelect[index] && _isSelect) {
+                      }
+                      //true and true= Deseleccionar
+                      else if (_clienteSelect[index] && _isSelect) {
+                        cliente.nuevoCliente();
                         _clienteSelect[index] = false;
                         _isSelect = false;
                         _indexSelected = -1;
@@ -104,13 +146,28 @@ class _ScCliente extends State<ScCliente> {
                   title: Text('Ver información'),
                   leading: Icon(Icons.view_agenda),
                   onTap: () async {
-                    await wDialog(context).mostrar();
+                    await DialogCliente(context).mostrar();
                   }),
               new ListTile(
                 title: Text('Actualizar'),
                 leading: Icon(Icons.update),
                 onTap: () async {
-                  await wDialog(context).modificar();
+                  switch (await showDialog<Response>(
+                      context: context,
+                      builder: (context) {
+                        return DialogCliente(context).modificar(context);
+                      })) {
+                    case Response.ok:
+                      await cliente.clienteModificar();
+                      _initialSelection();
+                      Navigator.pop(context);
+                      _snackbar('Cliente modificado!');
+                      break;
+                    case Response.cancel:
+                      Navigator.pop(context);
+                      _snackbar('Modificacion cliente cancelado');
+                      break;
+                  }
                   setState(() {
                     _ciudad = Ciudades.Todos;
                   });
@@ -120,7 +177,7 @@ class _ScCliente extends State<ScCliente> {
                 title: Text('Eliminar'),
                 leading: Icon(Icons.delete),
                 onTap: () async {
-                  showDialog(
+                  switch (await showDialog<Response>(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
@@ -130,23 +187,33 @@ class _ScCliente extends State<ScCliente> {
                                 onPressed: () async {
                                   await cliente
                                           .clienteBorrar(cliente.cliente.id)
-                                      ? print('cliente borrado')
-                                      : print('No se pudo borrar');
+                                      ? _snackbar('Cliente borrado.')
+                                      : _snackbar('No se pudo borrar cliente!');
+                                  _initialSelection();
                                   setState(() {
                                     _ciudad = Ciudades.Todos;
                                   });
+                                  Navigator.pop(context, Response.ok);
                                 },
                                 child: Text('SI')),
                             FlatButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  Navigator.pop(context, Response.cancel);
                                 },
                                 child: Text('NO'))
                           ],
                           content:
                               Text('¿Seguro que quieres eliminar el cliente?'),
                         );
-                      });
+                      })) {
+                    case Response.ok:
+                      Navigator.pop(context);
+                      break;
+                    case Response.cancel:
+                      Navigator.pop(context);
+                      _snackbar('Eliminación de cliente cancelada');
+                      break;
+                  }
                 },
               ),
             ]),
@@ -155,7 +222,7 @@ class _ScCliente extends State<ScCliente> {
         context: context);
   }
 
-  Widget _drawer() {
+  Widget _drawer(BuildContext context) {
     return Drawer(
         child: Column(children: <Widget>[
       Flexible(
@@ -167,9 +234,11 @@ class _ScCliente extends State<ScCliente> {
                 child: TextField(
                     onSubmitted: (String value) async {
                       await cliente.clienteForName(value);
-                      _clienteSelect = List.generate(
-                          cliente.clientes.length, (index) => false);
-                      _isSelect = false;
+                      _initialSelection();
+                      setState(() {
+                        _ciudad = Ciudades.Todos;
+                      });
+                      Navigator.pop(context);
                     },
                     decoration: InputDecoration(hintText: 'Buscar')),
               )
@@ -189,12 +258,11 @@ class _ScCliente extends State<ScCliente> {
             groupValue: _ciudad,
             onChanged: (Ciudades value) async {
               await cliente.loadCliente();
-              _clienteSelect =
-                  List.generate(cliente.clientes.length, (index) => false);
-              _isSelect = false;
+              _initialSelection();
               setState(() {
                 _ciudad = value;
               });
+              Navigator.pop(context);
             }),
       )),
       Flexible(
@@ -205,12 +273,11 @@ class _ScCliente extends State<ScCliente> {
             groupValue: _ciudad,
             onChanged: (Ciudades value) async {
               await cliente.clienteForCity('ANDES');
-              _clienteSelect =
-                  List.generate(cliente.clientes.length, (index) => false);
-              _isSelect = false;
+              _initialSelection();
               setState(() {
                 _ciudad = value;
               });
+              Navigator.pop(context);
             }),
       )),
       Flexible(
@@ -220,13 +287,12 @@ class _ScCliente extends State<ScCliente> {
             value: Ciudades.Betania,
             groupValue: _ciudad,
             onChanged: (Ciudades value) async {
-              _clienteSelect =
-                  List.generate(cliente.clientes.length, (index) => false);
-              _isSelect = false;
               await cliente.clienteForCity('BETANIA');
+              _initialSelection();
               setState(() {
                 _ciudad = value;
               });
+              Navigator.pop(context);
             }),
       )),
       Flexible(
@@ -236,13 +302,12 @@ class _ScCliente extends State<ScCliente> {
             value: Ciudades.Hispania,
             groupValue: _ciudad,
             onChanged: (Ciudades value) async {
-              _clienteSelect =
-                  List.generate(cliente.clientes.length, (index) => false);
-              _isSelect = false;
               await cliente.clienteForCity('HISPANIA');
+              _initialSelection();
               setState(() {
                 _ciudad = value;
               });
+              Navigator.pop(context);
             }),
       )),
       Flexible(
@@ -253,12 +318,11 @@ class _ScCliente extends State<ScCliente> {
             groupValue: _ciudad,
             onChanged: (Ciudades value) async {
               await cliente.clienteForCity('JARDIN');
-              _clienteSelect =
-                  List.generate(cliente.clientes.length, (index) => false);
-              _isSelect = false;
+              _initialSelection();
               setState(() {
                 _ciudad = value;
               });
+              Navigator.pop(context);
             }),
       )),
       Flexible(
@@ -269,12 +333,11 @@ class _ScCliente extends State<ScCliente> {
             groupValue: _ciudad,
             onChanged: (Ciudades value) async {
               await cliente.clienteForCity('SANTA INES');
-              _clienteSelect =
-                  List.generate(cliente.clientes.length, (index) => false);
-              _isSelect = false;
+              _initialSelection();
               setState(() {
                 _ciudad = value;
               });
+              Navigator.pop(context);
             }),
       )),
       Flexible(
@@ -285,12 +348,11 @@ class _ScCliente extends State<ScCliente> {
             groupValue: _ciudad,
             onChanged: (Ciudades value) async {
               await cliente.clienteForCity('SANTA RITA');
-              _clienteSelect =
-                  List.generate(cliente.clientes.length, (index) => false);
-              _isSelect = false;
+              _initialSelection();
               setState(() {
                 _ciudad = value;
               });
+              Navigator.pop(context);
             }),
       )),
       Flexible(
@@ -301,12 +363,11 @@ class _ScCliente extends State<ScCliente> {
             groupValue: _ciudad,
             onChanged: (Ciudades value) async {
               await cliente.clienteForCity('TAPARTO');
-              _clienteSelect =
-                  List.generate(cliente.clientes.length, (index) => false);
-              _isSelect = false;
+              _initialSelection();
               setState(() {
                 _ciudad = value;
               });
+              Navigator.pop(context);
             }),
       )),
     ]));

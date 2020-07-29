@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ventas/config/variables.dart';
+import 'package:ventas/config/utilidades.dart';
 import 'package:ventas/logic/producto/producto_provider.dart';
 
 class ScProducto extends StatefulWidget {
