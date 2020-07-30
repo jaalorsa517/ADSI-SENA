@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:ventas/config/utilidades.dart';
 
 class WBoton extends StatefulWidget {
   final String nom;
@@ -21,7 +22,7 @@ class _WBoton extends State<WBoton> {
         Navigator.pushNamed(context, this.event);
       },
       child: Text(this.nom),
-      color: Colors.green,
+      color: colorGenerico,
       textColor: Colors.white,
     );
   }

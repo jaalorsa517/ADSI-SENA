@@ -66,7 +66,6 @@ class ClienteProvider extends ChangeNotifier {
   Future<bool> clienteBorrar(int id) async {
     bool respuesta = await Clientes.delete(id) ? true : false;
     if (respuesta) await loadCliente();
-    notifyListeners();
     return respuesta;
   }
 }

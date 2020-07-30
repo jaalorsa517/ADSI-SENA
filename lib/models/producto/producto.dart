@@ -2,21 +2,29 @@ class Producto {
   int _id;
   String _nombre;
   int _precio;
-  int _iva;
+  double _iva;
 
+  // ignore: unnecessary_getters_setters
   int get id => _id;
 
+  // ignore: unnecessary_getters_setters
   set id(int value) => _id = value;
 
+  // ignore: unnecessary_getters_setters
   String get nombre => _nombre;
 
+  // ignore: unnecessary_getters_setters
   set nombre(String value) => _nombre = value;
 
+  // ignore: unnecessary_getters_setters
   int get precio => _precio;
 
+  // ignore: unnecessary_getters_setters
   set precio(int value) => _precio = value;
 
-  int get iva => _iva;
+  // ignore: unnecessary_getters_setters
+  double get iva => _iva;
 
-  set iva(int value) => _iva = value;
+  // ignore: unnecessary_getters_setters
+  set iva(double value) => _iva = value;
 }

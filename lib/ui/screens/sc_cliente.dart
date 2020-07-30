@@ -5,7 +5,6 @@ import 'package:ventas/config/utilidades.dart';
 import 'package:ventas/ui/widgets/dialog_cliente.dart';
 
 class ScCliente extends StatefulWidget {
-  ScCliente();
   @override
   State<StatefulWidget> createState() {
     return _ScCliente();

@@ -53,14 +53,14 @@ class Clientes implements Crud {
           'ORDER BY ciudad');
       return _mapToCliente(list);
     } catch (e) {
-      print(e.toString());
+      print('Metodo read en cliente ' + e.toString());
       return null;
     } finally {
       db.close();
     }
   }
 
-  static Future<List<Cliente>> readById(int idCliente) async {
+  /* static Future<List<Cliente>> readById(int idCliente) async {
     Database db = await Crud.conectar();
     String sentence = '';
     Setup.COLUMN_CLIENTE
@@ -84,7 +84,7 @@ class Clientes implements Crud {
     } finally {
       db.close();
     }
-  }
+  } */
 
   static Future<List<Cliente>> readByName(String nameCliente) async {
     Database db = await Crud.conectar();

@@ -10,7 +10,7 @@ class ScMain extends StatelessWidget {
   Widget build(BuildContext context) {
     widthScreen = MediaQuery.of(context).size.width;
     heightScreen = MediaQuery.of(context).size.height;
-    producto = ProductoProvider();
+    producto = Provider.of<ProductoProvider>(context);
     cliente = Provider.of<ClienteProvider>(context);
     contextoPrincipal = context;
     return Scaffold(
