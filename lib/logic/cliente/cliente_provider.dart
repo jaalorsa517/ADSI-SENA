@@ -28,7 +28,7 @@ class ClienteProvider extends ChangeNotifier {
   }
 
   Future<void> loadCliente() async {
-    clientes = await Clientes.read();
+    clientes = await Clientes.read() ?? [];
   }
 
   void updateCliente(String nit, String nombre, String representante,
@@ -44,16 +44,16 @@ class ClienteProvider extends ChangeNotifier {
   }
 
   Future<void> clienteForCity(String city) async {
-    clientes = await Clientes.readByCity(city);
+    clientes = await Clientes.readByCity(city) ?? [];
   }
 
   Future<void> clienteForName(String name) async {
-    clientes = await Clientes.readByName(name);
+    clientes = await Clientes.readByName(name) ?? [];
   }
 
   Future<bool> clienteCrear() async {
     bool respuesta = await Clientes.create(cliente) ? true : false;
-    if (respuesta) await loadCliente();
+    if (respuesta) await clienteForName(cliente.nombre);
     return respuesta;
   }
 

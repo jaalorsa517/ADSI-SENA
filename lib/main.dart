@@ -31,7 +31,7 @@ class Principal extends StatelessWidget {
             '/cliente': (context) => ScCliente(),
             '/producto': (context) => ScProducto(),
             '/venta': (context) => ScVenta(),
-            '/backup': (context) => ScBackup()
+            '/backup': (context) => ScBackup(),
           },
           home: ScMain(),
         ));

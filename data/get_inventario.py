@@ -7,14 +7,15 @@ import random as r
 def load():
     _PATH_DB = '/home/jaalorsa/Proyectos/flutter/ventas/data/pedidoDB.db'
     print('INICIO PROCESO INVENTARIO')
+    _id = 0
 
     try:
         con = sqlite3.connect(_PATH_DB)
         cursor = con.cursor()
 
-        cursor.execute("DELETE FROM inventario")
-        cursor.execute("DELETE FROM inventario_producto")
-        con.commit()
+        cursor.execute(
+            '''SELECT id FROM inventario ORDER BY id DESC LIMIT 1;''')
+        _id = cursor.fetchone()[0]
 
     except sqlite3.Error as e:
         print(type(e).__name__)
@@ -22,9 +23,9 @@ def load():
     finally:
         con.close()
 
-    for id in range(1, r.randint(10, 50)):
+    for id in range(_id+1, r.randint(_id+1, 10000)):
 
-        fecha = '{}-{}-{}'.format(r.randint(1, 31), r.randint(1, 13), 2020)
+        fecha = '{}-{}-{}'.format(r.randint(1, 28), r.randint(1, 12), 2020)
 
         cantidad = r.randint(0, 25)
 
@@ -39,7 +40,7 @@ def load():
                 '''SELECT id FROM Producto ORDER BY id DESC LIMIT 1''')
             f = cursor.fetchone()[0]
 
-            idProducto = r.randint(i, f + 1)
+            idProducto = r.randint(i, f)
 
             cursor.execute(
                 '''SELECT id FROM cliente ORDER BY id ASC LIMIT 1''')
@@ -48,7 +49,7 @@ def load():
                 '''SELECT id FROM cliente ORDER BY id DESC LIMIT 1''')
             f = cursor.fetchone()[0]
 
-            fkIdCliente = r.randint(i, f + 1)
+            fkIdCliente = r.randint(i, f)
 
             cursor.execute('''INSERT INTO inventario VALUES(
                 {},{},'{}',{}

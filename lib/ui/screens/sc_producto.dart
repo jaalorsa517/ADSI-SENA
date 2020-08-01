@@ -218,6 +218,7 @@ class _ScProducto extends State<ScProducto> {
                 Flexible(
                     flex: 4,
                     child: TextField(
+                      autofocus: true,
                       controller: _find,
                       decoration: InputDecoration(
                         hintText: 'Buscar',

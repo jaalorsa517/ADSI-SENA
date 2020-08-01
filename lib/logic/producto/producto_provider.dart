@@ -28,8 +28,7 @@ class ProductoProvider extends ChangeNotifier {
   }
 
   Future<void> loadProducto() async {
-    productos = await Productos.read();
-    productos = productos ?? [];
+    productos = await Productos.read() ?? [];
   }
 
   void updateCliente(
@@ -43,12 +42,8 @@ class ProductoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /* Future<void> productoForId(int id) async {
-    productos = await Productos.readById(id);
-  } */
-
   Future<void> productoForName(String name) async {
-    productos = await Productos.readByName(name);
+    productos = await Productos.readByName(name) ?? [];
   }
 
   Future<bool> productoCrear() async {
