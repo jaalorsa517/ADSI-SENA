@@ -4,7 +4,7 @@ import 'package:ventas/models/crud.dart';
 import 'package:ventas/models/producto/producto.dart';
 
 class Productos {
-  static const Map<String, String> alias = {
+  static const Map<String, String> _alias = {
     'id': 'id',
     'nom': 'nombre',
     'precio': 'precio',
@@ -14,12 +14,12 @@ class Productos {
     Database db = await Crud.conectar();
     try {
       List<Map<String, dynamic>> _id = await db.rawQuery("""
-      SELECT ${Setup.COLUMN_PRODUCTO['id']} AS ${alias['id']} 
+      SELECT ${Setup.COLUMN_PRODUCTO['id']} AS ${_alias['id']} 
       FROM ${Setup.PRODUCTO_TABLE} 
       ORDER BY ${Setup.COLUMN_PRODUCTO['id']} DESC 
       LIMIT 1
       """);
-      producto.id = _id[0][alias['id']] + 1;
+      producto.id = _id[0][_alias['id']] + 1 ?? 1;
       await db.insert(Setup.PRODUCTO_TABLE, _productoToMap(producto));
       return true;
     } catch (e) {
@@ -34,7 +34,7 @@ class Productos {
     Database db = await Crud.conectar();
     try {
       List<Map<String, dynamic>> list = await db.rawQuery(
-          'SELECT * FROM ${Setup.PRODUCTO_TABLE} ORDER BY ${alias['nom']} ASC');
+          'SELECT * FROM ${Setup.PRODUCTO_TABLE} ORDER BY ${_alias['nom']} ASC');
       return _mapToProducto(list);
     } catch (e) {
       print('metodo read en producto ' + e.toString());
@@ -50,7 +50,7 @@ class Productos {
       List<Map<String, dynamic>> list =
           await db.rawQuery("""SELECT * FROM producto WHERE 
               ${Setup.COLUMN_PRODUCTO['nombre']} LIKE \'%$name%\' 
-              ORDER BY ${alias['nom']} ASC""");
+              ORDER BY ${_alias['nom']} ASC""");
       return _mapToProducto(list);
     } catch (e) {
       print(e.toString());
@@ -111,10 +111,10 @@ class Productos {
     List<Producto> productos = [];
     list.forEach((element) {
       Producto producto = Producto();
-      producto.id = element[alias['id']];
-      producto.nombre = element[alias['nom']];
-      producto.precio = element[alias['precio']];
-      producto.iva = element[alias['iva']];
+      producto.id = element[_alias['id']];
+      producto.nombre = element[_alias['nom']];
+      producto.precio = element[_alias['precio']];
+      producto.iva = element[_alias['iva']];
       productos.add(producto);
     });
     return productos;

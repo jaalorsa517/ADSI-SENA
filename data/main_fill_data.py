@@ -5,7 +5,3 @@ import get_pedido
 if __name__== '__main__':
     get_inventario.load()
     get_pedido.load()
-    # get_inventario.load()
-    # get_pedido.load()
-    # get_inventario.load()
-    # get_pedido.load()

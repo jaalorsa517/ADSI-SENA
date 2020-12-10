@@ -6,7 +6,7 @@ import 'package:ventas/models/crud.dart';
 /// Clase driver del modelo cliente
 
 class Clientes {
-  static const Map<String, String> alias = {
+  static const Map<String, String> _alias = {
     'id': 'id',
     'nit': 'nit',
     'nom': 'nombre',
@@ -46,14 +46,14 @@ class Clientes {
 
     try {
       List<Map<String, dynamic>> list = await db.rawQuery("""
-      SELECT ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']} as ${alias['id']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nit']} as ${alias['nit']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nombre']} as ${alias['nom']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['admin']} as ${alias['admin']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['direccion']} as ${alias['dir']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['telefono']} as ${alias['tel']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['email']} as ${alias['email']},
-        ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['nombre']} as ${alias['ciudad']} 
+      SELECT ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']} as ${_alias['id']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nit']} as ${_alias['nit']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nombre']} as ${_alias['nom']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['admin']} as ${_alias['admin']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['direccion']} as ${_alias['dir']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['telefono']} as ${_alias['tel']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['email']} as ${_alias['email']},
+        ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['nombre']} as ${_alias['ciudad']} 
       FROM ${Setup.CLIENTE_TABLE} 
       JOIN ${Setup.CIUDAD_CLIENTE_TABLE} 
         ON ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE['idCliente']} = 
@@ -61,7 +61,7 @@ class Clientes {
       JOIN ${Setup.CIUDAD_TABLE} 
         ON   ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE['idCiudad']} = 
           ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['id']} 
-      ORDER BY ${alias['ciudad']}
+      ORDER BY ${_alias['ciudad']}
       """);
       return _mapToCliente(list);
     } catch (e) {
@@ -76,14 +76,14 @@ class Clientes {
     Database db = await Crud.conectar();
     try {
       List<Map<String, dynamic>> list = await db.rawQuery("""
-      SELECT ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']} as ${alias['id']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nit']} as ${alias['nit']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nombre']} as ${alias['nom']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['admin']} as ${alias['admin']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['direccion']} as ${alias['dir']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['telefono']} as ${alias['tel']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['email']} as ${alias['email']},
-        ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['nombre']} as ${alias['ciudad']} 
+      SELECT ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']} as ${_alias['id']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nit']} as ${_alias['nit']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nombre']} as ${_alias['nom']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['admin']} as ${_alias['admin']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['direccion']} as ${_alias['dir']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['telefono']} as ${_alias['tel']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['email']} as ${_alias['email']},
+        ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['nombre']} as ${_alias['ciudad']} 
       FROM ${Setup.CLIENTE_TABLE} 
       JOIN ${Setup.CIUDAD_CLIENTE_TABLE} 
         ON ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE['idCliente']} = 
@@ -92,7 +92,7 @@ class Clientes {
         ON   ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE['idCiudad']} = 
           ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['id']} 
       WHERE ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nombre']} LIKE\'%$nameCliente%\'
-      ORDER BY ${alias['ciudad']}
+      ORDER BY ${_alias['ciudad']}
       """);
       return _mapToCliente(list);
     } catch (e) {
@@ -107,14 +107,14 @@ class Clientes {
     Database db = await Crud.conectar();
     try {
       List<Map<String, dynamic>> list = await db.rawQuery("""
-      SELECT ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']} as ${alias['id']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nit']} as ${alias['nit']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nombre']} as ${alias['nom']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['admin']} as ${alias['admin']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['direccion']} as ${alias['dir']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['telefono']} as ${alias['tel']},
-        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['email']} as ${alias['email']},
-        ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['nombre']} as ${alias['ciudad']} 
+      SELECT ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']} as ${_alias['id']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nit']} as ${_alias['nit']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nombre']} as ${_alias['nom']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['admin']} as ${_alias['admin']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['direccion']} as ${_alias['dir']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['telefono']} as ${_alias['tel']},
+        ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['email']} as ${_alias['email']},
+        ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['nombre']} as ${_alias['ciudad']} 
       FROM ${Setup.CLIENTE_TABLE} 
       JOIN ${Setup.CIUDAD_CLIENTE_TABLE} 
         ON ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE['idCliente']} = 
@@ -123,7 +123,7 @@ class Clientes {
         ON   ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE['idCiudad']} = 
           ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['id']} 
       WHERE ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['nombre']}=\'$nameCity\' 
-      ORDER BY ${alias['ciudad']}
+      ORDER BY ${_alias['ciudad']}
           """);
       return _mapToCliente(list);
     } catch (e) {
@@ -185,13 +185,13 @@ class Clientes {
     List<Cliente> clientes = [];
     list.forEach((element) {
       Cliente cliente = Cliente();
-      cliente.id = element[alias['id']];
-      cliente.nit = element[alias['nit']];
-      cliente.nombre = element[alias['nom']];
-      cliente.representante = element[alias['admin']];
-      cliente.telefono = element[alias['tel']];
-      cliente.email = element[alias['email']];
-      cliente.direccion = element[alias['dir']];
+      cliente.id = element[_alias['id']];
+      cliente.nit = element[_alias['nit']];
+      cliente.nombre = element[_alias['nom']];
+      cliente.representante = element[_alias['admin']];
+      cliente.telefono = element[_alias['tel']];
+      cliente.email = element[_alias['email']];
+      cliente.direccion = element[_alias['dir']];
       cliente.ciudad = element['ciudad'];
       clientes.add(cliente);
     });

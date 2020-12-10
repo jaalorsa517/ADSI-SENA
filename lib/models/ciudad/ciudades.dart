@@ -5,7 +5,7 @@ import 'package:ventas/models/crud.dart';
 import 'ciudad.dart';
 
 class Ciudades {
-  static const Map<String, String> alias = {'id': 'id', 'nom': 'nombre'};
+  static const Map<String, String> _alias = {'id': 'id', 'nom': 'nombre'};
 
   static Future<List<Ciudad>> read() async {
     Database db = await Crud.conectar();
@@ -35,8 +35,8 @@ class Ciudades {
     List<Ciudad> ciudades = [];
     list.forEach((element) {
       Ciudad ciudad = Ciudad();
-      ciudad.id = element[alias['id']];
-      ciudad.nombre = element[alias['nom']];
+      ciudad.id = element[_alias['id']];
+      ciudad.nombre = element[_alias['nom']];
       ciudades.add(ciudad);
     });
     return ciudades;

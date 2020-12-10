@@ -7,8 +7,8 @@ class ProductoProvider extends ChangeNotifier {
   Producto _producto;
 
   get productos => _productos;
-  set productos(product) {
-    _productos = product;
+  set productos(List<Producto> products) {
+    _productos = products;
     notifyListeners();
   }
 

@@ -7,15 +7,18 @@ import random as r
 def load():
     _PATH_DB = '/home/jaalorsa/Proyectos/flutter/ventas/data/pedidoDB.db'
     print('INICIO PROCESO PEDIDO')
-    _id=0
+    _id = 0
 
     try:
         con = sqlite3.connect(_PATH_DB)
         cursor = con.cursor()
-        
-        cursor.execute(
+
+        if (cursor.fetchone() is None):
+            _id=0
+        else:
+            cursor.execute(
                 '''SELECT id FROM pedido ORDER BY id DESC LIMIT 1''')
-        _id = cursor.fetchone()[0]
+            _id = cursor.fetchone()[0]
 
     except sqlite3.Error as e:
         print(type(e).__name__)
@@ -33,8 +36,8 @@ def load():
 
             d = r.randint(1, 28)
             m = r.randint(1, 12)
-            fecha_pedido = '{}-{}-{}'.format(d, m, 2020)
-            fecha_entrega = '{}-{}-{}'.format(d + 1, m, 2020)
+            fecha_pedido = '{}-{}-{}'.format(2020, m, d)
+            fecha_entrega = '{}-{}-{}'.format(2020, m, d + 1)
 
             cantidad = r.randint(1, 30)
             valor = r.randint(1, 30) * 1000

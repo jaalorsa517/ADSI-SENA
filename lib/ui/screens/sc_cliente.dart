@@ -142,6 +142,15 @@ class _ScCliente extends State<ScCliente> {
           return Container(
             child: Wrap(children: <Widget>[
               new ListTile(
+                  title: Text('Venta'),
+                  leading: Icon(Icons.shopping_cart),
+                  onTap: () async {
+                    await inventario.inventarioProductoOnly(cliente.cliente.id);
+                    await pedido.recargarProductoPedido(cliente.cliente.id);
+                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed('/venta');
+                  }),
+              new ListTile(
                   title: Text('Ver información'),
                   leading: Icon(Icons.view_agenda),
                   onTap: () async {

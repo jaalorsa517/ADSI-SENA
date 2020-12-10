@@ -1,3 +1,5 @@
+import 'package:ventas/models/venta/historial/pedidio_historial.dart';
+
 class Pedido {
   int _id;
   String _fechaPedido;
@@ -5,6 +7,8 @@ class Pedido {
   int _idInventario;
   int _cantidad;
   int _valor;
+  List<PedidoHistorial> _historial = [];
+  List<PedidoHistorial> _historialProducto = [];
 
   Pedido(
       [this._id,
@@ -49,4 +53,17 @@ class Pedido {
 
   // ignore: unnecessary_getters_setters
   set valor(int value) => _valor = value;
+
+  // ignore: unnecessary_getters_setters
+  List<PedidoHistorial> get historial => _historial;
+
+  // ignore: unnecessary_getters_setters
+  set historial(List<PedidoHistorial> value) => _historial = value;
+
+  // ignore: unnecessary_getters_setters
+  List<PedidoHistorial> get historialProducto => _historialProducto;
+
+  // ignore: unnecessary_getters_setters
+  set historialProducto(List<PedidoHistorial> value) =>
+      _historialProducto = value;
 }

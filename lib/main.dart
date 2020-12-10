@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ventas/logic/cliente/cliente_provider.dart';
+import 'package:ventas/logic/venta/inventario/inventario_provider.dart';
+import 'package:ventas/logic/venta/pedido/pedido_provider.dart';
 import 'package:ventas/ui/screens/sc_backup.dart';
 import 'package:ventas/ui/screens/sc_cliente.dart';
 import 'package:ventas/ui/screens/sc_producto.dart';
@@ -20,6 +22,10 @@ class Principal extends StatelessWidget {
               create: (context) => ProductoProvider()),
           ChangeNotifierProvider<ClienteProvider>(
               create: (context) => ClienteProvider()),
+          ChangeNotifierProvider<InventarioProvider>(
+              create: (context) => InventarioProvider()),
+          ChangeNotifierProvider<PedidoProvider>(
+              create: (context) => PedidoProvider())
         ],
         child: MaterialApp(
           localizationsDelegates: [
@@ -30,7 +36,7 @@ class Principal extends StatelessWidget {
           routes: <String, WidgetBuilder>{
             '/cliente': (context) => ScCliente(),
             '/producto': (context) => ScProducto(),
-            '/venta': (context) => ScVenta(),
+            '/venta': (context) => ScVenta(context),
             '/backup': (context) => ScBackup(),
           },
           home: ScMain(),

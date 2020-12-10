@@ -13,7 +13,7 @@ class ClienteProvider extends ChangeNotifier {
   }
 
   get clientes => _clientes;
-  set clientes(clients) {
+  set clientes(List<Cliente> clients) {
     _clientes = clients;
     notifyListeners();
   }

@@ -13,9 +13,12 @@ def load():
         con = sqlite3.connect(_PATH_DB)
         cursor = con.cursor()
 
-        cursor.execute(
-            '''SELECT id FROM inventario ORDER BY id DESC LIMIT 1;''')
-        _id = cursor.fetchone()[0]
+        if (cursor.fetchone() is None):
+            _id=0
+        else:
+            cursor.execute(
+                '''SELECT id FROM inventario ORDER BY id DESC LIMIT 1;''')
+            _id = cursor.fetchone()[0]
 
     except sqlite3.Error as e:
         print(type(e).__name__)
@@ -25,7 +28,7 @@ def load():
 
     for id in range(_id+1, r.randint(_id+1, 10000)):
 
-        fecha = '{}-{}-{}'.format(r.randint(1, 28), r.randint(1, 12), 2020)
+        fecha = '{}-{}-{}'.format(2020,r.randint(1,12),r.randint(1, 28))
 
         cantidad = r.randint(0, 25)
 
