@@ -21,7 +21,7 @@ class ScMain extends StatelessWidget {
     contextoPrincipal = context;
 
     return Scaffold(
-        appBar: AppBar(title: Text('INICIO'), backgroundColor: Colors.green),
+        appBar: AppBar(title: Center(child:Text('INICIO')), backgroundColor: Colors.green),
         body: Center(
             child: Column(children: <Widget>[
           new WBoton('CLIENTES', '/cliente'),

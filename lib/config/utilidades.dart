@@ -27,3 +27,14 @@ String capitalize(String s) {
   }
   return _s.join(' ');
 }
+
+enum Ciudades {
+  Todos,
+  Andes,
+  Betania,
+  Hispania,
+  Jardin,
+  SantaInes,
+  SantaRita,
+  Taparto
+}

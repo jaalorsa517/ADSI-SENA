@@ -29,6 +29,7 @@ class _ScVenta extends State<ScVenta> {
         title: Row(children: <Widget>[
           Flexible(
             child: Text(titulo[_vista]),
+            fit: FlexFit.tight,
           ),
           Flexible(
             child: Text(fechaHoy),
@@ -51,23 +52,17 @@ class _ScVenta extends State<ScVenta> {
           },
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                title: Text(
-                  titulo[0],
-                ),
+                label: titulo[0],
                 icon: Icon(
                   Icons.add_shopping_cart,
                 )),
             BottomNavigationBarItem(
-                title: Text(
-                  titulo[1],
-                ),
+                label: titulo[1],
                 icon: Icon(
                   Icons.account_balance_wallet,
                 )),
             BottomNavigationBarItem(
-                title: Text(
-                  titulo[2],
-                ),
+                label: titulo[2],
                 icon: Icon(
                   Icons.shopping_cart,
                 )),
@@ -126,10 +121,9 @@ class _ScVenta extends State<ScVenta> {
         padding: EdgeInsets.all(0),
         child: Column(children: <Widget>[
           Flexible(
-            flex: 1,
-            fit: FlexFit.loose,
-            child: Consumer<InventarioProvider>(builder: (_, inventario, __) {
-              return ListTile(
+              flex: 1,
+              fit: FlexFit.loose,
+              child: ListTile(
                   title: Text(inventario.historial['producto']),
                   isThreeLine: true,
                   subtitle: Column(children: <Widget>[
@@ -141,9 +135,7 @@ class _ScVenta extends State<ScVenta> {
                         Text(inventario.historial['cantidad3'])
                       ],
                     )
-                  ]));
-            }),
-          ),
+                  ]))),
           Flexible(
               flex: 7,
               fit: FlexFit.tight,

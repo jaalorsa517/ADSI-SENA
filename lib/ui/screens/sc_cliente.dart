@@ -11,17 +11,6 @@ class ScCliente extends StatefulWidget {
   }
 }
 
-enum Ciudades {
-  Todos,
-  Andes,
-  Betania,
-  Hispania,
-  Jardin,
-  SantaInes,
-  SantaRita,
-  Taparto
-}
-
 class _ScCliente extends State<ScCliente> {
   final GlobalKey<ScaffoldState> _keyScaffold = GlobalKey<ScaffoldState>();
   Ciudades _ciudad = Ciudades.Todos;
