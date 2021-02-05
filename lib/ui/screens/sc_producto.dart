@@ -84,6 +84,19 @@ class _ScProducto extends State<ScProducto> {
                 child: ListTile(
                   enabled: true,
                   title: Text(producto.productos[index].nombre),
+                  trailing: IconButton(
+                    icon: Icon(Icons.shopping_cart),
+                    onPressed: () {
+                      if (inventario.getInventario()[0]['producto'] != "") {
+                        inventario.addInventario(
+                            fechaHoy, producto.productos[index].nombre, 0);
+                      } else {
+                        inventario.setInventario(
+                            0, fechaHoy, producto.productos[index].nombre, 0);
+                      }
+                      _snackbar("Producto agregado al carrito");
+                    },
+                  ),
                   onTap: () {
                     setState(() {
                       //false and false = Sin seleccion

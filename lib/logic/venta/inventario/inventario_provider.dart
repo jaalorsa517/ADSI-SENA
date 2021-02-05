@@ -4,7 +4,57 @@ import 'package:ventas/models/venta/inventario/inventario.dart';
 import 'package:ventas/models/venta/inventario/inventarios.dart';
 
 class InventarioProvider extends ChangeNotifier {
-  List<Inventario> _inventarios = [];
+  Inventario _inventarioModel; //Manejo del modelo Inventario
+  List<Map<String, dynamic>>
+      _inventario; //Atributo que cargara los datos a mostrar en la tabla.
+  Map<String, dynamic> _historial; // Atributo que mostrara la info en la card
+
+  InventarioProvider() {
+    _inventarioModel = Inventario();
+    _inventario = List<Map<String, dynamic>>();
+    _inventario.add({'fecha': '0', 'producto': '', 'cantidad': 0});
+    _historial = {
+      'producto': '',
+      'cantidad1': 0,
+      'cantidad2': 0,
+      'cantidad3': 0
+    };
+  }
+
+  /**** Propiedades del inventario ****/
+  List getInventario() => _inventario;
+
+  void addInventario(String fecha, String producto, int cantidad) {
+    _inventario
+        .add({'fecha': fecha, 'producto': producto, 'cantidad': cantidad});
+    notifyListeners();
+  }
+
+  void setInventario(int index, String fecha, String producto, int cantidad) {
+    _inventario[index]['fecha'] = fecha;
+    _inventario[index]['producto'] = producto;
+    _inventario[index]['cantidad'] = cantidad;
+    notifyListeners();
+  }
+
+  void deleteInventario(int index) {
+    _inventario.removeAt(index);
+    notifyListeners();
+  }
+
+  /**** Propiedades del historial ****/
+  Map getHistorial() => _historial;
+
+  void setHistorial(
+      String producto, int cantidad1, int cantidad2, int cantidad3) {
+    _historial['producto'] = producto;
+    _historial['cantidad1'] = cantidad1;
+    _historial['cantidad2'] = cantidad2;
+    _historial['cantidad3'] = cantidad3;
+    notifyListeners();
+  }
+
+  /* List<Inventario> _inventarios = [];
   Inventario _inventario;
   List<String> _productosInventario = []; //Solo un puente
   List<Map<String, dynamic>> inventarioHoy =
@@ -36,17 +86,20 @@ class InventarioProvider extends ChangeNotifier {
     historial['cantidad1'] = c1.toString() ?? 0.toString();
     historial['cantidad2'] = c2.toString() ?? 0.toString();
     historial['cantidad3'] = c3.toString() ?? 0.toString();
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> inventarioHistorial(idCliente, idProducto) async {
     _inventario.historial =
         await Inventarios.readHistoryProducto(idCliente, idProducto) ?? [];
-    historialUpdate(
-        _inventario.historial[0].nombreProducto,
-        _inventario.historial[0].cantidad,
-        _inventario.historial[1].cantidad,
-        _inventario.historial[2].cantidad);
+    if (_inventario.historial.length > 0) {
+      historialUpdate(
+          // Esta logica esta mala
+          _inventario.historial[0].nombreProducto,
+          _inventario.historial[0].cantidad ?? 0,
+          _inventario.historial[1].cantidad ?? 0,
+          _inventario.historial[2].cantidad ?? 0);
+    }
   }
 
   Future<void> inventarioProductoOnly(idCliente) async {
@@ -81,5 +134,5 @@ class InventarioProvider extends ChangeNotifier {
     bool respuesta = await Inventarios.delete(inventario.id) ? true : false;
     /* if(respuesta)  instruccion de carga de pantalla*/
     return respuesta;
-  }
+  } */
 }

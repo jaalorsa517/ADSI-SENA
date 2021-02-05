@@ -134,7 +134,7 @@ class _ScCliente extends State<ScCliente> {
                   title: Text('Venta'),
                   leading: Icon(Icons.shopping_cart),
                   onTap: () async {
-                    await inventario.inventarioProductoOnly(cliente.cliente.id);
+                    // await inventario.inventarioProductoOnly(cliente.cliente.id);
                     await pedido.recargarProductoPedido(cliente.cliente.id);
                     Navigator.pop(context);
                     Navigator.of(context).pushNamed('/venta');

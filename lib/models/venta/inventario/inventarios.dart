@@ -91,6 +91,7 @@ class Inventarios {
         AND ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['id']}=$idProducto
       ORDER BY ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']}
       """);
+      print(list);
       return _mapToInventarioHistorial(list);
     } catch (e) {
       print('Select en inventario' + e.toString());
