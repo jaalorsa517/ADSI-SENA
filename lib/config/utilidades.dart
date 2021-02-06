@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:ventas/logic/cliente/cliente_provider.dart';
 import 'package:ventas/logic/producto/producto_provider.dart';
 import 'package:ventas/logic/venta/inventario/inventario_provider.dart';
-import 'package:ventas/logic/venta/pedido/pedido_provider.dart';
 
 ClienteProvider cliente;
 ProductoProvider producto;
 InventarioProvider inventario;
-PedidoProvider pedido;
 
 double widthScreen;
 double heightScreen;

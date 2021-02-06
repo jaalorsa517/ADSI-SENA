@@ -34,7 +34,7 @@ class _ScProducto extends State<ScProducto> {
     final snackbar = SnackBar(
         content: Text(message),
         backgroundColor: colorGenerico,
-        duration: Duration(seconds: 3));
+        duration: Duration(seconds: 2));
     _keyScaffold.currentState.showSnackBar(snackbar);
   }
 
@@ -87,14 +87,20 @@ class _ScProducto extends State<ScProducto> {
                   trailing: IconButton(
                     icon: Icon(Icons.shopping_cart),
                     onPressed: () {
-                      if (inventario.getInventario()[0]['producto'] != "") {
-                        inventario.addInventario(
-                            fechaHoy, producto.productos[index].nombre, 0);
+                      if (inventario.findIndexInventario(
+                              producto.productos[index].nombre) ==
+                          null) {
+                        if (inventario.getInventario()[0]['producto'] != "") {
+                          inventario.addInventario(
+                              fechaHoy, producto.productos[index].nombre, 0);
+                        } else {
+                          inventario.setInventario(
+                              0, fechaHoy, producto.productos[index].nombre, 0);
+                        }
+                        _snackbar("Producto agregado al carrito");
                       } else {
-                        inventario.setInventario(
-                            0, fechaHoy, producto.productos[index].nombre, 0);
+                        _snackbar("Este producto ya está en el inventario");
                       }
-                      _snackbar("Producto agregado al carrito");
                     },
                   ),
                   onTap: () {

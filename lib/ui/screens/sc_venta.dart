@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:ventas/config/utilidades.dart';
 import 'package:ventas/logic/venta/inventario/inventario_provider.dart';
-import 'package:ventas/logic/venta/pedido/pedido_provider.dart';
-import 'package:ventas/logic/producto/producto_provider.dart';
 
 class ScVenta extends StatefulWidget {
   final BuildContext _context;
@@ -70,39 +68,101 @@ class _ScVenta extends State<ScVenta> {
   }
 
   Widget _venta(BuildContext context) {
-    List<TextEditingController> columnPedido = List.generate(
-        inventario.getInventario().length, (i) => TextEditingController());
-    return Padding(
-        padding: EdgeInsets.all(0),
-        child: Column(children: <Widget>[
-          Flexible(
-              flex: 7,
-              fit: FlexFit.tight,
-              child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        columns: <DataColumn>[
-                          DataColumn(label: Text('PRODUCTO')),
-                          DataColumn(label: Text('INVENTARIO')),
-                          DataColumn(label: Text('PEDIDO')),
-                        ],
-                        rows: List.generate(
-                            pedido.pedido.historialProducto.length,
-                            (index) => DataRow(cells: <DataCell>[
-                                  DataCell(Text(inventario
-                                      .getInventario()[index]['nombre'])),
-                                  DataCell(Text(inventario
-                                      .getInventario()[index]['cantidad'])),
-                                  DataCell(TextField(
-                                    controller: columnPedido[index],
-                                    autofocus: false,
-                                    keyboardType: TextInputType.number,
-                                  ))
-                                ])),
-                      ))))
-        ]));
+    return Consumer<InventarioProvider>(builder: (context, parent, child) {
+      List<TextEditingController> columnPedido = List.generate(
+          inventario.getInventario().length, (i) => TextEditingController());
+      return Padding(
+          padding: EdgeInsets.all(0),
+          child: Column(children: <Widget>[
+            Flexible(
+                flex: 1,
+                fit: FlexFit.loose,
+                child: ListTile(
+                  trailing: IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/producto");
+                      }),
+                  leading: IconButton(
+                      icon: Icon(Icons.remove),
+                      onPressed: () {
+                        inventario.deleteInventario(
+                            inventario.findIndexInventario(
+                                inventario.getHistorial()['producto']));
+                        inventario.setHistorial(producto: "");
+                      }),
+                  title: Text(inventario.getHistorial()['producto']),
+                )),
+            Flexible(
+                flex: 7,
+                fit: FlexFit.tight,
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          columns: <DataColumn>[
+                            DataColumn(label: Text('PRODUCTO')),
+                            DataColumn(label: Text('INVENTARIO')),
+                            DataColumn(label: Text('PEDIDO')),
+                          ],
+                          rows: List.generate(
+                              inventario.getInventario().length,
+                              (index) => DataRow(cells: <DataCell>[
+                                    DataCell(
+                                        InkWell(
+                                            child: Container(
+                                          width: widthScreen * 1 / 4,
+                                          child: Text(
+                                              inventario.getInventario()[index]
+                                                  ['producto']),
+                                        )), onTap: () {
+                                      inventario.setHistorial(
+                                          producto:
+                                              inventario.getInventario()[index]
+                                                  ['producto']);
+                                    }),
+                                    DataCell(Center(
+                                      child: InkWell(
+                                          child: Container(
+                                        width: widthScreen * 1 / 12,
+                                        child: Text(
+                                          inventario
+                                              .getInventario()[index]
+                                                  ['cantidad']
+                                              .toString(),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      )),
+                                    )),
+                                    DataCell(TextField(
+                                      textAlign: TextAlign.right,
+                                      onTap: () async {
+                                        columnPedido[index].selection =
+                                            TextSelection(
+                                                baseOffset: 0,
+                                                extentOffset:
+                                                    columnPedido[index]
+                                                        .text
+                                                        .length);
+                                      },
+                                      onEditingComplete: () {
+                                        inventario.setInventario(
+                                            index,
+                                            fechaHoy,
+                                            inventario.getInventario()[index]
+                                                ['producto'],
+                                            int.parse(
+                                                columnPedido[index].text));
+                                      },
+                                      controller: columnPedido[index],
+                                      autofocus: false,
+                                      keyboardType: TextInputType.number,
+                                    ))
+                                  ])),
+                        ))))
+          ]));
+    });
   }
 
   Widget _inventario(BuildContext context) {
@@ -123,11 +183,20 @@ class _ScVenta extends State<ScVenta> {
                         onPressed: () {
                           Navigator.pushNamed(context, "/producto");
                         }),
+                    leading: IconButton(
+                        icon: Icon(Icons.remove),
+                        onPressed: () {
+                          inventario.deleteInventario(
+                              inventario.findIndexInventario(
+                                  inventario.getHistorial()['producto']));
+                          inventario.setHistorial(producto: "");
+                        }),
                     title: Text(inventario.getHistorial()['producto']),
                     isThreeLine: true,
                     subtitle: Column(children: <Widget>[
                       Text('Últimos pedidos'),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 10, 20, 0),
@@ -142,7 +211,7 @@ class _ScVenta extends State<ScVenta> {
                                 .toString()),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 10, 0),
+                            padding: const EdgeInsets.fromLTRB(20, 10, 10, 0),
                             child: Text(inventario
                                 .getHistorial()['cantidad3']
                                 .toString()),
@@ -170,35 +239,56 @@ class _ScVenta extends State<ScVenta> {
                           ],
                           rows: List.generate(
                               inventario.getInventario().length,
-                              (index) => DataRow(cells: <DataCell>[
-                                    DataCell(InkWell(
-                                        child: Container(
-                                      width: widthScreen * 2 / 3,
-                                      child: Text(inventario
-                                          .getInventario()[index]['producto']),
-                                    ))),
-                                    DataCell(
-                                        TextField(
-                                          textAlign: TextAlign.right,
-                                          onTap: () async {
-                                            columnInventario[index].selection =
-                                                TextSelection(
-                                                    baseOffset: 0,
-                                                    extentOffset:
-                                                        columnInventario[index]
-                                                            .text
-                                                            .length);
-                                          },
-                                          // onEditingComplete: () async {
-                                          //   FocusScope.of(context)
-                                          //       .requestFocus(new FocusNode());
-                                          // },
-                                          controller: columnInventario[index],
-                                          autofocus: false,
-                                          keyboardType: TextInputType.number,
-                                        ),
-                                        placeholder: true)
-                                  ])),
+                              (index) => DataRow(
+                                    cells: <DataCell>[
+                                      DataCell(
+                                          InkWell(
+                                              child: Container(
+                                            width: widthScreen * 2 / 3,
+                                            child: Text(inventario
+                                                    .getInventario()[index]
+                                                ['producto']),
+                                          )), onTap: () {
+                                        inventario.setHistorial(
+                                            producto: inventario
+                                                    .getInventario()[index]
+                                                ['producto']);
+                                      }),
+                                      DataCell(
+                                          TextField(
+                                            textAlign: TextAlign.right,
+                                            onTap: () async {
+                                              columnInventario[index]
+                                                      .selection =
+                                                  TextSelection(
+                                                      baseOffset: 0,
+                                                      extentOffset:
+                                                          columnInventario[
+                                                                  index]
+                                                              .text
+                                                              .length);
+                                            },
+                                            onEditingComplete: () {
+                                              inventario.setInventario(
+                                                  index,
+                                                  fechaHoy,
+                                                  inventario.getInventario()[
+                                                      index]['producto'],
+                                                  int.parse(
+                                                      columnInventario[index]
+                                                          .text));
+                                            },
+                                            // onEditingComplete: () async {
+                                            //   FocusScope.of(context)
+                                            //       .requestFocus(new FocusNode());
+                                            // },
+                                            controller: columnInventario[index],
+                                            autofocus: false,
+                                            keyboardType: TextInputType.number,
+                                          ),
+                                          placeholder: true)
+                                    ],
+                                  )),
                         ))))
           ]));
     });

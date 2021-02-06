@@ -27,6 +27,7 @@ class InventarioProvider extends ChangeNotifier {
   void addInventario(String fecha, String producto, int cantidad) {
     _inventario
         .add({'fecha': fecha, 'producto': producto, 'cantidad': cantidad});
+    this._sortInventario();
     notifyListeners();
   }
 
@@ -34,11 +35,26 @@ class InventarioProvider extends ChangeNotifier {
     _inventario[index]['fecha'] = fecha;
     _inventario[index]['producto'] = producto;
     _inventario[index]['cantidad'] = cantidad;
+    this._sortInventario();
     notifyListeners();
+  }
+
+  int findIndexInventario(String producto) {
+    int index;
+    for (int i = 0; i < _inventario.length; i++) {
+      if (_inventario[i]['producto'] == producto) {
+        index = i;
+        break;
+      }
+    }
+    return index;
   }
 
   void deleteInventario(int index) {
     _inventario.removeAt(index);
+    if (_inventario.length == 0) {
+      _inventario.add({'fecha': '0', 'producto': '', 'cantidad': 0});
+    }
     notifyListeners();
   }
 
@@ -46,93 +62,21 @@ class InventarioProvider extends ChangeNotifier {
   Map getHistorial() => _historial;
 
   void setHistorial(
-      String producto, int cantidad1, int cantidad2, int cantidad3) {
-    _historial['producto'] = producto;
-    _historial['cantidad1'] = cantidad1;
-    _historial['cantidad2'] = cantidad2;
-    _historial['cantidad3'] = cantidad3;
+      {String producto, String cantidad1, String cantidad2, String cantidad3}) {
+    if (producto != null) _historial['producto'] = producto;
+    if (cantidad1 != null) _historial['cantidad1'] = cantidad1;
+    if (cantidad2 != null) _historial['cantidad2'] = cantidad2;
+    if (cantidad3 != null) _historial['cantidad3'] = cantidad3;
     notifyListeners();
   }
 
-  /* List<Inventario> _inventarios = [];
-  Inventario _inventario;
-  List<String> _productosInventario = []; //Solo un puente
-  List<Map<String, dynamic>> inventarioHoy =
-      []; //Cargar solo los productos e inicializa cantidades
-  Map<String, dynamic> historial = {}; //para mostrar en la card
-
-  get inventarios => _inventarios;
-  set inventarios(List<Inventario> invents) {
-    _inventarios = invents;
-    notifyListeners();
-  }
-
-  get inventario => _inventario;
-  set inventario(invent) {
-    _inventario = invent;
-    notifyListeners();
-  }
-
-  InventarioProvider() {
-    nuevoInventario();
-  }
-
-  void nuevoInventario() {
-    inventario = new Inventario();
-  }
-
-  void historialUpdate(String product, [int c1, int c2, int c3]) {
-    historial['producto'] = product;
-    historial['cantidad1'] = c1.toString() ?? 0.toString();
-    historial['cantidad2'] = c2.toString() ?? 0.toString();
-    historial['cantidad3'] = c3.toString() ?? 0.toString();
-    // notifyListeners();
-  }
-
-  Future<void> inventarioHistorial(idCliente, idProducto) async {
-    _inventario.historial =
-        await Inventarios.readHistoryProducto(idCliente, idProducto) ?? [];
-    if (_inventario.historial.length > 0) {
-      historialUpdate(
-          // Esta logica esta mala
-          _inventario.historial[0].nombreProducto,
-          _inventario.historial[0].cantidad ?? 0,
-          _inventario.historial[1].cantidad ?? 0,
-          _inventario.historial[2].cantidad ?? 0);
+  void _sortInventario() {
+    List _names = _inventario.map((v) => v['producto']).toList();
+    _names.sort();
+    List<Map<String, dynamic>> aux = List();
+    for (int i = 0; i < _names.length; i++) {
+      aux.add(_inventario[this.findIndexInventario(_names[i])]);
     }
+    _inventario = aux;
   }
-
-  Future<void> inventarioProductoOnly(idCliente) async {
-    inventario.fecha = fechaHoy;
-    inventario.idCliente = idCliente;
-    _productosInventario = await Inventarios.readProductOnly(idCliente) ?? [];
-    inventarioHoy = List.generate(_productosInventario.length,
-        (i) => {'producto': _productosInventario[i], 'cantidad': 0});
-  }
-
-  Future<void> inventarioForId(int idInventario) async {
-    // inventarios = await Inventarios.readById(idInventario) ?? [];
-  }
-
-  Future<bool> inventarioCrear(int cantidad) async {
-    inventario.cantidad = cantidad;
-    bool respuesta = await Inventarios.create(inventario) ? true : false;
-    if (respuesta) {
-      inventarioHoy;
-      historial;
-    }
-    return respuesta;
-  }
-
-  Future<bool> inventarioModificar() async {
-    bool respuesta = await Inventarios.update(inventario) ? true : false;
-    /* if(respuesta)  instruccion de carga de pantalla*/
-    return respuesta;
-  }
-
-  Future<bool> inventarioBorrar() async {
-    bool respuesta = await Inventarios.delete(inventario.id) ? true : false;
-    /* if(respuesta)  instruccion de carga de pantalla*/
-    return respuesta;
-  } */
 }
