@@ -92,10 +92,17 @@ class _ScProducto extends State<ScProducto> {
                           null) {
                         if (inventario.getInventario()[0]['producto'] != "") {
                           inventario.addInventario(
-                              fechaHoy, producto.productos[index].nombre, 0);
+                              fechaHoy,
+                              producto.productos[index].nombre,
+                              0,
+                              producto.productos[index].precio);
                         } else {
                           inventario.setInventario(
-                              0, fechaHoy, producto.productos[index].nombre, 0);
+                              index: 0,
+                              fecha: fechaHoy,
+                              producto: producto.productos[index].nombre,
+                              cantidad: 0,
+                              precio: producto.productos[index].precio);
                         }
                         _snackbar("Producto agregado al carrito");
                       } else {

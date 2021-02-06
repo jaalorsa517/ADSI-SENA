@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ventas/logic/cliente/cliente_provider.dart';
 import 'package:ventas/logic/producto/producto_provider.dart';
 import 'package:ventas/logic/venta/inventario/inventario_provider.dart';
+import 'package:intl/intl.dart';
 
 ClienteProvider cliente;
 ProductoProvider producto;
@@ -14,8 +15,10 @@ const Color colorGenerico = Colors.green;
 enum Response { ok, cancel }
 BuildContext contextoPrincipal;
 
+var f = NumberFormat('00', 'es_CO');
+
 String fechaHoy =
-    '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
+    '${DateTime.now().year}-${f.format(DateTime.now().month)}-${f.format(DateTime.now().day)}';
 
 String capitalize(String s) {
   if (s == '' || s == ' ') return s;

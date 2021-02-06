@@ -12,29 +12,49 @@ class InventarioProvider extends ChangeNotifier {
   InventarioProvider() {
     _inventarioModel = Inventario();
     _inventario = List<Map<String, dynamic>>();
-    _inventario.add({'fecha': '0', 'producto': '', 'cantidad': 0});
+    _inventario.add({
+      'fecha': '0',
+      'producto': '',
+      'cantidad': 0,
+      'precio': 0,
+      'pedido': 0
+    });
     _historial = {
       'producto': '',
-      'cantidad1': 0,
-      'cantidad2': 0,
-      'cantidad3': 0
+      'cantidad1': '0',
+      'cantidad2': '0',
+      'cantidad3': '0',
+      'precio': '',
     };
   }
 
   /**** Propiedades del inventario ****/
   List getInventario() => _inventario;
 
-  void addInventario(String fecha, String producto, int cantidad) {
-    _inventario
-        .add({'fecha': fecha, 'producto': producto, 'cantidad': cantidad});
+  void addInventario(String fecha, String producto, int cantidad, int precio) {
+    _inventario.add({
+      'fecha': fecha,
+      'producto': producto,
+      'cantidad': cantidad,
+      'precio': precio,
+      'pedido': 0
+    });
     this._sortInventario();
     notifyListeners();
   }
 
-  void setInventario(int index, String fecha, String producto, int cantidad) {
-    _inventario[index]['fecha'] = fecha;
-    _inventario[index]['producto'] = producto;
-    _inventario[index]['cantidad'] = cantidad;
+  void setInventario(
+      {int index,
+      String fecha,
+      String producto,
+      int cantidad,
+      int precio,
+      int pedido}) {
+    if (fecha != null) _inventario[index]['fecha'] = fecha;
+    if (producto != null) _inventario[index]['producto'] = producto;
+    if (cantidad != null) _inventario[index]['cantidad'] = cantidad;
+    if (precio != null) _inventario[index]['precio'] = precio;
+    if (pedido != null) _inventario[index]['pedido'] = pedido;
     this._sortInventario();
     notifyListeners();
   }
@@ -53,20 +73,31 @@ class InventarioProvider extends ChangeNotifier {
   void deleteInventario(int index) {
     _inventario.removeAt(index);
     if (_inventario.length == 0) {
-      _inventario.add({'fecha': '0', 'producto': '', 'cantidad': 0});
+      _inventario.add({
+        'fecha': '0',
+        'producto': '',
+        'cantidad': 0,
+        'precio': 0,
+        'pedido': 0
+      });
     }
     notifyListeners();
   }
 
-  /**** Propiedades del historial ****/
+  // Propiedades del historial
   Map getHistorial() => _historial;
 
   void setHistorial(
-      {String producto, String cantidad1, String cantidad2, String cantidad3}) {
+      {String producto,
+      String cantidad1,
+      String cantidad2,
+      String cantidad3,
+      String precio}) {
     if (producto != null) _historial['producto'] = producto;
     if (cantidad1 != null) _historial['cantidad1'] = cantidad1;
     if (cantidad2 != null) _historial['cantidad2'] = cantidad2;
     if (cantidad3 != null) _historial['cantidad3'] = cantidad3;
+    if (precio != null) _historial['precio'] = precio;
     notifyListeners();
   }
 

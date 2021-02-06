@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:ventas/config/utilidades.dart';
 import 'package:ventas/logic/venta/inventario/inventario_provider.dart';
+import 'package:intl/intl.dart';
 
 class ScVenta extends StatefulWidget {
   final BuildContext _context;
@@ -68,9 +69,12 @@ class _ScVenta extends State<ScVenta> {
   }
 
   Widget _venta(BuildContext context) {
+    var filter = new NumberFormat();
     return Consumer<InventarioProvider>(builder: (context, parent, child) {
       List<TextEditingController> columnPedido = List.generate(
-          inventario.getInventario().length, (i) => TextEditingController());
+          inventario.getInventario().length,
+          (i) => TextEditingController(
+              text: inventario.getInventario()[i]['pedido'].toString()));
       return Padding(
           padding: EdgeInsets.all(0),
           child: Column(children: <Widget>[
@@ -89,9 +93,14 @@ class _ScVenta extends State<ScVenta> {
                         inventario.deleteInventario(
                             inventario.findIndexInventario(
                                 inventario.getHistorial()['producto']));
-                        inventario.setHistorial(producto: "");
+                        inventario.setHistorial(producto: "", precio: '');
                       }),
-                  title: Text(inventario.getHistorial()['producto']),
+                  title: Text(
+                    inventario.getHistorial()['producto'],
+                    textAlign: TextAlign.center,
+                  ),
+                  subtitle: Center(
+                      child: Text("\$${inventario.getHistorial()['precio']}")),
                 )),
             Flexible(
                 flex: 7,
@@ -120,7 +129,10 @@ class _ScVenta extends State<ScVenta> {
                                       inventario.setHistorial(
                                           producto:
                                               inventario.getInventario()[index]
-                                                  ['producto']);
+                                                  ['producto'],
+                                          precio: filter.format(
+                                              inventario.getInventario()[index]
+                                                  ['precio']));
                                     }),
                                     DataCell(Center(
                                       child: InkWell(
@@ -137,7 +149,7 @@ class _ScVenta extends State<ScVenta> {
                                     )),
                                     DataCell(TextField(
                                       textAlign: TextAlign.right,
-                                      onTap: () async {
+                                      onTap: () {
                                         columnPedido[index].selection =
                                             TextSelection(
                                                 baseOffset: 0,
@@ -148,11 +160,8 @@ class _ScVenta extends State<ScVenta> {
                                       },
                                       onEditingComplete: () {
                                         inventario.setInventario(
-                                            index,
-                                            fechaHoy,
-                                            inventario.getInventario()[index]
-                                                ['producto'],
-                                            int.parse(
+                                            index: index,
+                                            pedido: int.parse(
                                                 columnPedido[index].text));
                                       },
                                       controller: columnPedido[index],
@@ -191,7 +200,10 @@ class _ScVenta extends State<ScVenta> {
                                   inventario.getHistorial()['producto']));
                           inventario.setHistorial(producto: "");
                         }),
-                    title: Text(inventario.getHistorial()['producto']),
+                    title: Text(
+                      inventario.getHistorial()['producto'],
+                      textAlign: TextAlign.center,
+                    ),
                     isThreeLine: true,
                     subtitle: Column(children: <Widget>[
                       Text('Últimos pedidos'),
@@ -270,18 +282,11 @@ class _ScVenta extends State<ScVenta> {
                                             },
                                             onEditingComplete: () {
                                               inventario.setInventario(
-                                                  index,
-                                                  fechaHoy,
-                                                  inventario.getInventario()[
-                                                      index]['producto'],
-                                                  int.parse(
+                                                  index: index,
+                                                  cantidad: int.parse(
                                                       columnInventario[index]
                                                           .text));
                                             },
-                                            // onEditingComplete: () async {
-                                            //   FocusScope.of(context)
-                                            //       .requestFocus(new FocusNode());
-                                            // },
                                             controller: columnInventario[index],
                                             autofocus: false,
                                             keyboardType: TextInputType.number,
