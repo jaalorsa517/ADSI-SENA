@@ -18,19 +18,29 @@ class Inventarios {
     'fechaEntrega': 'fechaEntrega'
   };
 
-  static Future<bool> create(Inventario inventario) async {
+  static Future<bool> create(String fechaPedido, int cantidad, int idCliente,
+      int idProducto, String fechaEntrega, int pedido, int valor) async {
     Database db = await Crud.conectar();
     try {
-      List<Map<String, dynamic>> _id = await db.rawQuery("""
-      SELECT ${Setup.COLUMN_INVENTARIO['id']} AS ${_alias['id']} 
-      FROM ${Setup.INVENTARIO_TABLE} 
-      ORDER BY ${Setup.COLUMN_INVENTARIO['id']} DESC 
-      LIMIT 1
-      """);
-      inventario.id = _id[0][_alias['id']] + 1 ?? 1;
-      await db.insert(Setup.INVENTARIO_TABLE, _inventarioToMap(inventario)[0]);
-      await db.insert(
-          Setup.INVENTARIO_PRODUCTO_TABLE, _inventarioToMap(inventario)[1]);
+      await db.transaction((txn) async {
+        int idInventario = await txn.insert(Setup.INVENTARIO_TABLE, {
+          Setup.COLUMN_INVENTARIO['cantidad']: cantidad,
+          Setup.COLUMN_INVENTARIO['fecha']: fechaPedido,
+          Setup.COLUMN_INVENTARIO['idCliente']: idCliente,
+        });
+        await txn.insert(Setup.INVENTARIO_PRODUCTO_TABLE, {
+          Setup.COLUMN_INVENTARIO_PRODUCTO['idInventario']: idInventario,
+          Setup.COLUMN_INVENTARIO_PRODUCTO['idProducto']: idProducto,
+        });
+        await txn.insert(Setup.PEDIDO_TABLE, {
+          Setup.COLUMN_PEDIDO['fechaPedido']: fechaPedido,
+          Setup.COLUMN_PEDIDO['fechaEntrega']: fechaEntrega,
+          Setup.COLUMN_PEDIDO['idInventario']: idInventario,
+          Setup.COLUMN_PEDIDO['cantidad']: pedido,
+          Setup.COLUMN_PEDIDO['valor']: valor,
+        });
+      });
+
       return true;
     } catch (e) {
       print(e.toString());
@@ -86,7 +96,7 @@ class Inventarios {
       SELECT 
         ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['fecha']} AS ${_alias['fecha']}, 
         ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']} AS ${_alias['producto']},
-        ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['cantidad']} AS ${_alias['cantidad']}
+        ${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['cantidad']} AS ${_alias['pedido']}
       FROM ${Setup.INVENTARIO_TABLE} 
       INNER JOIN ${Setup.CLIENTE_TABLE} ON 
         ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']} =
@@ -97,6 +107,9 @@ class Inventarios {
       INNER JOIN ${Setup.INVENTARIO_PRODUCTO_TABLE} ON 
         ${Setup.INVENTARIO_PRODUCTO_TABLE}.${Setup.COLUMN_INVENTARIO_PRODUCTO['idInventario']}=
          ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['id']}
+      INNER JOIN ${Setup.PEDIDO_TABLE} ON 
+        ${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['idInventario']}= 
+        ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['id']}
       WHERE ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']}=$idCliente
         AND ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['id']}=$idProducto
       ORDER BY ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']}
@@ -106,7 +119,7 @@ class Inventarios {
           (i) => {
                 'fecha': list[i]['fecha'],
                 'producto': list[i]['producto'],
-                'cantidad': list[i]['cantidad']
+                'pedido': list[i]['pedido']
               });
     } catch (e) {
       print('Select en inventario' + e.toString());
@@ -152,11 +165,13 @@ class Inventarios {
       int idCliente) async {
     Database db = await Crud.conectar();
     try {
-      List<Map<String, dynamic>> listMap = await db.rawQuery("""
+      List<Map<String, dynamic>> list = await db.rawQuery("""
         SELECT 
+        ${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['fechaPedido']} as ${_alias['fecha']},
         ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['id']} AS ${_alias['id']},
         ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']} AS ${_alias['producto']},
-        ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['precio']} AS ${_alias['precio']}
+        ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['precio']} AS ${_alias['precio']},
+        ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['cantidad']} AS ${_alias['cantidad']}
         FROM ${Setup.PRODUCTO_TABLE}
         INNER JOIN ${Setup.INVENTARIO_TABLE} 
           ON ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['id']} =
@@ -167,11 +182,22 @@ class Inventarios {
         INNER JOIN ${Setup.CLIENTE_TABLE} 
           ON ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']}=
             ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['idCliente']}
+        INNER JOIN ${Setup.PEDIDO_TABLE} 
+          ON ${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['idInventario']}=
+            ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['id']}
         WHERE ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']}=$idCliente
         GROUP BY ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']}
         ORDER BY ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']} ASC
         """);
-      return listMap;
+      return List.generate(
+          list.length,
+          (i) => {
+                'fecha': list[i]['fecha'],
+                'id': list[i]['id'],
+                'producto': list[i]['producto'],
+                'precio': list[i]['precio'],
+                'cantidad': list[i]['cantidad']
+              });
     } catch (e) {
       print('Select en inventario' + e.toString());
       return null;

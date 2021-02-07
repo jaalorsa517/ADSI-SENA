@@ -34,7 +34,7 @@ class _ScProducto extends State<ScProducto> {
     final snackbar = SnackBar(
         content: Text(message),
         backgroundColor: colorGenerico,
-        duration: Duration(seconds: 2));
+        duration: Duration(seconds: 1));
     _keyScaffold.currentState.showSnackBar(snackbar);
   }
 

@@ -356,9 +356,16 @@ class _ScVenta extends State<ScVenta> {
                 child: Row(
                   children: [
                     RaisedButton(
-                      child: Text("Registrar"),
-                      onPressed: () {},
-                    ),
+                        child: Text("Registrar"),
+                        onPressed: cliente.cliente.id != null
+                            ? () {
+                                if (cliente.cliente.id != null) {
+                                  inventario.saveInventario(cliente.cliente.id);
+                                  inventario.reset();
+                                  inventario.loadInventario(cliente.cliente.id);
+                                }
+                              }
+                            : null),
                     RaisedButton(
                       child: Text("Limpiar Pedido"),
                       onPressed: () {

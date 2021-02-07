@@ -119,6 +119,9 @@ class InventarioProvider extends ChangeNotifier {
 
   Future<void> setHistorial(
       {String producto, String precio, int idCliente, int idProducto}) async {
+    _historial['cantidad1'] = '0';
+    _historial['cantidad2'] = '0';
+    _historial['cantidad3'] = '0';
     if (producto != null) _historial['producto'] = producto;
     if (precio != null) _historial['precio'] = precio;
     if (idCliente != null && idProducto != null) {
@@ -145,55 +148,72 @@ class InventarioProvider extends ChangeNotifier {
         //switch con el length de la lista
         switch (aux.length) {
           case 1:
-            _historial['cantidad1'] = aux[aux.length - 1]['cantidad'];
+            _historial['cantidad1'] = aux[aux.length - 1]['pedido'];
             break;
           case 2:
-            _historial['cantidad1'] = aux[aux.length - 1]['cantidad'];
-            _historial['cantidad2'] = aux[aux.length - 2]['cantidad'];
+            _historial['cantidad1'] = aux[aux.length - 1]['pedido'];
+            _historial['cantidad2'] = aux[aux.length - 2]['pedido'];
             break;
           case 3:
-            _historial['cantidad1'] = aux[aux.length - 1]['cantidad'];
-            _historial['cantidad2'] = aux[aux.length - 2]['cantidad'];
-            _historial['cantidad3'] = aux[aux.length - 3]['cantidad'];
+            _historial['cantidad1'] = aux[aux.length - 1]['pedido'];
+            _historial['cantidad2'] = aux[aux.length - 2]['pedido'];
+            _historial['cantidad3'] = aux[aux.length - 3]['pedido'];
             break;
         }
       }
-    } else {
-      _historial['cantidad1'] = '0';
-      _historial['cantidad2'] = '0';
-      _historial['cantidad3'] = '0';
     }
     notifyListeners();
   }
 
-  // void _sortInventario() {
-  //   List _names = _inventario.map((v) => v['producto']).toList();
-  //   _names.sort();
-  //   List<Map<String, dynamic>> aux = List();
-  //   for (int i = 0; i < _names.length; i++) {
-  //     aux.add(_inventario[this.findIndexInventario(_names[i])]);
-  //   }
-  //   _inventario = aux;
-  // }
-
   void loadInventario(int idCliente) async {
-    /**
-     * 1. Cargar los prodoctos solamente. check
-     * 2. Cargar el historial ==> Para que?
-     */
     List _productos = await Inventarios.readProductOnly(idCliente);
     if (_productos != null) {
       for (int i = 0; i < _productos.length; i++) {
         if (i == 0) {
-          this.setInventario(i,
-              id: _productos[i]['id'],
-              producto: _productos[i]['producto'],
-              precio: _productos[i]['precio']);
+          if (_productos[i]['fecha'] == fechaHoy) {
+            this.setInventario(i,
+                id: _productos[i]['id'],
+                producto: _productos[i]['producto'],
+                precio: _productos[i]['precio'],
+                cantidad: _productos[i]['cantidad']);
+          } else {
+            this.setInventario(i,
+                id: _productos[i]['id'],
+                producto: _productos[i]['producto'],
+                precio: _productos[i]['precio']);
+          }
           continue;
         }
-        this.addInventario(_productos[i]['id'], fechaHoy,
-            _productos[i]['producto'], 0, _productos[i]['precio']);
+        if (_productos[i]['fecha'] == fechaHoy) {
+          this.addInventario(
+            _productos[i]['id'],
+            fechaHoy,
+            _productos[i]['producto'],
+            _productos[i]['cantidad'],
+            _productos[i]['precio'],
+          );
+        } else {
+          this.addInventario(_productos[i]['id'], fechaHoy,
+              _productos[i]['producto'], 0, _productos[i]['precio']);
+        }
       }
+    }
+  }
+
+  void saveInventario(idCliente) async {
+    List pedido = _inventario
+        .where((v) => (v['pedido'] != 0 || v['cantidad'] != 0))
+        .toList();
+    for (int i = 0; i < pedido.length; i++) {
+      // Inventarios.create(fechaPedido,cantidad,idCliente,idProducto,fechaEntrega,pedido,valor);
+      await Inventarios.create(
+          fechaHoy,
+          pedido[i]['cantidad'],
+          idCliente,
+          pedido[i]['id'],
+          pedido[i]['fechaEntrega'],
+          pedido[i]['pedido'],
+          pedido[i]['precio']);
     }
   }
 
