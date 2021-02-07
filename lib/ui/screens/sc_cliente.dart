@@ -94,6 +94,7 @@ class _ScCliente extends State<ScCliente> {
                     icon: Icon(Icons.shopping_cart_rounded),
                     onPressed: () {
                       cliente.cliente = cliente.clientes[index];
+                      inventario.reset();
                       inventario.loadInventario(cliente.cliente.id);
                       Navigator.of(context).pop();
                       Navigator.of(context).pushNamed("/venta");

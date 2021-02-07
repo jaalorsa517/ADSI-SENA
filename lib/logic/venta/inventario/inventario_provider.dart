@@ -15,6 +15,7 @@ class InventarioProvider extends ChangeNotifier {
     _inventarioModel = Inventario();
     _inventario = List<Map<String, dynamic>>();
     _inventario.add({
+      'id': null,
       'fecha': fechaHoy,
       'producto': '',
       'cantidad': 0,
@@ -45,8 +46,10 @@ class InventarioProvider extends ChangeNotifier {
   /**** Propiedades del inventario ****/
   List getInventario() => _inventario;
 
-  void addInventario(String fecha, String producto, int cantidad, int precio) {
+  void addInventario(
+      int id, String fecha, String producto, int cantidad, int precio) {
     _inventario.add({
+      'id': id,
       'fecha': fecha,
       'producto': producto,
       'cantidad': cantidad,
@@ -54,24 +57,34 @@ class InventarioProvider extends ChangeNotifier {
       'pedido': 0,
       'fechaEntrega': filterDate(_fechaEntrega)
     });
-    this._sortInventario();
+    _inventario.sort((a, b) {
+      var aName = a['producto'];
+      var bName = b['producto'];
+      return aName.compareTo(bName);
+    });
     notifyListeners();
   }
 
   void setInventario(int index,
-      {String fecha,
+      {int id,
+      String fecha,
       String producto,
       int cantidad,
       int precio,
       int pedido,
       String fechaEntrega}) {
+    if (id != null) _inventario[index]['id'] = id;
     if (fecha != null) _inventario[index]['fecha'] = fecha;
     if (producto != null) _inventario[index]['producto'] = producto;
     if (cantidad != null) _inventario[index]['cantidad'] = cantidad;
     if (precio != null) _inventario[index]['precio'] = precio;
     if (pedido != null) _inventario[index]['pedido'] = pedido;
     if (fechaEntrega != null) _inventario[index]['fechaEntrega'] = fechaEntrega;
-    this._sortInventario();
+    _inventario.sort((a, b) {
+      var aName = a['producto'];
+      var bName = b['producto'];
+      return aName.compareTo(bName);
+    });
     notifyListeners();
   }
 
@@ -90,6 +103,7 @@ class InventarioProvider extends ChangeNotifier {
     _inventario.removeAt(index);
     if (_inventario.length == 0) {
       _inventario.add({
+        'id': null,
         'fecha': '0',
         'producto': '',
         'cantidad': 0,
@@ -103,46 +117,82 @@ class InventarioProvider extends ChangeNotifier {
   // Propiedades del historial
   Map getHistorial() => _historial;
 
-  void setHistorial(
-      {String producto,
-      String cantidad1,
-      String cantidad2,
-      String cantidad3,
-      String precio}) {
+  Future<void> setHistorial(
+      {String producto, String precio, int idCliente, int idProducto}) async {
     if (producto != null) _historial['producto'] = producto;
-    if (cantidad1 != null) _historial['cantidad1'] = cantidad1;
-    if (cantidad2 != null) _historial['cantidad2'] = cantidad2;
-    if (cantidad3 != null) _historial['cantidad3'] = cantidad3;
     if (precio != null) _historial['precio'] = precio;
+    if (idCliente != null && idProducto != null) {
+      List<Map<String, dynamic>> aux =
+          await Inventarios.readHistoryProduct(idCliente, idProducto);
+      if (aux != null) {
+        //transformar string a fechas para ordenar
+        for (int i = 0; i < aux.length; i++) {
+          int year = int.parse(aux[i]['fecha'].split("-")[0]);
+          int month = int.parse(aux[i]['fecha'].split("-")[1]);
+          int day = int.parse(aux[i]['fecha'].split("-")[2]);
+          aux[i]['fecha'] = filterDate(DateTime(
+            year,
+            month,
+            day,
+          ));
+        }
+        //ordernar lista por fecha
+        aux.sort((a, b) {
+          var aDate = a['fecha'];
+          var bDate = b['fecha'];
+          return aDate.compareTo(bDate);
+        });
+        //switch con el length de la lista
+        switch (aux.length) {
+          case 1:
+            _historial['cantidad1'] = aux[aux.length - 1]['cantidad'];
+            break;
+          case 2:
+            _historial['cantidad1'] = aux[aux.length - 1]['cantidad'];
+            _historial['cantidad2'] = aux[aux.length - 2]['cantidad'];
+            break;
+          case 3:
+            _historial['cantidad1'] = aux[aux.length - 1]['cantidad'];
+            _historial['cantidad2'] = aux[aux.length - 2]['cantidad'];
+            _historial['cantidad3'] = aux[aux.length - 3]['cantidad'];
+            break;
+        }
+      }
+    } else {
+      _historial['cantidad1'] = '0';
+      _historial['cantidad2'] = '0';
+      _historial['cantidad3'] = '0';
+    }
     notifyListeners();
   }
 
-  void _sortInventario() {
-    List _names = _inventario.map((v) => v['producto']).toList();
-    _names.sort();
-    List<Map<String, dynamic>> aux = List();
-    for (int i = 0; i < _names.length; i++) {
-      aux.add(_inventario[this.findIndexInventario(_names[i])]);
-    }
-    _inventario = aux;
-  }
+  // void _sortInventario() {
+  //   List _names = _inventario.map((v) => v['producto']).toList();
+  //   _names.sort();
+  //   List<Map<String, dynamic>> aux = List();
+  //   for (int i = 0; i < _names.length; i++) {
+  //     aux.add(_inventario[this.findIndexInventario(_names[i])]);
+  //   }
+  //   _inventario = aux;
+  // }
 
-  void loadInventario(int id) async {
+  void loadInventario(int idCliente) async {
     /**
-     * 1. Cargar los prodoctos solamente
-     * 2. Cargar el historial
+     * 1. Cargar los prodoctos solamente. check
+     * 2. Cargar el historial ==> Para que?
      */
-    List _productos = await Inventarios.readProductOnly(id);
+    List _productos = await Inventarios.readProductOnly(idCliente);
     if (_productos != null) {
       for (int i = 0; i < _productos.length; i++) {
         if (i == 0) {
           this.setInventario(i,
+              id: _productos[i]['id'],
               producto: _productos[i]['producto'],
               precio: _productos[i]['precio']);
           continue;
         }
-        this.addInventario(
-            fechaHoy, _productos[i]['producto'], 0, _productos[i]['precio']);
+        this.addInventario(_productos[i]['id'], fechaHoy,
+            _productos[i]['producto'], 0, _productos[i]['precio']);
       }
     }
   }
@@ -159,6 +209,7 @@ class InventarioProvider extends ChangeNotifier {
     _inventario = [];
     _historial = null;
     _inventario.add({
+      'id': null,
       'fecha': fechaHoy,
       'producto': '',
       'cantidad': 0,
@@ -173,6 +224,5 @@ class InventarioProvider extends ChangeNotifier {
       'cantidad3': '0',
       'precio': '',
     };
-    notifyListeners();
   }
 }

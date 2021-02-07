@@ -133,7 +133,10 @@ class _ScVenta extends State<ScVenta> {
                                                   ['producto'],
                                           precio: filter.format(
                                               inventario.getInventario()[index]
-                                                  ['precio']));
+                                                  ['precio']),
+                                          idCliente: cliente.cliente.id,
+                                          idProducto: inventario
+                                              .getInventario()[index]['id']);
                                     }),
                                     DataCell(Center(
                                       child: InkWell(
@@ -260,11 +263,17 @@ class _ScVenta extends State<ScVenta> {
                                             child: Text(inventario
                                                     .getInventario()[index]
                                                 ['producto']),
-                                          )), onTap: () {
-                                        inventario.setHistorial(
+                                          )), onTap: () async {
+                                        await inventario.setHistorial(
                                             producto: inventario
                                                     .getInventario()[index]
-                                                ['producto']);
+                                                ['producto'],
+                                            precio: filter.format(inventario
+                                                    .getInventario()[index]
+                                                ['precio']),
+                                            idCliente: cliente.cliente.id,
+                                            idProducto: inventario
+                                                .getInventario()[index]['id']);
                                       }),
                                       DataCell(
                                           TextField(

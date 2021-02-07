@@ -92,6 +92,7 @@ class _ScProducto extends State<ScProducto> {
                           null) {
                         if (inventario.getInventario()[0]['producto'] != "") {
                           inventario.addInventario(
+                              producto.productos[index].id,
                               fechaHoy,
                               producto.productos[index].nombre,
                               0,

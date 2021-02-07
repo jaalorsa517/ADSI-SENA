@@ -24,7 +24,7 @@ class ClienteProvider extends ChangeNotifier {
   }
 
   void nuevoCliente() {
-    _cliente = new Cliente(0, '', '');
+    _cliente = new Cliente(null, '', '');
   }
 
   Future<void> loadCliente() async {

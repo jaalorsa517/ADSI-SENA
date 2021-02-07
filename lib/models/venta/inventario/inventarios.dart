@@ -45,6 +45,7 @@ class Inventarios {
     try {
       List<Map<String, dynamic>> list = await db.rawQuery("""
       SELECT 
+        ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['id']} AS ${_alias['id']},
         ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['fecha']} AS ${_alias['fecha']}, 
         ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']} AS ${_alias['producto']},
         ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['cantidad']} AS ${_alias['cantidad']},
@@ -77,7 +78,7 @@ class Inventarios {
     }
   }
 
-  static Future<List<InventarioHistorial>> readHistoryProducto(
+  static Future<List<Map<String, dynamic>>> readHistoryProduct(
       int idCliente, int idProducto) async {
     Database db = await Crud.conectar();
     try {
@@ -100,8 +101,13 @@ class Inventarios {
         AND ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['id']}=$idProducto
       ORDER BY ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']}
       """);
-      print(list);
-      return _mapToInventarioHistorial(list);
+      return List.generate(
+          list.length,
+          (i) => {
+                'fecha': list[i]['fecha'],
+                'producto': list[i]['producto'],
+                'cantidad': list[i]['cantidad']
+              });
     } catch (e) {
       print('Select en inventario' + e.toString());
       return null;
@@ -147,7 +153,9 @@ class Inventarios {
     Database db = await Crud.conectar();
     try {
       List<Map<String, dynamic>> listMap = await db.rawQuery("""
-        SELECT ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']} AS ${_alias['producto']},
+        SELECT 
+        ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['id']} AS ${_alias['id']},
+        ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']} AS ${_alias['producto']},
         ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['precio']} AS ${_alias['precio']}
         FROM ${Setup.PRODUCTO_TABLE}
         INNER JOIN ${Setup.INVENTARIO_TABLE} 
