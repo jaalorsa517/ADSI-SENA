@@ -97,8 +97,7 @@ class _ScProducto extends State<ScProducto> {
                               0,
                               producto.productos[index].precio);
                         } else {
-                          inventario.setInventario(
-                              index: 0,
+                          inventario.setInventario(0,
                               fecha: fechaHoy,
                               producto: producto.productos[index].nombre,
                               cantidad: 0,

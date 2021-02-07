@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ventas/config/utilidades.dart';
 import 'package:ventas/logic/cliente/cliente_provider.dart';
 import 'package:ventas/logic/venta/inventario/inventario_provider.dart';
 import 'package:ventas/ui/screens/sc_backup.dart';
@@ -25,6 +26,7 @@ class Principal extends StatelessWidget {
               create: (context) => InventarioProvider()),
         ],
         child: MaterialApp(
+          theme: ThemeData(primaryColor: colorGenerico),
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate

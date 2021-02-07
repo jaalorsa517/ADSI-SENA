@@ -19,6 +19,8 @@ class _ScVenta extends State<ScVenta> {
   List<String> titulo = ['Resumen', 'Inventario', 'Ventas'];
   int _vista = 0;
   List<Widget> _pantalla = [];
+  var filter = new NumberFormat();
+
   _ScVenta(context) {
     _pantalla = [_resumen(context), _inventario(context), _venta(context)];
   }
@@ -69,7 +71,6 @@ class _ScVenta extends State<ScVenta> {
   }
 
   Widget _venta(BuildContext context) {
-    var filter = new NumberFormat();
     return Consumer<InventarioProvider>(builder: (context, parent, child) {
       List<TextEditingController> columnPedido = List.generate(
           inventario.getInventario().length,
@@ -158,9 +159,8 @@ class _ScVenta extends State<ScVenta> {
                                                         .text
                                                         .length);
                                       },
-                                      onEditingComplete: () {
-                                        inventario.setInventario(
-                                            index: index,
+                                      onChanged: (v) {
+                                        inventario.setInventario(index,
                                             pedido: int.parse(
                                                 columnPedido[index].text));
                                       },
@@ -280,9 +280,8 @@ class _ScVenta extends State<ScVenta> {
                                                               .text
                                                               .length);
                                             },
-                                            onEditingComplete: () {
-                                              inventario.setInventario(
-                                                  index: index,
+                                            onChanged: (v) {
+                                              inventario.setInventario(index,
                                                   cantidad: int.parse(
                                                       columnInventario[index]
                                                           .text));
@@ -300,33 +299,91 @@ class _ScVenta extends State<ScVenta> {
   }
 
   Widget _resumen(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.all(0),
-        child: Column(
-          children: <Widget>[
-            Flexible(
-                child: ListTile(
-              title: Text('cliente'),
-              trailing: Text('fecha pedido'),
-              leading: Text('fecha entrega'),
-            )),
-            Flexible(
-                child: DataTable(
-              columns: <DataColumn>[
-                DataColumn(label: Text('')),
-                DataColumn(label: Text(''))
-              ],
-              rows: <DataRow>[
-                DataRow(
-                    cells: <DataCell>[DataCell(Text('')), DataCell(Text(''))])
-              ],
-            )),
-            Flexible(
-                child: Row(children: <Widget>[
-              Flexible(child: Text('')),
-              Flexible(child: Text('')),
-            ])),
-          ],
-        ));
+    return Consumer<InventarioProvider>(builder: (context, parent, child) {
+      return Padding(
+          padding: EdgeInsets.all(0),
+          child: Column(
+            children: <Widget>[
+              Flexible(
+                  child: Column(
+                children: [
+                  Text("Fecha de entrega"),
+                  Row(children: [
+                    IconButton(
+                      icon: Icon(Icons.calendar_today_rounded),
+                      onPressed: () => _selectDate(context),
+                    ),
+                    Text(filterDate(inventario.fechaEntrega))
+                  ])
+                ],
+              )),
+              Flexible(
+                  child: Column(
+                children: [
+                  Text("Cliente"),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.contact_page_rounded),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed("/cliente");
+                        },
+                      ),
+                      Text(cliente.cliente.nombre != ''
+                          ? cliente.cliente.nombre
+                          : "Seleccione un cliente")
+                    ],
+                  )
+                ],
+              )),
+              Flexible(
+                  child: Row(
+                children: [
+                  Text("Total del Pedido"),
+                  Text("\$${filter.format(inventario.total())}")
+                ],
+              )),
+              Flexible(
+                child: Row(
+                  children: [
+                    RaisedButton(
+                      child: Text("Registrar"),
+                      onPressed: () {},
+                    ),
+                    RaisedButton(
+                      child: Text("Limpiar Pedido"),
+                      onPressed: () {
+                        cliente.resetClient();
+                        inventario.reset();
+                      },
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ));
+    });
+  }
+
+  /// Función que muestra el datepicker
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime selectedDate = DateTime.now();
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2019, 1),
+        lastDate: DateTime(2050),
+        builder: (context, child) => Theme(
+              data: ThemeData.light().copyWith(
+                primaryColor: colorGenerico,
+                colorScheme: ColorScheme.light(primary: colorGenerico),
+              ),
+              child: child,
+            ));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        inventario.fechaEntrega = picked;
+      });
   }
 }

@@ -24,7 +24,7 @@ class ClienteProvider extends ChangeNotifier {
   }
 
   void nuevoCliente() {
-    cliente = new Cliente();
+    _cliente = new Cliente(0, '', '');
   }
 
   Future<void> loadCliente() async {
@@ -67,5 +67,9 @@ class ClienteProvider extends ChangeNotifier {
     bool respuesta = await Clientes.delete(id) ? true : false;
     if (respuesta) await loadCliente();
     return respuesta;
+  }
+
+  void resetClient() {
+    this.nuevoCliente();
   }
 }

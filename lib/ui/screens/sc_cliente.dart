@@ -90,6 +90,15 @@ class _ScCliente extends State<ScCliente> {
                 child: ListTile(
                   enabled: true,
                   title: Text(cliente.clientes[index].nombre),
+                  trailing: IconButton(
+                    icon: Icon(Icons.shopping_cart_rounded),
+                    onPressed: () {
+                      cliente.cliente = cliente.clientes[index];
+                      inventario.loadInventario(cliente.cliente.id);
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushNamed("/venta");
+                    },
+                  ),
                   onTap: () {
                     setState(() {
                       //false and false = Sin seleccion
@@ -130,13 +139,6 @@ class _ScCliente extends State<ScCliente> {
         builder: (BuildContext context) {
           return Container(
             child: Wrap(children: <Widget>[
-              new ListTile(
-                  title: Text('Venta'),
-                  leading: Icon(Icons.shopping_cart),
-                  onTap: () async {
-                    Navigator.pop(context);
-                    Navigator.of(context).pushNamed('/venta');
-                  }),
               new ListTile(
                   title: Text('Ver información'),
                   leading: Icon(Icons.view_agenda),

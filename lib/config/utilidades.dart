@@ -17,8 +17,7 @@ BuildContext contextoPrincipal;
 
 var f = NumberFormat('00', 'es_CO');
 
-String fechaHoy =
-    '${DateTime.now().year}-${f.format(DateTime.now().month)}-${f.format(DateTime.now().day)}';
+String fechaHoy = filterDate(DateTime.now());
 
 String capitalize(String s) {
   if (s == '' || s == ' ') return s;
@@ -28,6 +27,9 @@ String capitalize(String s) {
   }
   return _s.join(' ');
 }
+
+String filterDate(DateTime date) =>
+    "${date.year}-${f.format(date.month)}-${f.format(date.day)}";
 
 enum Ciudades {
   Todos,
