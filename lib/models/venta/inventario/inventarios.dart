@@ -167,7 +167,7 @@ class Inventarios {
     try {
       List<Map<String, dynamic>> list = await db.rawQuery("""
         SELECT 
-        ${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['fechaPedido']} as ${_alias['fecha']},
+        MAX(${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['fechaPedido']}) AS ${_alias['fecha']},
         ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['id']} AS ${_alias['id']},
         ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']} AS ${_alias['producto']},
         ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['precio']} AS ${_alias['precio']},

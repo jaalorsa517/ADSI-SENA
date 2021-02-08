@@ -22,12 +22,29 @@ class ScMain extends StatelessWidget {
         appBar: AppBar(
             title: Center(child: Text('INICIO')),
             backgroundColor: Colors.green),
-        body: Center(
-            child: Column(children: <Widget>[
-          new WBoton('CLIENTES', '/cliente'),
-          new WBoton('PRODUCTOS', '/producto'),
-          new WBoton('VENTA', '/venta'),
-          new WBoton('BACKUP', '/backup')
-        ])));
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: new WBoton('CLIENTES', '/cliente'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: new WBoton('PRODUCTOS', '/producto'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: new WBoton('VENTA', '/venta'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: new WBoton('BACKUP', '/backup'),
+                )
+              ])),
+        ));
   }
 }

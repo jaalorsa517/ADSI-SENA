@@ -26,8 +26,7 @@ class DialogProducto {
 
   modificar(context) {
     var _styleButton = TextStyle(
-      backgroundColor: colorGenerico,
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: FontWeight.bold,
       letterSpacing: 1,
     );
@@ -39,23 +38,26 @@ class DialogProducto {
             children: <Widget>[
               TextField(
                 controller: this._nombre,
-                decoration: InputDecoration(hintText: 'NOMBRE'),
+                decoration: InputDecoration(
+                    hintText: 'NOMBRE', contentPadding: EdgeInsets.all(10)),
               ),
               TextField(
                 keyboardType: TextInputType.number,
                 controller: this._precio,
-                decoration: InputDecoration(hintText: 'PRECIO'),
+                decoration: InputDecoration(
+                    hintText: 'PRECIO', contentPadding: EdgeInsets.all(10)),
               ),
               TextField(
                 keyboardType: TextInputType.number,
                 controller: this._iva,
-                decoration: InputDecoration(hintText: 'IVA'),
+                decoration: InputDecoration(
+                    hintText: 'IVA', contentPadding: EdgeInsets.all(10)),
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
                   Widget>[
                 Expanded(
                     child: SimpleDialogOption(
-                  padding: EdgeInsets.all(0),
+                  padding: EdgeInsets.all(10),
                   child: Text(
                     'Aceptar',
                     style: _styleButton,
@@ -89,6 +91,7 @@ class DialogProducto {
                 )),
                 Expanded(
                   child: SimpleDialogOption(
+                      padding: EdgeInsets.all(10),
                       child: Text(
                         'Cancelar',
                         style: _styleButton,
@@ -104,30 +107,50 @@ class DialogProducto {
   }
 
   Future mostrar() async {
+    var pad = EdgeInsets.fromLTRB(10, 5, 10, 5);
     return await showDialog(
         context: _context,
         builder: (context) {
           TextStyle titulo =
               new TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
-          TextStyle subtitulo = new TextStyle(fontSize: 16);
+          TextStyle subtitulo = new TextStyle(fontSize: 20);
           return SimpleDialog(
             title: Center(child: Text('PRODUCTO')),
             children: <Widget>[
-              Text(
-                'NOMBRE',
-                style: titulo,
+              Padding(
+                padding: pad,
+                child: Text(
+                  'NOMBRE',
+                  style: titulo,
+                ),
               ),
-              Text(producto.producto.nombre, style: subtitulo),
-              Text(
-                'PRECIO',
-                style: titulo,
+              Padding(
+                padding: pad,
+                child: Text(producto.producto.nombre, style: subtitulo),
               ),
-              Text(producto.producto.precio.toString(), style: subtitulo),
-              Text(
-                'IVA',
-                style: titulo,
+              Padding(
+                padding: pad,
+                child: Text(
+                  'PRECIO',
+                  style: titulo,
+                ),
               ),
-              Text(producto.producto.iva.toString(), style: subtitulo),
+              Padding(
+                padding: pad,
+                child:
+                    Text(producto.producto.precio.toString(), style: subtitulo),
+              ),
+              Padding(
+                padding: pad,
+                child: Text(
+                  'IVA',
+                  style: titulo,
+                ),
+              ),
+              Padding(
+                padding: pad,
+                child: Text(producto.producto.iva.toString(), style: subtitulo),
+              ),
             ],
           );
         });

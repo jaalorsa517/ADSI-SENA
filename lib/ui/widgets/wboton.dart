@@ -18,10 +18,15 @@ class _WBoton extends State<WBoton> {
   @override
   Widget build(BuildContext context) {
     return new FlatButton(
+      padding: EdgeInsets.all(20),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       onPressed: () {
         Navigator.pushNamed(context, this.event);
       },
-      child: Text(this.nom),
+      child: Text(
+        this.nom,
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
       color: colorGenerico,
       textColor: Colors.white,
     );

@@ -27,8 +27,7 @@ class DialogCliente {
 
   modificar(context) {
     var _styleButton = TextStyle(
-      backgroundColor: colorGenerico,
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: FontWeight.bold,
       letterSpacing: 1,
     );
@@ -40,39 +39,46 @@ class DialogCliente {
             children: <Widget>[
               TextField(
                 controller: this._nit,
-                decoration: InputDecoration(hintText: 'NIT'),
+                decoration: InputDecoration(
+                    hintText: 'NIT', contentPadding: EdgeInsets.all(10)),
               ),
               TextField(
                 controller: this._nombre,
-                decoration: InputDecoration(hintText: 'NOMBRE'),
+                decoration: InputDecoration(
+                    hintText: 'NOMBRE', contentPadding: EdgeInsets.all(10)),
               ),
               TextField(
                 controller: this._admin,
-                decoration: InputDecoration(hintText: 'ADMIN'),
+                decoration: InputDecoration(
+                    hintText: 'ADMIN', contentPadding: EdgeInsets.all(10)),
               ),
               TextField(
                 controller: this._telefono,
-                decoration: InputDecoration(hintText: 'TELEFONO'),
+                decoration: InputDecoration(
+                    hintText: 'TELEFONO', contentPadding: EdgeInsets.all(10)),
               ),
               TextField(
                 controller: this._email,
-                decoration: InputDecoration(hintText: 'EMAIL'),
+                decoration: InputDecoration(
+                    hintText: 'EMAIL', contentPadding: EdgeInsets.all(10)),
               ),
               TextField(
                 controller: this._direccion,
-                decoration: InputDecoration(hintText: 'DIRECCION'),
+                decoration: InputDecoration(
+                    hintText: 'DIRECCION', contentPadding: EdgeInsets.all(10)),
               ),
               TextField(
                 controller: this._ciudad,
-                decoration: InputDecoration(hintText: 'CIUDAD'),
+                decoration: InputDecoration(
+                    hintText: 'CIUDAD', contentPadding: EdgeInsets.all(10)),
               ),
               Row(
                   // mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Expanded(
                         child: SimpleDialogOption(
-                      padding: EdgeInsets.all(0),
+                      padding: EdgeInsets.all(10),
                       child: Text(
                         'Aceptar',
                         style: _styleButton,
@@ -110,6 +116,7 @@ class DialogCliente {
                     )),
                     Expanded(
                       child: SimpleDialogOption(
+                          padding: EdgeInsets.all(10),
                           child: Text(
                             'Cancelar',
                             style: _styleButton,
@@ -125,50 +132,93 @@ class DialogCliente {
   }
 
   Future mostrar() async {
+    var pad = EdgeInsets.fromLTRB(10, 5, 10, 5);
     return await showDialog(
         context: _context,
         builder: (context) {
           TextStyle titulo =
               new TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
-          TextStyle subtitulo = new TextStyle(fontSize: 16);
+          TextStyle subtitulo = new TextStyle(fontSize: 20);
           return SimpleDialog(
             title: Center(child: Text('CLIENTE')),
             children: <Widget>[
-              Text(
-                'NIT',
-                style: titulo,
+              Padding(
+                padding: pad,
+                child: Text(
+                  'NIT',
+                  style: titulo,
+                ),
               ),
-              Text(cliente.cliente.nit, style: subtitulo),
-              Text(
-                'NOMBRE',
-                style: titulo,
+              Padding(
+                padding: pad,
+                child: Text(cliente.cliente.nit, style: subtitulo),
               ),
-              Text(cliente.cliente.nombre, style: subtitulo),
-              Text(
-                'ADMIN',
-                style: titulo,
+              Padding(
+                padding: pad,
+                child: Text(
+                  'NOMBRE',
+                  style: titulo,
+                ),
               ),
-              Text(cliente.cliente.representante, style: subtitulo),
-              Text(
-                'TELEFONO',
-                style: titulo,
+              Padding(
+                padding: pad,
+                child: Text(cliente.cliente.nombre, style: subtitulo),
               ),
-              Text(cliente.cliente.telefono, style: subtitulo),
-              Text(
-                'EMAIL',
-                style: titulo,
+              Padding(
+                padding: pad,
+                child: Text(
+                  'ADMIN',
+                  style: titulo,
+                ),
               ),
-              Text(cliente.cliente.email, style: subtitulo),
-              Text(
-                'DIRECCION',
-                style: titulo,
+              Padding(
+                padding: pad,
+                child: Text(cliente.cliente.representante, style: subtitulo),
               ),
-              Text(cliente.cliente.direccion, style: subtitulo),
-              Text(
-                'CIUDAD',
-                style: titulo,
+              Padding(
+                padding: pad,
+                child: Text(
+                  'TELEFONO',
+                  style: titulo,
+                ),
               ),
-              Text(cliente.cliente.ciudad, style: subtitulo),
+              Padding(
+                padding: pad,
+                child: Text(cliente.cliente.telefono, style: subtitulo),
+              ),
+              Padding(
+                padding: pad,
+                child: Text(
+                  'EMAIL',
+                  style: titulo,
+                ),
+              ),
+              Padding(
+                padding: pad,
+                child: Text(cliente.cliente.email, style: subtitulo),
+              ),
+              Padding(
+                padding: pad,
+                child: Text(
+                  'DIRECCION',
+                  style: titulo,
+                ),
+              ),
+              Padding(
+                padding: pad,
+                child: Text(cliente.cliente.direccion, style: subtitulo),
+              ),
+              Padding(
+                padding: pad,
+                child: Text(
+                  'CIUDAD',
+                  style: titulo,
+                ),
+              ),
+              Padding(
+                padding: pad,
+                child: Text(cliente.cliente.ciudad, style: subtitulo),
+              ),
             ],
           );
         });

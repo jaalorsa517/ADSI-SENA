@@ -308,39 +308,56 @@ class _ScVenta extends State<ScVenta> {
   }
 
   Widget _resumen(BuildContext context) {
+    var styleTitle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+    var styleSubTitle = TextStyle(fontSize: 24);
     return Consumer<InventarioProvider>(builder: (context, parent, child) {
       return Padding(
-          padding: EdgeInsets.all(0),
+          padding: EdgeInsets.all(10),
           child: Column(
             children: <Widget>[
               Flexible(
                   child: Column(
                 children: [
-                  Text("Fecha de entrega"),
+                  Text(
+                    "Fecha de entrega",
+                    style: styleTitle,
+                  ),
                   Row(children: [
                     IconButton(
                       icon: Icon(Icons.calendar_today_rounded),
                       onPressed: () => _selectDate(context),
                     ),
-                    Text(filterDate(inventario.fechaEntrega))
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        filterDate(inventario.fechaEntrega),
+                        style: styleSubTitle,
+                      ),
+                    )
                   ])
                 ],
               )),
               Flexible(
                   child: Column(
                 children: [
-                  Text("Cliente"),
+                  Text(
+                    "Cliente",
+                    style: styleTitle,
+                  ),
                   Row(
                     children: [
                       IconButton(
                         icon: Icon(Icons.contact_page_rounded),
                         onPressed: () {
+                          Navigator.of(context).pop();
                           Navigator.of(context).pushNamed("/cliente");
                         },
                       ),
-                      Text(cliente.cliente.nombre != ''
-                          ? cliente.cliente.nombre
-                          : "Seleccione un cliente")
+                      Text(
+                          cliente.cliente.nombre != ''
+                              ? cliente.cliente.nombre
+                              : "Seleccione un cliente",
+                          style: styleSubTitle)
                     ],
                   )
                 ],
@@ -348,30 +365,48 @@ class _ScVenta extends State<ScVenta> {
               Flexible(
                   child: Row(
                 children: [
-                  Text("Total del Pedido"),
-                  Text("\$${filter.format(inventario.total())}")
+                  Text(
+                    "Total del Pedido",
+                    style: styleTitle,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                      child: Text("\$ ${filter.format(inventario.total())}",
+                          style: TextStyle(fontSize: 24, color: colorGenerico)))
                 ],
               )),
               Flexible(
+                fit: FlexFit.tight,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    RaisedButton(
-                        child: Text("Registrar"),
-                        onPressed: cliente.cliente.id != null
-                            ? () {
-                                if (cliente.cliente.id != null) {
-                                  inventario.saveInventario(cliente.cliente.id);
-                                  inventario.reset();
-                                  inventario.loadInventario(cliente.cliente.id);
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: RaisedButton(
+                          color: colorGenerico,
+                          child: Text("Registrar", style: styleSubTitle),
+                          onPressed: cliente.cliente.id != null
+                              ? () {
+                                  if (cliente.cliente.id != null) {
+                                    inventario
+                                        .saveInventario(cliente.cliente.id);
+                                    inventario.reset();
+                                    inventario
+                                        .loadInventario(cliente.cliente.id);
+                                  }
                                 }
-                              }
-                            : null),
-                    RaisedButton(
-                      child: Text("Limpiar Pedido"),
-                      onPressed: () {
-                        cliente.resetClient();
-                        inventario.reset();
-                      },
+                              : null),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: RaisedButton(
+                        color: colorGenerico,
+                        child: Text("Limpiar Pedido", style: styleSubTitle),
+                        onPressed: () {
+                          cliente.resetClient();
+                          inventario.reset();
+                        },
+                      ),
                     ),
                   ],
                 ),
