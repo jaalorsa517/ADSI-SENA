@@ -42,7 +42,7 @@ class ScMain extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: new WBoton('BACKUP', '/backup'),
+                  child: new WBoton('BACKUP', '/datos'),
                 )
               ])),
         ));

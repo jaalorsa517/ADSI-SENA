@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:ventas/config/utilidades.dart';
 import 'package:ventas/logic/cliente/cliente_provider.dart';
 import 'package:ventas/logic/venta/inventario/inventario_provider.dart';
-import 'package:ventas/ui/screens/sc_backup.dart';
+import 'package:ventas/ui/screens/sc_datos.dart';
 import 'package:ventas/ui/screens/sc_cliente.dart';
 import 'package:ventas/ui/screens/sc_producto.dart';
 import 'package:ventas/ui/screens/sc_venta.dart';
@@ -36,7 +36,7 @@ class Principal extends StatelessWidget {
             '/cliente': (context) => ScCliente(),
             '/producto': (context) => ScProducto(),
             '/venta': (context) => ScVenta(context),
-            '/backup': (context) => ScBackup(),
+            '/datos': (context) => ScDatos(),
           },
           home: ScMain(),
         ));
