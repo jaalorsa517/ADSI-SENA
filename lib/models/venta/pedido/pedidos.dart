@@ -14,8 +14,10 @@ class Pedidos {
     'valor': 'valor',
     'idCliente': 'idCliente',
     'cliente': 'cliente',
+    'admin': 'admin',
     'fecha': 'fecha',
-    'producto': 'producto'
+    'producto': 'producto',
+    'ciudad': 'ciudad'
   };
 
   static Future<bool> create(Pedido pedido) async {
@@ -67,6 +69,45 @@ class Pedidos {
       return null;
     } finally {
       db.close();
+    }
+  }
+
+  static Future<List<Map>> readPedidoToday() async {
+    Database db = await Crud.conectar();
+    try {
+      List<Map<String, dynamic>> list = await db.rawQuery("""
+      SELECT ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['nombre']} as ${_alias['ciudad']},
+      ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['nombre']} as ${_alias['cliente']},
+      ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['admin']} as ${_alias['admin']},
+      ${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['fechaEntrega']} as ${_alias['fechaEntrega']},
+      ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['id']} as ${_alias['id']},
+      ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']} as ${_alias['producto']},
+      ${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['cantidad']} as ${_alias['cantidad']}
+      FROM ${Setup.CIUDAD_TABLE}
+      INNER JOIN ${Setup.CIUDAD_CLIENTE_TABLE}
+        ON ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['id']} = 
+          ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE['idCiudad']}
+      INNER JOIN ${Setup.CLIENTE_TABLE}
+        ON ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']}
+          ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE['idCliente']}
+      INNER JOIN ${Setup.INVENTARIO_TABLE}
+        ON ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']}
+          ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['idCliente']}
+      INNER JOIN ${Setup.INVENTARIO_PRODUCTO_TABLE}
+        ON ${Setup.INVENTARIO_PRODUCTO_TABLE}.${Setup.COLUMN_INVENTARIO_PRODUCTO['idInventario']}
+          ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['id']}
+      INNER JOIN ${Setup.PRODUCTO_TABLE}
+        ON ${Setup.INVENTARIO_PRODUCTO_TABLE}.${Setup.COLUMN_INVENTARIO_PRODUCTO['idProducto']}
+          ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']}
+      INNER JOIN ${Setup.PEDIDO_TABLE}
+        ON ${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['idInventario']}
+          ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['id']}
+      ORDER BY ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['nombre']}
+      """);
+      return _toObject(list);
+    } catch (e) {
+      print("select pedido hoy " + e.toString());
+      return null;
     }
   }
 
@@ -205,21 +246,90 @@ class Pedidos {
     return _pedido;
   }
 
-  // static List<Inventario> _mapToInventario(List<Map<String, dynamic>> list) {
-  //   List<Inventario> inventarios = [];
-  //   list.forEach((element) {
-  //     Inventario inventario = Inventario();
-  //     inventario.id = element[_alias['id']];
-  //     inventario.fecha = element[_alias['fecha']];
-  //     inventario.idProducto = element[_alias['idProducto']];
-  //     inventario.producto = element[_alias['producto']];
-  //     inventario.cantidad = element[_alias['cantidad']] ?? 0;
-  //     inventario.idCliente = element[_alias['idCliente']];
-  //     inventario.cliente = element[_alias['cliente']];
-  //     inventarios.add(inventario);
-  //   });
-  //   return inventarios;
-  // }
+  /**
+   * Función que convierte una lista de Map desordenado a una list de map Estructurados y ordenados
+   */
+  static List<Map> _toObject(List list) {
+    /* El objetivo de este método es exportar un objeto como el siguiente
+      [
+        {
+          ciudad: andes,
+          clientes:[
+            {
+              negocio: tienda X,
+              admin: admin
+              fechaEntrega:[
+                {fecha:21-3-21,
+                productos:[
+                    {id:123, producto:productoX,cantidad:y}
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+      */
+
+    List<Map> result = List();
+    Map<String, dynamic> datos = {'ciudad': "", "clientes": []};
+
+    //Crear la lista de ciudades
+    for (int i = 0; i < list.length; i++) {
+      if (list[i]['ciudad'] != datos['ciudad']) {
+        datos['ciudad'] = list[i]['ciudad'];
+        result.add(datos);
+      }
+    }
+
+    datos = {};
+
+    // Crear la lista de clientes
+    for (int i = 0; i < result.length; i++) {
+      datos = {"negocio": "", "admin": "", "fechaEntrega": []};
+      for (int j = 0; j < list.length; j++) {
+        if (list[j]['cliente'] != datos['negocio']) {
+          datos['negocio'] = list[j]['cliente'];
+          datos['admin'] = list[j]['admin'];
+          result[i]['clientes'].add(datos);
+        }
+      }
+    }
+
+    datos = {};
+
+    // Crear la lista de fecha de entrega
+    for (int i = 0; i < result.length; i++) {
+      for (int j = 0; j < result[i]['clientes']; j++) {
+        datos = {'fecha': '', 'productos': []};
+        for (int k = 0; k < list.length; k++) {
+          if (list[k]['fechaEntrega'] != datos['fecha']) {
+            datos['fecha'] = list[k]['fechaEntrega'];
+            result[i]['clientes'][j]['fechaEntrega'].add(datos);
+          }
+        }
+      }
+    }
+
+    //Crear la lista de productos
+    for (int i = 0; i < result.length; i++) {
+      for (int j = 0; i < result[i]['clientes']; j++) {
+        for (int k = 0; k < result[i]['clientes'][j]['fechaEntrega']; k++) {
+          for (int l = 0; l < list.length; l++) {
+            if (list[l]['fechaEntrega'] ==
+                result[i]['clientes'][j]['fechaEntrega'][k]['fecha']) {
+              result[i]['clientes'][j]['fechaEntrega'][k]['productos'].add({
+                'id': list[l]['id'],
+                'producto': list[l]['producto'],
+                'cantidad': list[l]['cantidad']
+              });
+            }
+          }
+        }
+      }
+    }
+    return result;
+  }
 
   static List<PedidoHistorial> _mapToPedidoHistorial(
       List<Map<String, dynamic>> list) {
