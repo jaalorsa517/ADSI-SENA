@@ -84,32 +84,39 @@ def load():
                 if ('email' in dic):
                     _c.email = dic['email']
 
-                try:
-                    con = sqlite3.connect(_PATH_DB)
-                    cursor = con.cursor()
+                from csv import writer
+                with open('clientes.csv', 'a') as csv_file:
+                    csv_writer = writer(csv_file)
+                    csv_writer.writerow(
+                        [_c.nit, _c.neg, _c.nom, _c.tel, 'dir', _c.email])
 
-                    cursor.execute(
-                        "INSERT INTO cliente (nit,nombre,representante,telefono,email,direccion) VALUES('{}','{}','{}','{}','{}','{}')"
-                        .format(_c.nit, _c.neg, _c.nom, _c.tel, _c.email,
-                                _c.dir))
+                # try:
+                #     con = sqlite3.connect(_PATH_DB)
+                #     cursor = con.cursor()
 
-                    cursor.execute(
-                        "SELECT id FROM cliente WHERE nombre='{}'".format(
-                            _c.neg))
-                    var = cursor.fetchone()
+                #     cursor.execute(
+                #         "INSERT INTO cliente (nit,nombre,representante,telefono,email,direccion) VALUES('{}','{}','{}','{}','{}','{}')"
+                #         .format(_c.nit, _c.neg, _c.nom, _c.tel, _c.email,
+                #                 _c.dir))
 
-                    cursor.execute(
-                        "INSERT INTO 'ciudad_cliente' VALUES ({},{});".format(
-                            var[0], (_PATHS_XLSX.index(xlsx) + 1)))
+                #     cursor.execute(
+                #         "SELECT id FROM cliente WHERE nombre='{}'".format(
+                #             _c.neg))
+                #     var = cursor.fetchone()
 
-                    con.commit()
+                #     cursor.execute(
+                #         "INSERT INTO 'ciudad_cliente' VALUES ({},{});".format(
+                #             var[0], (_PATHS_XLSX.index(xlsx) + 1)))
 
-                except sqlite3.Error as e:
-                    print(type(e).__name__)
+                #     con.commit()
 
-                finally:
-                    con.close()
+                # except sqlite3.Error as e:
+                #     print(type(e).__name__)
+
+                # finally:
+                #     con.close()
     print('FIN PROCESO CLIENTES')
+
 
 def datosInComment(coment):
     '''
@@ -128,3 +135,7 @@ def datosInComment(coment):
             if (len(i) == 2):
                 datos_dic[i[0]] = i[1]
     return datos_dic
+
+
+if __name__ == "__main__":
+    load()

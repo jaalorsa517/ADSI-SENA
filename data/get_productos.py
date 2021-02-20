@@ -7,7 +7,6 @@ import sqlite3
 
 
 class GetProductos:
-
     def __init__(self, nom=None, precio=None, iva=None):
         self.nom = nom
         self.precio = precio
@@ -20,10 +19,10 @@ def load():
     _PATH_XLXS = '/home/jaalorsa/Documentos/Drive/Gralac/Precios.xlsx'
     _PATH_DB = '/home/jaalorsa/Proyectos/flutter/ventas/data/pedidoDB.db'
     _NUM_SHEET = 0
-    _MAX_ROW=277
-    _MIN_ROW=3
+    _MAX_ROW = 277
+    _MIN_ROW = 3
 
-    #VARIABLES 
+    #VARIABLES
     _id = 1001
     _list_producto = []
     _workbook = load_workbook(_PATH_XLXS)
@@ -54,42 +53,53 @@ def load():
                     _list_producto[cell.row - _MIN_ROW].precio = cell.value
 
                 n += 1
-                print(
-                    round(n * 100 / ((_MAX_ROW-2) * _MIN_ROW),1),
-                    '%',
-                    flush=True,
-                    sep='',
-                    end='\r')
+                print(round(n * 100 / ((_MAX_ROW - 2) * _MIN_ROW), 1),
+                      '%',
+                      flush=True,
+                      sep='',
+                      end='\r')
 
     print()
     print('SE OBTUVO LOS DATOS DEL ARCHIVO XLSX')
 
-    try:
-        print('INICIO DE COPIADO A LA TABLA producto')
-        conexion = sqlite3.connect(_PATH_DB)
-        cursor = conexion.cursor()
+    from csv import writer
 
-        cursor.execute("DELETE FROM producto")
-        conexion.commit()
-
-        n = 0
-        for prod in _list_producto:
-            cursor.execute(
-                "INSERT INTO producto VALUES ({},'{}',{},{})".format(
-                    _id + n, prod.name, prod.precio, prod.iva))
-            conexion.commit()
+    n = 0
+    for prod in _list_producto:
+        with open('productos.csv', 'a') as csv_file:
+            csv_writer = writer(csv_file)
+            csv_writer.writerow([_id + n, prod.name, prod.precio, prod.iva])
             n += 1
-            print(round(n * 100 / len(_list_producto) , 1),
-                  '%',
-                  sep='',
-                  flush=True,
-                  end='\r')
+    # try:
+    #     print('INICIO DE COPIADO A LA TABLA producto')
+    #     conexion = sqlite3.connect(_PATH_DB)
+    #     cursor = conexion.cursor()
 
-    except Error:
-        print()
-        print(type(Error).__name__)
+    #     cursor.execute("DELETE FROM producto")
+    #     conexion.commit()
 
-    finally:
-        conexion.close()
-        print()
-        print('FIN DE PROCESO DE PRODUCTOS')
+    #     n = 0
+    #     for prod in _list_producto:
+    #         cursor.execute(
+    #             "INSERT INTO producto VALUES ({},'{}',{},{})".format(
+    #                 _id + n, prod.name, prod.precio, prod.iva))
+    #         conexion.commit()
+    #         n += 1
+    #         print(round(n * 100 / len(_list_producto) , 1),
+    #               '%',
+    #               sep='',
+    #               flush=True,
+    #               end='\r')
+
+    # except Error:
+    #     print()
+    #     print(type(Error).__name__)
+
+    # finally:
+    #     conexion.close()
+    #     print()
+    #     print('FIN DE PROCESO DE PRODUCTOS')
+
+
+if __name__ == "__main__":
+    load()

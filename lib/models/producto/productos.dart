@@ -45,19 +45,21 @@ class Productos {
   }
 
   static Future<List<Producto>> readByName(String name) async {
+    // ignore: avoid_init_to_null
+    List<Producto> response = null;
     Database db = await Crud.conectar();
     try {
       List<Map<String, dynamic>> list =
           await db.rawQuery("""SELECT * FROM producto WHERE 
               ${Setup.COLUMN_PRODUCTO['nombre']} LIKE \'%$name%\' 
               ORDER BY ${_alias['nom']} ASC""");
-      return _mapToProducto(list);
+      response = _mapToProducto(list);
     } catch (e) {
       print(e.toString());
-      return null;
     } finally {
       db.close();
     }
+    return response;
   }
 
   /* static Future<List<Producto>> readById(int id) async {

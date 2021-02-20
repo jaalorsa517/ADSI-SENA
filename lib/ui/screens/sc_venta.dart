@@ -310,7 +310,7 @@ class _ScVenta extends State<ScVenta> {
   Widget _resumen(BuildContext context) {
     var styleTitle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
     var styleSubTitle = TextStyle(fontSize: 24);
-    return Consumer<InventarioProvider>(builder: (context, parent, child) {
+    return Consumer<InventarioProvider>(builder: (context, inventario, child) {
       return Padding(
           padding: EdgeInsets.all(10),
           child: Column(
@@ -380,32 +380,36 @@ class _ScVenta extends State<ScVenta> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: RaisedButton(
-                          color: colorGenerico,
-                          child: Text("Registrar", style: styleSubTitle),
-                          onPressed: cliente.cliente.id != null
-                              ? () {
-                                  if (cliente.cliente.id != null) {
-                                    inventario
-                                        .saveInventario(cliente.cliente.id);
-                                    inventario.reset();
-                                    inventario
-                                        .loadInventario(cliente.cliente.id);
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: RaisedButton(
+                            color: colorGenerico,
+                            child: Text("Registrar", style: styleSubTitle),
+                            onPressed: cliente.cliente.id != null
+                                ? () {
+                                    if (cliente.cliente.id != null) {
+                                      inventario
+                                          .saveInventario(cliente.cliente.id);
+                                      inventario.reset();
+                                      inventario
+                                          .loadInventario(cliente.cliente.id);
+                                    }
                                   }
-                                }
-                              : null),
+                                : null),
+                      ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: RaisedButton(
-                        color: colorGenerico,
-                        child: Text("Limpiar Pedido", style: styleSubTitle),
-                        onPressed: () {
-                          cliente.resetClient();
-                          inventario.reset();
-                        },
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: RaisedButton(
+                          color: colorGenerico,
+                          child: Text("Limpiar Pedido", style: styleSubTitle),
+                          onPressed: () {
+                            cliente.resetClient();
+                            inventario.reset();
+                          },
+                        ),
                       ),
                     ),
                   ],

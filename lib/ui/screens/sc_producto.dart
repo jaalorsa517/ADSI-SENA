@@ -80,7 +80,7 @@ class _ScProducto extends State<ScProducto> {
           itemCount: producto.productos.length,
           itemBuilder: (context, index) {
             return Container(
-                color: _productoSelect[index] ? colorGenerico : Colors.white,
+                color:( _productoSelect.length > 0 ? _productoSelect[index]:false) ? colorGenerico : Colors.white,
                 child: ListTile(
                   enabled: true,
                   title: Text(producto.productos[index].nombre),

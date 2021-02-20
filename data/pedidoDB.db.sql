@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS "producto" (
 	"id"	INTEGER,
 	"nombre"	TEXT NOT NULL,
 	"precio"	INTEGER,
-	"iva"	INTEGER,
+	"iva"	REAL,
 	PRIMARY KEY("id")
 );
 CREATE TABLE IF NOT EXISTS "ciudad" (
