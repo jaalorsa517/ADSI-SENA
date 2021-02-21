@@ -31,7 +31,7 @@ class Principal extends StatelessWidget {
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate
           ],
-          supportedLocales: [const Locale('es')],
+          supportedLocales: [const Locale('es','CO')],
           routes: <String, WidgetBuilder>{
             '/cliente': (context) => ScCliente(),
             '/producto': (context) => ScProducto(),

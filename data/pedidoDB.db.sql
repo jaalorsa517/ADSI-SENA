@@ -1,10 +1,4 @@
 BEGIN TRANSACTION;
-CREATE TABLE IF NOT EXISTS "ciudad_cliente" (
-	"idCliente"	INTEGER,
-	"idCiudad"	INTEGER,
-	FOREIGN KEY("idCiudad") REFERENCES "ciudad"("id"),
-	FOREIGN KEY("idCliente") REFERENCES "cliente"("id")
-);
 CREATE TABLE IF NOT EXISTS "cliente" (
 	"id"	INTEGER PRIMARY KEY AUTOINCREMENT,
 	"nit"	TEXT,
@@ -14,29 +8,7 @@ CREATE TABLE IF NOT EXISTS "cliente" (
 	"email"	TEXT,
 	"direccion"	TEXT
 );
-CREATE TABLE IF NOT EXISTS "pedido" (
-	"id"	INTEGER,
-	"fecha_pedido"	TEXT NOT NULL,
-	"fecha_entrega"	TEXT NOT NULL,
-	"id_inventario"	INTEGER NOT NULL,
-	"cantidad"	INTEGER NOT NULL,
-	"valor"	INTEGER NOT NULL,
-	FOREIGN KEY("id_inventario") REFERENCES "inventario"("id"),
-	PRIMARY KEY("id")
-);
-CREATE TABLE IF NOT EXISTS "inventario" (
-	"id"	INTEGER,
-	"cantidad"	INTEGER,
-	"fecha"	TEXT,
-	"fk_id_cliente"	INTEGER,
-	PRIMARY KEY("id")
-);
-CREATE TABLE IF NOT EXISTS "inventario_producto" (
-	"id_Inventario"	INTEGER,
-	"id_Producto"	INTEGER,
-	PRIMARY KEY("id_Inventario","id_Producto"),
-	FOREIGN KEY("id_Inventario") REFERENCES "inventario"("id")
-);
+
 CREATE TABLE IF NOT EXISTS "producto" (
 	"id"	INTEGER,
 	"nombre"	TEXT NOT NULL,
@@ -45,161 +17,51 @@ CREATE TABLE IF NOT EXISTS "producto" (
 	PRIMARY KEY("id")
 );
 CREATE TABLE IF NOT EXISTS "ciudad" (
-	"id"	INTEGER,
+	"id"	INTEGER PRIMARY KEY AUTOINCREMENT,
 	"nombre"	TEXT,
-	PRIMARY KEY("id")
+	-- PRIMARY KEY("id")
 );
-INSERT INTO "ciudad_cliente" VALUES (454,1);
-INSERT INTO "ciudad_cliente" VALUES (455,1);
-INSERT INTO "ciudad_cliente" VALUES (456,1);
-INSERT INTO "ciudad_cliente" VALUES (457,1);
-INSERT INTO "ciudad_cliente" VALUES (458,1);
-INSERT INTO "ciudad_cliente" VALUES (459,1);
-INSERT INTO "ciudad_cliente" VALUES (460,1);
-INSERT INTO "ciudad_cliente" VALUES (461,1);
-INSERT INTO "ciudad_cliente" VALUES (462,1);
-INSERT INTO "ciudad_cliente" VALUES (463,1);
-INSERT INTO "ciudad_cliente" VALUES (464,1);
-INSERT INTO "ciudad_cliente" VALUES (465,1);
-INSERT INTO "ciudad_cliente" VALUES (466,1);
-INSERT INTO "ciudad_cliente" VALUES (467,1);
-INSERT INTO "ciudad_cliente" VALUES (468,1);
-INSERT INTO "ciudad_cliente" VALUES (469,1);
-INSERT INTO "ciudad_cliente" VALUES (470,2);
-INSERT INTO "ciudad_cliente" VALUES (471,2);
-INSERT INTO "ciudad_cliente" VALUES (472,2);
-INSERT INTO "ciudad_cliente" VALUES (473,2);
-INSERT INTO "ciudad_cliente" VALUES (474,2);
-INSERT INTO "ciudad_cliente" VALUES (475,2);
-INSERT INTO "ciudad_cliente" VALUES (476,2);
-INSERT INTO "ciudad_cliente" VALUES (477,2);
-INSERT INTO "ciudad_cliente" VALUES (478,2);
-INSERT INTO "ciudad_cliente" VALUES (479,2);
-INSERT INTO "ciudad_cliente" VALUES (480,2);
-INSERT INTO "ciudad_cliente" VALUES (481,2);
-INSERT INTO "ciudad_cliente" VALUES (482,2);
-INSERT INTO "ciudad_cliente" VALUES (483,2);
-INSERT INTO "ciudad_cliente" VALUES (484,2);
-INSERT INTO "ciudad_cliente" VALUES (485,2);
-INSERT INTO "ciudad_cliente" VALUES (486,2);
-INSERT INTO "ciudad_cliente" VALUES (487,2);
-INSERT INTO "ciudad_cliente" VALUES (488,2);
-INSERT INTO "ciudad_cliente" VALUES (489,2);
-INSERT INTO "ciudad_cliente" VALUES (490,2);
-INSERT INTO "ciudad_cliente" VALUES (491,2);
-INSERT INTO "ciudad_cliente" VALUES (492,2);
-INSERT INTO "ciudad_cliente" VALUES (493,2);
-INSERT INTO "ciudad_cliente" VALUES (494,2);
-INSERT INTO "ciudad_cliente" VALUES (495,2);
-INSERT INTO "ciudad_cliente" VALUES (496,2);
-INSERT INTO "ciudad_cliente" VALUES (497,2);
-INSERT INTO "ciudad_cliente" VALUES (498,2);
-INSERT INTO "ciudad_cliente" VALUES (499,2);
-INSERT INTO "ciudad_cliente" VALUES (500,2);
-INSERT INTO "ciudad_cliente" VALUES (501,2);
-INSERT INTO "ciudad_cliente" VALUES (502,2);
-INSERT INTO "ciudad_cliente" VALUES (503,3);
-INSERT INTO "ciudad_cliente" VALUES (504,3);
-INSERT INTO "ciudad_cliente" VALUES (505,3);
-INSERT INTO "ciudad_cliente" VALUES (506,3);
-INSERT INTO "ciudad_cliente" VALUES (507,3);
-INSERT INTO "ciudad_cliente" VALUES (508,3);
-INSERT INTO "ciudad_cliente" VALUES (509,3);
-INSERT INTO "ciudad_cliente" VALUES (510,3);
-INSERT INTO "ciudad_cliente" VALUES (511,3);
-INSERT INTO "ciudad_cliente" VALUES (512,3);
-INSERT INTO "ciudad_cliente" VALUES (513,3);
-INSERT INTO "ciudad_cliente" VALUES (514,3);
-INSERT INTO "ciudad_cliente" VALUES (515,3);
-INSERT INTO "ciudad_cliente" VALUES (516,3);
-INSERT INTO "ciudad_cliente" VALUES (517,3);
-INSERT INTO "ciudad_cliente" VALUES (518,3);
-INSERT INTO "ciudad_cliente" VALUES (519,3);
-INSERT INTO "ciudad_cliente" VALUES (520,3);
-INSERT INTO "ciudad_cliente" VALUES (521,4);
-INSERT INTO "ciudad_cliente" VALUES (522,4);
-INSERT INTO "ciudad_cliente" VALUES (523,4);
-INSERT INTO "ciudad_cliente" VALUES (524,4);
-INSERT INTO "ciudad_cliente" VALUES (525,4);
-INSERT INTO "ciudad_cliente" VALUES (526,4);
-INSERT INTO "ciudad_cliente" VALUES (527,4);
-INSERT INTO "ciudad_cliente" VALUES (528,4);
-INSERT INTO "ciudad_cliente" VALUES (529,4);
-INSERT INTO "ciudad_cliente" VALUES (530,4);
-INSERT INTO "ciudad_cliente" VALUES (531,4);
-INSERT INTO "ciudad_cliente" VALUES (532,4);
-INSERT INTO "ciudad_cliente" VALUES (533,4);
-INSERT INTO "ciudad_cliente" VALUES (534,4);
-INSERT INTO "ciudad_cliente" VALUES (535,4);
-INSERT INTO "ciudad_cliente" VALUES (536,4);
-INSERT INTO "ciudad_cliente" VALUES (537,4);
-INSERT INTO "ciudad_cliente" VALUES (538,4);
-INSERT INTO "ciudad_cliente" VALUES (539,4);
-INSERT INTO "ciudad_cliente" VALUES (540,4);
-INSERT INTO "ciudad_cliente" VALUES (541,4);
-INSERT INTO "ciudad_cliente" VALUES (542,4);
-INSERT INTO "ciudad_cliente" VALUES (543,4);
-INSERT INTO "ciudad_cliente" VALUES (544,4);
-INSERT INTO "ciudad_cliente" VALUES (545,4);
-INSERT INTO "ciudad_cliente" VALUES (546,4);
-INSERT INTO "ciudad_cliente" VALUES (547,4);
-INSERT INTO "ciudad_cliente" VALUES (548,4);
-INSERT INTO "ciudad_cliente" VALUES (549,4);
-INSERT INTO "ciudad_cliente" VALUES (550,4);
-INSERT INTO "ciudad_cliente" VALUES (551,4);
-INSERT INTO "ciudad_cliente" VALUES (552,4);
-INSERT INTO "ciudad_cliente" VALUES (553,4);
-INSERT INTO "ciudad_cliente" VALUES (554,4);
-INSERT INTO "ciudad_cliente" VALUES (555,4);
-INSERT INTO "ciudad_cliente" VALUES (556,4);
-INSERT INTO "ciudad_cliente" VALUES (557,4);
-INSERT INTO "ciudad_cliente" VALUES (558,4);
-INSERT INTO "ciudad_cliente" VALUES (559,4);
-INSERT INTO "ciudad_cliente" VALUES (560,4);
-INSERT INTO "ciudad_cliente" VALUES (561,4);
-INSERT INTO "ciudad_cliente" VALUES (562,4);
-INSERT INTO "ciudad_cliente" VALUES (563,4);
-INSERT INTO "ciudad_cliente" VALUES (564,4);
-INSERT INTO "ciudad_cliente" VALUES (565,4);
-INSERT INTO "ciudad_cliente" VALUES (566,4);
-INSERT INTO "ciudad_cliente" VALUES (567,5);
-INSERT INTO "ciudad_cliente" VALUES (568,5);
-INSERT INTO "ciudad_cliente" VALUES (569,5);
-INSERT INTO "ciudad_cliente" VALUES (570,5);
-INSERT INTO "ciudad_cliente" VALUES (571,5);
-INSERT INTO "ciudad_cliente" VALUES (572,5);
-INSERT INTO "ciudad_cliente" VALUES (573,5);
-INSERT INTO "ciudad_cliente" VALUES (574,5);
-INSERT INTO "ciudad_cliente" VALUES (575,5);
-INSERT INTO "ciudad_cliente" VALUES (576,5);
-INSERT INTO "ciudad_cliente" VALUES (577,5);
-INSERT INTO "ciudad_cliente" VALUES (578,5);
-INSERT INTO "ciudad_cliente" VALUES (579,5);
-INSERT INTO "ciudad_cliente" VALUES (580,5);
-INSERT INTO "ciudad_cliente" VALUES (580,5);
-INSERT INTO "ciudad_cliente" VALUES (582,6);
-INSERT INTO "ciudad_cliente" VALUES (583,6);
-INSERT INTO "ciudad_cliente" VALUES (584,6);
-INSERT INTO "ciudad_cliente" VALUES (585,6);
-INSERT INTO "ciudad_cliente" VALUES (586,6);
-INSERT INTO "ciudad_cliente" VALUES (587,6);
-INSERT INTO "ciudad_cliente" VALUES (588,6);
-INSERT INTO "ciudad_cliente" VALUES (589,6);
-INSERT INTO "ciudad_cliente" VALUES (590,6);
-INSERT INTO "ciudad_cliente" VALUES (591,6);
-INSERT INTO "ciudad_cliente" VALUES (592,7);
-INSERT INTO "ciudad_cliente" VALUES (593,7);
-INSERT INTO "ciudad_cliente" VALUES (594,7);
-INSERT INTO "ciudad_cliente" VALUES (595,7);
-INSERT INTO "ciudad_cliente" VALUES (596,7);
-INSERT INTO "ciudad_cliente" VALUES (597,7);
-INSERT INTO "ciudad_cliente" VALUES (598,7);
-INSERT INTO "ciudad_cliente" VALUES (599,7);
-INSERT INTO "ciudad_cliente" VALUES (600,7);
-INSERT INTO "ciudad_cliente" VALUES (601,7);
-INSERT INTO "ciudad_cliente" VALUES (602,7);
-INSERT INTO "ciudad_cliente" VALUES (603,7);
-INSERT INTO "ciudad_cliente" VALUES (604,7);
+
+CREATE TABLE IF NOT EXISTS "ciudad_cliente" (
+	"idCliente"	INTEGER,
+	"idCiudad"	INTEGER,
+	FOREIGN KEY("idCiudad") REFERENCES "ciudad"("id"),
+	FOREIGN KEY("idCliente") REFERENCES "cliente"("id")
+);
+
+CREATE TABLE IF NOT EXISTS "inventario" (
+	"id"	INTEGER PRIMARY KEY AUTOINCREMENT,
+	"cantidad"	INTEGER,
+	"fecha"	TEXT,
+	"fk_id_cliente"	INTEGER,
+	-- PRIMARY KEY("id")
+);
+
+CREATE TABLE IF NOT EXISTS "pedido" (
+	"id"	INTEGER PRIMARY KEY AUTOINCREMENT,
+	"fecha_pedido"	TEXT NOT NULL,
+	"fecha_entrega"	TEXT NOT NULL,
+	"id_inventario"	INTEGER NOT NULL,
+	"cantidad"	INTEGER NOT NULL,
+	"valor"	INTEGER NOT NULL,
+	FOREIGN KEY("id_inventario") REFERENCES "inventario"("id"),
+	-- PRIMARY KEY("id")
+);
+
+CREATE TABLE IF NOT EXISTS "inventario_producto" (
+	"id_Inventario"	INTEGER,
+	"id_Producto"	INTEGER,
+	PRIMARY KEY("id_Inventario","id_Producto"),
+	FOREIGN KEY("id_Inventario") REFERENCES "inventario"("id")
+);
+
+INSERT INTO "ciudad" VALUES (1,'ANDES');
+INSERT INTO "ciudad" VALUES (2,'BETANIA');
+INSERT INTO "ciudad" VALUES (3,'HISPANIA');
+INSERT INTO "ciudad" VALUES (4,'JARDIN');
+INSERT INTO "ciudad" VALUES (5,'SANTA INES');
+INSERT INTO "ciudad" VALUES (6,'SANTA RITA');
+INSERT INTO "ciudad" VALUES (7,'TAPARTO');
 INSERT INTO "cliente" VALUES (454,'','Supermercado Tesoro','Supermercado Tesoro','','','');
 INSERT INTO "cliente" VALUES (455,'','Supermercado Familiar','Supermercado Familiar','','','');
 INSERT INTO "cliente" VALUES (456,'','Supermercado Dinastia','Supermercado Dinastia','','','');
@@ -351,121 +213,157 @@ INSERT INTO "cliente" VALUES (601,'','Colegio','Adriana Ruiz','3117544770','',''
 INSERT INTO "cliente" VALUES (602,'','Los Velez','Maximercado los Velez','3122954085',' maximercadovelez@gmail.com','');
 INSERT INTO "cliente" VALUES (603,'','Fonda el descuelgue','Marina Alzate','3225710353',' ','');
 INSERT INTO "cliente" VALUES (604,'','Lácteos del campo',' Gabriel Zapata','3204518881',' ','');
-INSERT INTO "cliente" VALUES (605,'','cliente1','','','','');
-INSERT INTO "cliente" VALUES (606,'','','','','','');
-INSERT INTO "pedido" VALUES (1,'1-8-2020','2-8-2020',19,1,26000);
-INSERT INTO "pedido" VALUES (2,'23-9-2020','24-9-2020',24,3,22000);
-INSERT INTO "pedido" VALUES (3,'5-1-2020','6-1-2020',15,11,14000);
-INSERT INTO "pedido" VALUES (4,'28-13-2020','29-13-2020',20,21,14000);
-INSERT INTO "pedido" VALUES (5,'25-3-2020','26-3-2020',22,21,26000);
-INSERT INTO "pedido" VALUES (6,'24-5-2020','25-5-2020',6,24,19000);
-INSERT INTO "pedido" VALUES (7,'31-2-2020','32-2-2020',9,11,26000);
-INSERT INTO "pedido" VALUES (8,'21-6-2020','22-6-2020',6,2,3000);
-INSERT INTO "pedido" VALUES (9,'9-13-2020','10-13-2020',14,13,30000);
-INSERT INTO "pedido" VALUES (10,'16-1-2020','17-1-2020',26,5,14000);
-INSERT INTO "pedido" VALUES (11,'2-9-2020','3-9-2020',13,9,6000);
-INSERT INTO "pedido" VALUES (12,'31-9-2020','32-9-2020',16,14,30000);
-INSERT INTO "pedido" VALUES (13,'21-9-2020','22-9-2020',10,30,5000);
-INSERT INTO "pedido" VALUES (14,'5-12-2020','6-12-2020',28,4,18000);
-INSERT INTO "pedido" VALUES (15,'30-12-2020','31-12-2020',15,18,25000);
-INSERT INTO "pedido" VALUES (16,'13-13-2020','14-13-2020',28,7,23000);
-INSERT INTO "pedido" VALUES (17,'15-6-2020','16-6-2020',12,29,5000);
-INSERT INTO "pedido" VALUES (18,'13-10-2020','14-10-2020',10,6,5000);
-INSERT INTO "pedido" VALUES (19,'2-8-2020','3-8-2020',29,7,22000);
-INSERT INTO "pedido" VALUES (20,'20-5-2020','21-5-2020',11,22,10000);
-INSERT INTO "pedido" VALUES (21,'8-7-2020','9-7-2020',18,22,22000);
-INSERT INTO "pedido" VALUES (22,'12-1-2020','13-1-2020',3,25,20000);
-INSERT INTO "pedido" VALUES (23,'11-6-2020','12-6-2020',15,2,23000);
-INSERT INTO "pedido" VALUES (24,'7-8-2020','8-8-2020',23,19,17000);
-INSERT INTO "pedido" VALUES (25,'16-4-2020','17-4-2020',10,2,1000);
-INSERT INTO "pedido" VALUES (26,'8-5-2020','9-5-2020',11,23,27000);
-INSERT INTO "pedido" VALUES (27,'4-13-2020','5-13-2020',3,12,18000);
-INSERT INTO "pedido" VALUES (28,'9-10-2020','10-10-2020',17,21,3000);
-INSERT INTO "pedido" VALUES (29,'23-6-2020','24-6-2020',21,10,4000);
-INSERT INTO "pedido" VALUES (30,'30-7-2020','31-7-2020',5,21,5000);
-INSERT INTO "pedido" VALUES (31,'28-4-2020','29-4-2020',7,25,4000);
-INSERT INTO "pedido" VALUES (32,'20-13-2020','21-13-2020',22,27,4000);
-INSERT INTO "pedido" VALUES (33,'24-9-2020','25-9-2020',7,30,25000);
-INSERT INTO "pedido" VALUES (34,'10-4-2020','11-4-2020',2,22,27000);
-INSERT INTO "pedido" VALUES (35,'24-8-2020','25-8-2020',11,2,10000);
-INSERT INTO "pedido" VALUES (36,'28-12-2020','29-12-2020',16,29,25000);
-INSERT INTO "pedido" VALUES (37,'16-8-2020','17-8-2020',14,10,29000);
-INSERT INTO "pedido" VALUES (38,'22-12-2020','23-12-2020',8,20,3000);
-INSERT INTO "pedido" VALUES (39,'23-10-2020','24-10-2020',18,26,9000);
-INSERT INTO "pedido" VALUES (40,'15-5-2020','16-5-2020',15,14,22000);
-INSERT INTO "pedido" VALUES (41,'2-3-2020','3-3-2020',6,24,5000);
-INSERT INTO "pedido" VALUES (42,'9-5-2020','10-5-2020',25,11,25000);
-INSERT INTO "pedido" VALUES (43,'27-7-2020','28-7-2020',29,22,11000);
-INSERT INTO "pedido" VALUES (44,'14-5-2020','15-5-2020',19,26,25000);
-INSERT INTO "pedido" VALUES (45,'31-6-2020','32-6-2020',4,24,11000);
-INSERT INTO "pedido" VALUES (46,'25-3-2020','26-3-2020',26,26,17000);
-INSERT INTO "pedido" VALUES (47,'21-6-2020','22-6-2020',1,19,27000);
-INSERT INTO "pedido" VALUES (48,'26-2-2020','27-2-2020',9,20,12000);
-INSERT INTO "pedido" VALUES (49,'20-13-2020','21-13-2020',5,4,20000);
-INSERT INTO "pedido" VALUES (50,'17-8-2020','18-8-2020',20,12,30000);
-INSERT INTO "pedido" VALUES (51,'11-13-2020','12-13-2020',17,21,20000);
-INSERT INTO "pedido" VALUES (52,'26-3-2020','27-3-2020',14,12,28000);
-INSERT INTO "pedido" VALUES (53,'31-4-2020','32-4-2020',6,1,4000);
-INSERT INTO "pedido" VALUES (54,'1-2-2020','2-2-2020',23,21,28000);
-INSERT INTO "pedido" VALUES (55,'18-4-2020','19-4-2020',22,16,21000);
-INSERT INTO "pedido" VALUES (56,'11-10-2020','12-10-2020',9,28,19000);
-INSERT INTO "pedido" VALUES (57,'25-8-2020','26-8-2020',17,20,23000);
-INSERT INTO "inventario" VALUES (1,14,'7-10-2020',501);
-INSERT INTO "inventario" VALUES (2,12,'23-2-2020',555);
-INSERT INTO "inventario" VALUES (3,22,'13-8-2020',512);
-INSERT INTO "inventario" VALUES (4,4,'7-5-2020',553);
-INSERT INTO "inventario" VALUES (5,23,'21-12-2020',605);
-INSERT INTO "inventario" VALUES (6,2,'28-12-2020',522);
-INSERT INTO "inventario" VALUES (7,0,'24-7-2020',582);
-INSERT INTO "inventario" VALUES (8,3,'29-8-2020',462);
-INSERT INTO "inventario" VALUES (9,13,'13-3-2020',474);
-INSERT INTO "inventario" VALUES (10,7,'24-12-2020',600);
-INSERT INTO "inventario" VALUES (11,12,'29-1-2020',519);
-INSERT INTO "inventario" VALUES (12,12,'27-12-2020',595);
-INSERT INTO "inventario" VALUES (13,20,'18-8-2020',571);
-INSERT INTO "inventario" VALUES (14,20,'14-8-2020',590);
-INSERT INTO "inventario" VALUES (15,16,'25-11-2020',605);
-INSERT INTO "inventario" VALUES (16,9,'23-11-2020',471);
-INSERT INTO "inventario" VALUES (17,25,'24-12-2020',531);
-INSERT INTO "inventario" VALUES (18,19,'3-8-2020',549);
-INSERT INTO "inventario" VALUES (19,8,'17-7-2020',457);
-INSERT INTO "inventario" VALUES (20,13,'24-10-2020',556);
-INSERT INTO "inventario" VALUES (21,15,'16-7-2020',553);
-INSERT INTO "inventario" VALUES (22,15,'9-1-2020',584);
-INSERT INTO "inventario" VALUES (23,3,'3-5-2020',503);
-INSERT INTO "inventario" VALUES (24,3,'5-6-2020',480);
-INSERT INTO "inventario" VALUES (25,2,'15-11-2020',510);
-INSERT INTO "inventario" VALUES (26,11,'5-13-2020',541);
-INSERT INTO "inventario" VALUES (27,15,'20-6-2020',532);
-INSERT INTO "inventario" VALUES (28,17,'14-3-2020',479);
-INSERT INTO "inventario_producto" VALUES (1,1257);
-INSERT INTO "inventario_producto" VALUES (2,1162);
-INSERT INTO "inventario_producto" VALUES (3,1189);
-INSERT INTO "inventario_producto" VALUES (4,1140);
-INSERT INTO "inventario_producto" VALUES (5,1038);
-INSERT INTO "inventario_producto" VALUES (6,1161);
-INSERT INTO "inventario_producto" VALUES (7,1103);
-INSERT INTO "inventario_producto" VALUES (8,1042);
-INSERT INTO "inventario_producto" VALUES (9,1058);
-INSERT INTO "inventario_producto" VALUES (10,1219);
-INSERT INTO "inventario_producto" VALUES (11,1247);
-INSERT INTO "inventario_producto" VALUES (12,1139);
-INSERT INTO "inventario_producto" VALUES (13,1114);
-INSERT INTO "inventario_producto" VALUES (14,1152);
-INSERT INTO "inventario_producto" VALUES (15,1171);
-INSERT INTO "inventario_producto" VALUES (16,1217);
-INSERT INTO "inventario_producto" VALUES (17,1051);
-INSERT INTO "inventario_producto" VALUES (18,1093);
-INSERT INTO "inventario_producto" VALUES (19,1183);
-INSERT INTO "inventario_producto" VALUES (20,1019);
-INSERT INTO "inventario_producto" VALUES (21,1113);
-INSERT INTO "inventario_producto" VALUES (22,1041);
-INSERT INTO "inventario_producto" VALUES (23,1128);
-INSERT INTO "inventario_producto" VALUES (24,1053);
-INSERT INTO "inventario_producto" VALUES (25,1170);
-INSERT INTO "inventario_producto" VALUES (26,1271);
-INSERT INTO "inventario_producto" VALUES (27,1147);
-INSERT INTO "inventario_producto" VALUES (28,1101);
+INSERT INTO "ciudad_cliente" VALUES (454,1);
+INSERT INTO "ciudad_cliente" VALUES (455,1);
+INSERT INTO "ciudad_cliente" VALUES (456,1);
+INSERT INTO "ciudad_cliente" VALUES (457,1);
+INSERT INTO "ciudad_cliente" VALUES (458,1);
+INSERT INTO "ciudad_cliente" VALUES (459,1);
+INSERT INTO "ciudad_cliente" VALUES (460,1);
+INSERT INTO "ciudad_cliente" VALUES (461,1);
+INSERT INTO "ciudad_cliente" VALUES (462,1);
+INSERT INTO "ciudad_cliente" VALUES (463,1);
+INSERT INTO "ciudad_cliente" VALUES (464,1);
+INSERT INTO "ciudad_cliente" VALUES (465,1);
+INSERT INTO "ciudad_cliente" VALUES (466,1);
+INSERT INTO "ciudad_cliente" VALUES (467,1);
+INSERT INTO "ciudad_cliente" VALUES (468,1);
+INSERT INTO "ciudad_cliente" VALUES (469,1);
+INSERT INTO "ciudad_cliente" VALUES (470,2);
+INSERT INTO "ciudad_cliente" VALUES (471,2);
+INSERT INTO "ciudad_cliente" VALUES (472,2);
+INSERT INTO "ciudad_cliente" VALUES (473,2);
+INSERT INTO "ciudad_cliente" VALUES (474,2);
+INSERT INTO "ciudad_cliente" VALUES (475,2);
+INSERT INTO "ciudad_cliente" VALUES (476,2);
+INSERT INTO "ciudad_cliente" VALUES (477,2);
+INSERT INTO "ciudad_cliente" VALUES (478,2);
+INSERT INTO "ciudad_cliente" VALUES (479,2);
+INSERT INTO "ciudad_cliente" VALUES (480,2);
+INSERT INTO "ciudad_cliente" VALUES (481,2);
+INSERT INTO "ciudad_cliente" VALUES (482,2);
+INSERT INTO "ciudad_cliente" VALUES (483,2);
+INSERT INTO "ciudad_cliente" VALUES (484,2);
+INSERT INTO "ciudad_cliente" VALUES (485,2);
+INSERT INTO "ciudad_cliente" VALUES (486,2);
+INSERT INTO "ciudad_cliente" VALUES (487,2);
+INSERT INTO "ciudad_cliente" VALUES (488,2);
+INSERT INTO "ciudad_cliente" VALUES (489,2);
+INSERT INTO "ciudad_cliente" VALUES (490,2);
+INSERT INTO "ciudad_cliente" VALUES (491,2);
+INSERT INTO "ciudad_cliente" VALUES (492,2);
+INSERT INTO "ciudad_cliente" VALUES (493,2);
+INSERT INTO "ciudad_cliente" VALUES (494,2);
+INSERT INTO "ciudad_cliente" VALUES (495,2);
+INSERT INTO "ciudad_cliente" VALUES (496,2);
+INSERT INTO "ciudad_cliente" VALUES (497,2);
+INSERT INTO "ciudad_cliente" VALUES (498,2);
+INSERT INTO "ciudad_cliente" VALUES (499,2);
+INSERT INTO "ciudad_cliente" VALUES (500,2);
+INSERT INTO "ciudad_cliente" VALUES (501,2);
+INSERT INTO "ciudad_cliente" VALUES (502,2);
+INSERT INTO "ciudad_cliente" VALUES (503,3);
+INSERT INTO "ciudad_cliente" VALUES (504,3);
+INSERT INTO "ciudad_cliente" VALUES (505,3);
+INSERT INTO "ciudad_cliente" VALUES (506,3);
+INSERT INTO "ciudad_cliente" VALUES (507,3);
+INSERT INTO "ciudad_cliente" VALUES (508,3);
+INSERT INTO "ciudad_cliente" VALUES (509,3);
+INSERT INTO "ciudad_cliente" VALUES (510,3);
+INSERT INTO "ciudad_cliente" VALUES (511,3);
+INSERT INTO "ciudad_cliente" VALUES (512,3);
+INSERT INTO "ciudad_cliente" VALUES (513,3);
+INSERT INTO "ciudad_cliente" VALUES (514,3);
+INSERT INTO "ciudad_cliente" VALUES (515,3);
+INSERT INTO "ciudad_cliente" VALUES (516,3);
+INSERT INTO "ciudad_cliente" VALUES (517,3);
+INSERT INTO "ciudad_cliente" VALUES (518,3);
+INSERT INTO "ciudad_cliente" VALUES (519,3);
+INSERT INTO "ciudad_cliente" VALUES (520,3);
+INSERT INTO "ciudad_cliente" VALUES (521,4);
+INSERT INTO "ciudad_cliente" VALUES (522,4);
+INSERT INTO "ciudad_cliente" VALUES (523,4);
+INSERT INTO "ciudad_cliente" VALUES (524,4);
+INSERT INTO "ciudad_cliente" VALUES (525,4);
+INSERT INTO "ciudad_cliente" VALUES (526,4);
+INSERT INTO "ciudad_cliente" VALUES (527,4);
+INSERT INTO "ciudad_cliente" VALUES (528,4);
+INSERT INTO "ciudad_cliente" VALUES (529,4);
+INSERT INTO "ciudad_cliente" VALUES (530,4);
+INSERT INTO "ciudad_cliente" VALUES (531,4);
+INSERT INTO "ciudad_cliente" VALUES (532,4);
+INSERT INTO "ciudad_cliente" VALUES (533,4);
+INSERT INTO "ciudad_cliente" VALUES (534,4);
+INSERT INTO "ciudad_cliente" VALUES (535,4);
+INSERT INTO "ciudad_cliente" VALUES (536,4);
+INSERT INTO "ciudad_cliente" VALUES (537,4);
+INSERT INTO "ciudad_cliente" VALUES (538,4);
+INSERT INTO "ciudad_cliente" VALUES (539,4);
+INSERT INTO "ciudad_cliente" VALUES (540,4);
+INSERT INTO "ciudad_cliente" VALUES (541,4);
+INSERT INTO "ciudad_cliente" VALUES (542,4);
+INSERT INTO "ciudad_cliente" VALUES (543,4);
+INSERT INTO "ciudad_cliente" VALUES (544,4);
+INSERT INTO "ciudad_cliente" VALUES (545,4);
+INSERT INTO "ciudad_cliente" VALUES (546,4);
+INSERT INTO "ciudad_cliente" VALUES (547,4);
+INSERT INTO "ciudad_cliente" VALUES (548,4);
+INSERT INTO "ciudad_cliente" VALUES (549,4);
+INSERT INTO "ciudad_cliente" VALUES (550,4);
+INSERT INTO "ciudad_cliente" VALUES (551,4);
+INSERT INTO "ciudad_cliente" VALUES (552,4);
+INSERT INTO "ciudad_cliente" VALUES (553,4);
+INSERT INTO "ciudad_cliente" VALUES (554,4);
+INSERT INTO "ciudad_cliente" VALUES (555,4);
+INSERT INTO "ciudad_cliente" VALUES (556,4);
+INSERT INTO "ciudad_cliente" VALUES (557,4);
+INSERT INTO "ciudad_cliente" VALUES (558,4);
+INSERT INTO "ciudad_cliente" VALUES (559,4);
+INSERT INTO "ciudad_cliente" VALUES (560,4);
+INSERT INTO "ciudad_cliente" VALUES (561,4);
+INSERT INTO "ciudad_cliente" VALUES (562,4);
+INSERT INTO "ciudad_cliente" VALUES (563,4);
+INSERT INTO "ciudad_cliente" VALUES (564,4);
+INSERT INTO "ciudad_cliente" VALUES (565,4);
+INSERT INTO "ciudad_cliente" VALUES (566,4);
+INSERT INTO "ciudad_cliente" VALUES (567,5);
+INSERT INTO "ciudad_cliente" VALUES (568,5);
+INSERT INTO "ciudad_cliente" VALUES (569,5);
+INSERT INTO "ciudad_cliente" VALUES (570,5);
+INSERT INTO "ciudad_cliente" VALUES (571,5);
+INSERT INTO "ciudad_cliente" VALUES (572,5);
+INSERT INTO "ciudad_cliente" VALUES (573,5);
+INSERT INTO "ciudad_cliente" VALUES (574,5);
+INSERT INTO "ciudad_cliente" VALUES (575,5);
+INSERT INTO "ciudad_cliente" VALUES (576,5);
+INSERT INTO "ciudad_cliente" VALUES (577,5);
+INSERT INTO "ciudad_cliente" VALUES (578,5);
+INSERT INTO "ciudad_cliente" VALUES (579,5);
+INSERT INTO "ciudad_cliente" VALUES (580,5);
+INSERT INTO "ciudad_cliente" VALUES (580,5);
+INSERT INTO "ciudad_cliente" VALUES (582,6);
+INSERT INTO "ciudad_cliente" VALUES (583,6);
+INSERT INTO "ciudad_cliente" VALUES (584,6);
+INSERT INTO "ciudad_cliente" VALUES (585,6);
+INSERT INTO "ciudad_cliente" VALUES (586,6);
+INSERT INTO "ciudad_cliente" VALUES (587,6);
+INSERT INTO "ciudad_cliente" VALUES (588,6);
+INSERT INTO "ciudad_cliente" VALUES (589,6);
+INSERT INTO "ciudad_cliente" VALUES (590,6);
+INSERT INTO "ciudad_cliente" VALUES (591,6);
+INSERT INTO "ciudad_cliente" VALUES (592,7);
+INSERT INTO "ciudad_cliente" VALUES (593,7);
+INSERT INTO "ciudad_cliente" VALUES (594,7);
+INSERT INTO "ciudad_cliente" VALUES (595,7);
+INSERT INTO "ciudad_cliente" VALUES (596,7);
+INSERT INTO "ciudad_cliente" VALUES (597,7);
+INSERT INTO "ciudad_cliente" VALUES (598,7);
+INSERT INTO "ciudad_cliente" VALUES (599,7);
+INSERT INTO "ciudad_cliente" VALUES (600,7);
+INSERT INTO "ciudad_cliente" VALUES (601,7);
+INSERT INTO "ciudad_cliente" VALUES (602,7);
+INSERT INTO "ciudad_cliente" VALUES (603,7);
+INSERT INTO "ciudad_cliente" VALUES (604,7);
 INSERT INTO "producto" VALUES (1001,'AGUA MONTEFRIO BTLLA X 600',1050,0);
 INSERT INTO "producto" VALUES (1002,'ALBONDIGON X 250',2750,0.19);
 INSERT INTO "producto" VALUES (1003,'ALBONDIGON X 500',5200,0.19);
@@ -741,11 +639,118 @@ INSERT INTO "producto" VALUES (1272,'YOGUR VIDA X 100 G',1250,0.19);
 INSERT INTO "producto" VALUES (1273,'YOGURD KID CEREAL AZUCAR X 132',1150,0.19);
 INSERT INTO "producto" VALUES (1274,'YOGURTH SLIGHT BOLSA X 200',890,0.19);
 INSERT INTO "producto" VALUES (1275,'YOGURTH SLIGHT CEREAL X 170',1950,0.19);
-INSERT INTO "ciudad" VALUES (1,'ANDES');
-INSERT INTO "ciudad" VALUES (2,'BETANIA');
-INSERT INTO "ciudad" VALUES (3,'HISPANIA');
-INSERT INTO "ciudad" VALUES (4,'JARDIN');
-INSERT INTO "ciudad" VALUES (5,'SANTA INES');
-INSERT INTO "ciudad" VALUES (6,'SANTA RITA');
-INSERT INTO "ciudad" VALUES (7,'TAPARTO');
+INSERT INTO "inventario" VALUES (1,14,'7-10-2020',501);
+INSERT INTO "inventario" VALUES (2,12,'23-2-2020',555);
+INSERT INTO "inventario" VALUES (3,22,'13-8-2020',512);
+INSERT INTO "inventario" VALUES (4,4,'7-5-2020',553);
+INSERT INTO "inventario" VALUES (5,23,'21-12-2020',605);
+INSERT INTO "inventario" VALUES (6,2,'28-12-2020',522);
+INSERT INTO "inventario" VALUES (7,0,'24-7-2020',582);
+INSERT INTO "inventario" VALUES (8,3,'29-8-2020',462);
+INSERT INTO "inventario" VALUES (9,13,'13-3-2020',474);
+INSERT INTO "inventario" VALUES (10,7,'24-12-2020',600);
+INSERT INTO "inventario" VALUES (11,12,'29-1-2020',519);
+INSERT INTO "inventario" VALUES (12,12,'27-12-2020',595);
+INSERT INTO "inventario" VALUES (13,20,'18-8-2020',571);
+INSERT INTO "inventario" VALUES (14,20,'14-8-2020',590);
+INSERT INTO "inventario" VALUES (15,16,'25-11-2020',605);
+INSERT INTO "inventario" VALUES (16,9,'23-11-2020',471);
+INSERT INTO "inventario" VALUES (17,25,'24-12-2020',531);
+INSERT INTO "inventario" VALUES (18,19,'3-8-2020',549);
+INSERT INTO "inventario" VALUES (19,8,'17-7-2020',457);
+INSERT INTO "inventario" VALUES (20,13,'24-10-2020',556);
+INSERT INTO "inventario" VALUES (21,15,'16-7-2020',553);
+INSERT INTO "inventario" VALUES (22,15,'9-1-2020',584);
+INSERT INTO "inventario" VALUES (23,3,'3-5-2020',503);
+INSERT INTO "inventario" VALUES (24,3,'5-6-2020',480);
+INSERT INTO "inventario" VALUES (25,2,'15-11-2020',510);
+INSERT INTO "inventario" VALUES (26,11,'5-13-2020',541);
+INSERT INTO "inventario" VALUES (27,15,'20-6-2020',532);
+INSERT INTO "inventario" VALUES (28,17,'14-3-2020',479);
+INSERT INTO "pedido" VALUES (1,'1-8-2020','2-8-2020',19,1,26000);
+INSERT INTO "pedido" VALUES (2,'23-9-2020','24-9-2020',24,3,22000);
+INSERT INTO "pedido" VALUES (3,'5-1-2020','6-1-2020',15,11,14000);
+INSERT INTO "pedido" VALUES (4,'28-13-2020','29-13-2020',20,21,14000);
+INSERT INTO "pedido" VALUES (5,'25-3-2020','26-3-2020',22,21,26000);
+INSERT INTO "pedido" VALUES (6,'24-5-2020','25-5-2020',6,24,19000);
+INSERT INTO "pedido" VALUES (7,'31-2-2020','32-2-2020',9,11,26000);
+INSERT INTO "pedido" VALUES (8,'21-6-2020','22-6-2020',6,2,3000);
+INSERT INTO "pedido" VALUES (9,'9-13-2020','10-13-2020',14,13,30000);
+INSERT INTO "pedido" VALUES (10,'16-1-2020','17-1-2020',26,5,14000);
+INSERT INTO "pedido" VALUES (11,'2-9-2020','3-9-2020',13,9,6000);
+INSERT INTO "pedido" VALUES (12,'31-9-2020','32-9-2020',16,14,30000);
+INSERT INTO "pedido" VALUES (13,'21-9-2020','22-9-2020',10,30,5000);
+INSERT INTO "pedido" VALUES (14,'5-12-2020','6-12-2020',28,4,18000);
+INSERT INTO "pedido" VALUES (15,'30-12-2020','31-12-2020',15,18,25000);
+INSERT INTO "pedido" VALUES (16,'13-13-2020','14-13-2020',28,7,23000);
+INSERT INTO "pedido" VALUES (17,'15-6-2020','16-6-2020',12,29,5000);
+INSERT INTO "pedido" VALUES (18,'13-10-2020','14-10-2020',10,6,5000);
+INSERT INTO "pedido" VALUES (19,'2-8-2020','3-8-2020',29,7,22000);
+INSERT INTO "pedido" VALUES (20,'20-5-2020','21-5-2020',11,22,10000);
+INSERT INTO "pedido" VALUES (21,'8-7-2020','9-7-2020',18,22,22000);
+INSERT INTO "pedido" VALUES (22,'12-1-2020','13-1-2020',3,25,20000);
+INSERT INTO "pedido" VALUES (23,'11-6-2020','12-6-2020',15,2,23000);
+INSERT INTO "pedido" VALUES (24,'7-8-2020','8-8-2020',23,19,17000);
+INSERT INTO "pedido" VALUES (25,'16-4-2020','17-4-2020',10,2,1000);
+INSERT INTO "pedido" VALUES (26,'8-5-2020','9-5-2020',11,23,27000);
+INSERT INTO "pedido" VALUES (27,'4-13-2020','5-13-2020',3,12,18000);
+INSERT INTO "pedido" VALUES (28,'9-10-2020','10-10-2020',17,21,3000);
+INSERT INTO "pedido" VALUES (29,'23-6-2020','24-6-2020',21,10,4000);
+INSERT INTO "pedido" VALUES (30,'30-7-2020','31-7-2020',5,21,5000);
+INSERT INTO "pedido" VALUES (31,'28-4-2020','29-4-2020',7,25,4000);
+INSERT INTO "pedido" VALUES (32,'20-13-2020','21-13-2020',22,27,4000);
+INSERT INTO "pedido" VALUES (33,'24-9-2020','25-9-2020',7,30,25000);
+INSERT INTO "pedido" VALUES (34,'10-4-2020','11-4-2020',2,22,27000);
+INSERT INTO "pedido" VALUES (35,'24-8-2020','25-8-2020',11,2,10000);
+INSERT INTO "pedido" VALUES (36,'28-12-2020','29-12-2020',16,29,25000);
+INSERT INTO "pedido" VALUES (37,'16-8-2020','17-8-2020',14,10,29000);
+INSERT INTO "pedido" VALUES (38,'22-12-2020','23-12-2020',8,20,3000);
+INSERT INTO "pedido" VALUES (39,'23-10-2020','24-10-2020',18,26,9000);
+INSERT INTO "pedido" VALUES (40,'15-5-2020','16-5-2020',15,14,22000);
+INSERT INTO "pedido" VALUES (41,'2-3-2020','3-3-2020',6,24,5000);
+INSERT INTO "pedido" VALUES (42,'9-5-2020','10-5-2020',25,11,25000);
+INSERT INTO "pedido" VALUES (43,'27-7-2020','28-7-2020',29,22,11000);
+INSERT INTO "pedido" VALUES (44,'14-5-2020','15-5-2020',19,26,25000);
+INSERT INTO "pedido" VALUES (45,'31-6-2020','32-6-2020',4,24,11000);
+INSERT INTO "pedido" VALUES (46,'25-3-2020','26-3-2020',26,26,17000);
+INSERT INTO "pedido" VALUES (47,'21-6-2020','22-6-2020',1,19,27000);
+INSERT INTO "pedido" VALUES (48,'26-2-2020','27-2-2020',9,20,12000);
+INSERT INTO "pedido" VALUES (49,'20-13-2020','21-13-2020',5,4,20000);
+INSERT INTO "pedido" VALUES (50,'17-8-2020','18-8-2020',20,12,30000);
+INSERT INTO "pedido" VALUES (51,'11-13-2020','12-13-2020',17,21,20000);
+INSERT INTO "pedido" VALUES (52,'26-3-2020','27-3-2020',14,12,28000);
+INSERT INTO "pedido" VALUES (53,'31-4-2020','32-4-2020',6,1,4000);
+INSERT INTO "pedido" VALUES (54,'1-2-2020','2-2-2020',23,21,28000);
+INSERT INTO "pedido" VALUES (55,'18-4-2020','19-4-2020',22,16,21000);
+INSERT INTO "pedido" VALUES (56,'11-10-2020','12-10-2020',9,28,19000);
+INSERT INTO "pedido" VALUES (57,'25-8-2020','26-8-2020',17,20,23000);
+INSERT INTO "inventario_producto" VALUES (1,1257);
+INSERT INTO "inventario_producto" VALUES (2,1162);
+INSERT INTO "inventario_producto" VALUES (3,1189);
+INSERT INTO "inventario_producto" VALUES (4,1140);
+INSERT INTO "inventario_producto" VALUES (5,1038);
+INSERT INTO "inventario_producto" VALUES (6,1161);
+INSERT INTO "inventario_producto" VALUES (7,1103);
+INSERT INTO "inventario_producto" VALUES (8,1042);
+INSERT INTO "inventario_producto" VALUES (9,1058);
+INSERT INTO "inventario_producto" VALUES (10,1219);
+INSERT INTO "inventario_producto" VALUES (11,1247);
+INSERT INTO "inventario_producto" VALUES (12,1139);
+INSERT INTO "inventario_producto" VALUES (13,1114);
+INSERT INTO "inventario_producto" VALUES (14,1152);
+INSERT INTO "inventario_producto" VALUES (15,1171);
+INSERT INTO "inventario_producto" VALUES (16,1217);
+INSERT INTO "inventario_producto" VALUES (17,1051);
+INSERT INTO "inventario_producto" VALUES (18,1093);
+INSERT INTO "inventario_producto" VALUES (19,1183);
+INSERT INTO "inventario_producto" VALUES (20,1019);
+INSERT INTO "inventario_producto" VALUES (21,1113);
+INSERT INTO "inventario_producto" VALUES (22,1041);
+INSERT INTO "inventario_producto" VALUES (23,1128);
+INSERT INTO "inventario_producto" VALUES (24,1053);
+INSERT INTO "inventario_producto" VALUES (25,1170);
+INSERT INTO "inventario_producto" VALUES (26,1271);
+INSERT INTO "inventario_producto" VALUES (27,1147);
+INSERT INTO "inventario_producto" VALUES (28,1101);
+
 COMMIT;

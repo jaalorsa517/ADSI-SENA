@@ -165,7 +165,7 @@ class InventarioProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void loadInventario(int idCliente) async {
+  Future<void> loadInventario(int idCliente) async {
     List _productos = await Inventarios.readProductOnly(idCliente);
     if (_productos != null) {
       for (int i = 0; i < _productos.length; i++) {
@@ -200,7 +200,7 @@ class InventarioProvider extends ChangeNotifier {
     }
   }
 
-  void saveInventario(idCliente) async {
+  Future<void> saveInventario(idCliente) async {
     List pedido = _inventario
         .where((v) => (v['pedido'] != 0 || v['cantidad'] != 0))
         .toList();
@@ -224,6 +224,9 @@ class InventarioProvider extends ChangeNotifier {
     }
     return total;
   }
+
+  Future<bool> isInventario(int idCliente) async =>
+      await Inventarios.isInventario(idCliente);
 
   void reset() {
     _inventario = [];

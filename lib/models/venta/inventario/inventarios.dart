@@ -20,34 +20,43 @@ class Inventarios {
 
   static Future<bool> create(String fechaPedido, int cantidad, int idCliente,
       int idProducto, String fechaEntrega, int pedido, int valor) async {
+    bool onError = false;
     Database db = await Crud.conectar();
-    try {
-      await db.transaction((txn) async {
-        int idInventario = await txn.insert(Setup.INVENTARIO_TABLE, {
-          Setup.COLUMN_INVENTARIO['cantidad']: cantidad,
-          Setup.COLUMN_INVENTARIO['fecha']: fechaPedido,
-          Setup.COLUMN_INVENTARIO['idCliente']: idCliente,
-        });
-        await txn.insert(Setup.INVENTARIO_PRODUCTO_TABLE, {
-          Setup.COLUMN_INVENTARIO_PRODUCTO['idInventario']: idInventario,
-          Setup.COLUMN_INVENTARIO_PRODUCTO['idProducto']: idProducto,
-        });
-        await txn.insert(Setup.PEDIDO_TABLE, {
-          Setup.COLUMN_PEDIDO['fechaPedido']: fechaPedido,
-          Setup.COLUMN_PEDIDO['fechaEntrega']: fechaEntrega,
-          Setup.COLUMN_PEDIDO['idInventario']: idInventario,
-          Setup.COLUMN_PEDIDO['cantidad']: pedido,
-          Setup.COLUMN_PEDIDO['valor']: valor,
-        });
+    await db.transaction((txn) async {
+      int idInventario = await txn.insert(Setup.INVENTARIO_TABLE, {
+        Setup.COLUMN_INVENTARIO['cantidad']: cantidad,
+        Setup.COLUMN_INVENTARIO['fecha']: fechaPedido,
+        Setup.COLUMN_INVENTARIO['idCliente']: idCliente,
+      }).catchError((e) {
+        print("error en insert " + e.toString());
+        onError = true;
       });
+      await txn.insert(Setup.INVENTARIO_PRODUCTO_TABLE, {
+        Setup.COLUMN_INVENTARIO_PRODUCTO['idInventario']: idInventario,
+        Setup.COLUMN_INVENTARIO_PRODUCTO['idProducto']: idProducto,
+      }).catchError((e) {
+        print("error en insert " + e.toString());
+        onError = true;
+      });
+      await txn.insert(Setup.PEDIDO_TABLE, {
+        Setup.COLUMN_PEDIDO['fechaPedido']: fechaPedido,
+        Setup.COLUMN_PEDIDO['fechaEntrega']: fechaEntrega,
+        Setup.COLUMN_PEDIDO['idInventario']: idInventario,
+        Setup.COLUMN_PEDIDO['cantidad']: pedido,
+        Setup.COLUMN_PEDIDO['valor']: valor,
+      }).catchError((e) {
+        print("error en insert " + e.toString());
+        onError = true;
+      });
+      print(await txn.rawQuery(
+          "SELECT * FROM inventario WHERE fk_id_cliente = $idCliente"));
+      print(await txn.rawQuery(
+          "SELECT * FROM inventario_producto WHERE id_Inventario = $idInventario"));
+      print(await txn.rawQuery("SELECT * FROM pedido WHERE id_inventario = $idInventario"));
+    });
 
-      return true;
-    } catch (e) {
-      print(e.toString());
-      return false;
-    } finally {
-      db.close();
-    }
+    db.close();
+    return !onError ? true : false;
   }
 
   static Future<List<Map<String, dynamic>>> readVenta(int idCliente) async {
@@ -167,7 +176,7 @@ class Inventarios {
     try {
       List<Map<String, dynamic>> list = await db.rawQuery("""
         SELECT 
-        MAX(${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['fechaPedido']}) AS ${_alias['fecha']},
+        (${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['fechaPedido']}) AS ${_alias['fecha']},
         ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['id']} AS ${_alias['id']},
         ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']} AS ${_alias['producto']},
         ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['precio']} AS ${_alias['precio']},
@@ -204,6 +213,14 @@ class Inventarios {
     } finally {
       db.close();
     }
+  }
+
+  static Future<bool> isInventario(int idCliente) async {
+    Database db = await Crud.conectar();
+    List<Map<String, dynamic>> list = await db.query(Setup.INVENTARIO_TABLE,
+        columns: [Setup.COLUMN_INVENTARIO['idCliente']],
+        where: "${Setup.COLUMN_INVENTARIO['idCliente']} = $idCliente");
+    return list.length > 0 ? true : false;
   }
 
   static Future<bool> update(Inventario inventario) async {

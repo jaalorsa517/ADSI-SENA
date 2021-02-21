@@ -92,10 +92,13 @@ class _ScCliente extends State<ScCliente> {
                   title: Text(cliente.clientes[index].nombre),
                   trailing: IconButton(
                     icon: Icon(Icons.shopping_cart_rounded),
-                    onPressed: () {
+                    onPressed: () async {
                       cliente.cliente = cliente.clientes[index];
-                      inventario.reset();
-                      inventario.loadInventario(cliente.cliente.id);
+                      if (await inventario
+                          .isInventario(cliente.clientes[index].id)) {
+                        inventario.reset();
+                        inventario.loadInventario(cliente.cliente.id);
+                      }
                       Navigator.of(context).pop();
                       Navigator.of(context).pushNamed("/venta");
                     },

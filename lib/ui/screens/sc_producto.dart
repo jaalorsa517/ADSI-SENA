@@ -100,6 +100,7 @@ class _ScProducto extends State<ScProducto> {
                         } else {
                           inventario.setInventario(0,
                               fecha: fechaHoy,
+                              id: producto.productos[index].id,
                               producto: producto.productos[index].nombre,
                               cantidad: 0,
                               precio: producto.productos[index].precio);

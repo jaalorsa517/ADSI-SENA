@@ -1,9 +1,12 @@
-import "package:flutter/material.dart";
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
+import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqlite_api.dart';
 import 'package:ventas/config/utilidades.dart';
 import 'package:ventas/logic/venta/inventario/inventario_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:ventas/models/crud.dart';
 
 class ScVenta extends StatefulWidget {
   final BuildContext _context;
@@ -387,12 +390,12 @@ class _ScVenta extends State<ScVenta> {
                             color: colorGenerico,
                             child: Text("Registrar", style: styleSubTitle),
                             onPressed: cliente.cliente.id != null
-                                ? () {
+                                ? () async{
                                     if (cliente.cliente.id != null) {
-                                      inventario
+                                      await inventario
                                           .saveInventario(cliente.cliente.id);
                                       inventario.reset();
-                                      inventario
+                                      await inventario
                                           .loadInventario(cliente.cliente.id);
                                     }
                                   }
