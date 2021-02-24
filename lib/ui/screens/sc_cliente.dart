@@ -1,8 +1,8 @@
+import 'package:edertiz/config/utilidades.dart';
+import 'package:edertiz/ui/widgets/dialog_cliente.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:edertiz/logic/cliente/cliente_provider.dart';
-import 'package:edertiz/config/utilidades.dart';
-import 'package:edertiz/ui/widgets/dialog_cliente.dart';
 
 class ScCliente extends StatefulWidget {
   @override

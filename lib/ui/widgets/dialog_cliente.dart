@@ -84,7 +84,27 @@ class DialogCliente {
                         style: _styleButton,
                       ),
                       onPressed: () async {
-                        if (_nombre.text != '' && _ciudad.text != '') {
+                        List cities = await cliente.getCities();
+                        if (!cities.contains(_ciudad.text.toUpperCase())) {
+                          await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('CIUDAD INCORRECTA'),
+                                  content: Text(
+                                      "El campo CIUDAD debe ser uno de los siguientes:\n" +
+                                          "${cities.join(',')}"),
+                                  // "ANDES, BETANIA, HISPANIA, JARDIN, SANTA INES, SANTA RITA O TAPARTO"),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                        child: Text('OK'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        })
+                                  ],
+                                );
+                              });
+                        } else if (_nombre.text != '' && _ciudad.text != '') {
                           cliente.updateCliente(
                               _nit.text,
                               capitalize(_nombre.text),

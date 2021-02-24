@@ -1,3 +1,4 @@
+import 'package:edertiz/models/ciudad/ciudades.dart';
 import 'package:flutter/foundation.dart';
 import 'package:edertiz/models/cliente/cliente.dart';
 import 'package:edertiz/models/cliente/clientes.dart';
@@ -67,6 +68,10 @@ class ClienteProvider extends ChangeNotifier {
     bool respuesta = await Clientes.delete(id) ? true : false;
     if (respuesta) await loadCliente();
     return respuesta;
+  }
+
+  Future<List<String>> getCities()async{
+    return await Ciudades.read();
   }
 
   void resetClient() {

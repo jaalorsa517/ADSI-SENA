@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:edertiz/config/utilidades.dart';
-import 'package:edertiz/models/venta/inventario/inventario.dart';
 import 'package:edertiz/models/venta/inventario/inventarios.dart';
 
 class InventarioProvider extends ChangeNotifier {
-  Inventario _inventarioModel; //Manejo del modelo Inventario
   List<Map<String, dynamic>>
       _inventario; //Atributo que cargara los datos a mostrar en la tabla.
   Map<String, dynamic> _historial; // Atributo que mostrara la info en la card
@@ -12,7 +10,6 @@ class InventarioProvider extends ChangeNotifier {
 
   InventarioProvider() {
     _fechaEntrega = DateTime.now();
-    _inventarioModel = Inventario();
     _inventario = List<Map<String, dynamic>>();
     _inventario.add({
       'id': null,
@@ -32,7 +29,7 @@ class InventarioProvider extends ChangeNotifier {
     };
   }
 
-  /****Propiedad fechaEntrega *****/
+  /// **Propiedad fechaEntrega *****/
   get fechaEntrega => _fechaEntrega;
 
   set fechaEntrega(DateTime fecha) {
@@ -43,7 +40,7 @@ class InventarioProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /**** Propiedades del inventario ****/
+  /// ** Propiedades del inventario ****/
   List getInventario() => _inventario;
 
   void addInventario(
@@ -200,13 +197,14 @@ class InventarioProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> saveInventario(idCliente) async {
+  Future<String> saveInventario(idCliente) async {
     List pedido = _inventario
         .where((v) => (v['pedido'] != 0 || v['cantidad'] != 0))
         .toList();
+    bool _result = false;
     for (int i = 0; i < pedido.length; i++) {
       // Inventarios.create(fechaPedido,cantidad,idCliente,idProducto,fechaEntrega,pedido,valor);
-      await Inventarios.create(
+      _result = await Inventarios.create(
           fechaHoy,
           pedido[i]['cantidad'],
           idCliente,
@@ -214,7 +212,15 @@ class InventarioProvider extends ChangeNotifier {
           pedido[i]['fechaEntrega'],
           pedido[i]['pedido'],
           pedido[i]['precio']);
+      if (_result == false) break;
     }
+    return _result ? "Guardado exitoso" : "Ocurrió un fallo al guardar";
+  }
+
+  Future<String> deletePedido(idCliente) async {
+    return await Inventarios.deleteInventario(idCliente)
+        ? "Pedido eliminado"
+        : "Ocurrió un error";
   }
 
   int total() {

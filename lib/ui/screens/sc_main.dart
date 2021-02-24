@@ -20,7 +20,7 @@ class ScMain extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-            title: Center(child: Text('INICIO')),
+            title: Center(child: Text('EDERTIZ')),
             backgroundColor: Colors.green),
         body: Padding(
           padding: const EdgeInsets.all(20.0),

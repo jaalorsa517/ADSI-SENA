@@ -41,3 +41,15 @@ enum Ciudades {
   SantaRita,
   Taparto
 }
+
+//UNA FORMA DE COPIAR UNA BASE DE DATOS EXTERNA AL CELULAR
+//static Future<void> backUp() async {
+  //   String _name = Setup.DB_NAME;
+  //   String dbPath = join(await getDatabasesPath(), _name);
+  //   await deleteDatabase(dbPath);
+  //   //COPIAR LA BASE DE DATOS DESDE EL RECURSO
+  //   ByteData data = await rootBundle.load(join('data', _name));
+  //   List<int> bytes =
+  //       data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+  //   await File(dbPath).writeAsBytes(bytes);
+  // }

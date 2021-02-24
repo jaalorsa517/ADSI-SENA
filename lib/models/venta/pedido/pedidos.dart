@@ -3,7 +3,6 @@ import 'package:edertiz/config/setup.dart';
 import 'package:edertiz/config/utilidades.dart';
 import 'package:edertiz/models/crud.dart';
 import 'package:edertiz/models/venta/historial/pedidio_historial.dart';
-import 'package:edertiz/models/venta/pedido/pedido.dart';
 
 class Pedidos {
   static const Map<String, String> _alias = {
@@ -20,26 +19,6 @@ class Pedidos {
     'producto': 'producto',
     'ciudad': 'ciudad'
   };
-
-  static Future<bool> create(Pedido pedido) async {
-    Database db = await Crud.conectar();
-    try {
-      List<Map<String, dynamic>> _id = await db.rawQuery("""
-      SELECT ${Setup.COLUMN_PEDIDO['id']} AS ${_alias['id']} 
-      FROM ${Setup.PEDIDO_TABLE} 
-      ORDER BY ${Setup.COLUMN_PEDIDO['id']} DESC 
-      LIMIT 1
-      """);
-      pedido.id = _id[0][_alias['id']] + 1 ?? 1;
-      await db.insert(Setup.PEDIDO_TABLE, _pedidoToMap(pedido));
-      return true;
-    } catch (e) {
-      print(e.toString());
-      return false;
-    } finally {
-      db.close();
-    }
-  }
 
   static Future<List<PedidoHistorial>> readHistoryGeneral(int idCliente) async {
     Database db = await Crud.conectar();
@@ -210,49 +189,7 @@ class Pedidos {
     }
   }
 
-  static Future<bool> update(Pedido pedido) async {
-    Database db = await Crud.conectar();
-    try {
-      await db.update(Setup.PEDIDO_TABLE, _pedidoToMap(pedido),
-          where: '${Setup.COLUMN_PEDIDO['id']}= pedido.id');
-      return true;
-    } catch (e) {
-      print(e.toString());
-      return false;
-    } finally {
-      db.close();
-    }
-  }
-
-  static Future<bool> delete(int idPedido) async {
-    Database db = await Crud.conectar();
-    try {
-      await db.delete(Setup.PEDIDO_TABLE,
-          where: '${Setup.COLUMN_PEDIDO['id']}=$idPedido');
-      return true;
-    } catch (e) {
-      print(e.toString());
-      return false;
-    } finally {
-      db.close();
-    }
-  }
-
-  static Map<String, dynamic> _pedidoToMap(Pedido pedido) {
-    Map<String, dynamic> _pedido = {};
-    _pedido[Setup.COLUMN_PEDIDO['id']] = pedido.id;
-    _pedido[Setup.COLUMN_PEDIDO['fechaPedido']] = pedido.fechaPedido;
-    _pedido[Setup.COLUMN_PEDIDO['fechaEntrega']] = pedido.fechaEntrega;
-    _pedido[Setup.COLUMN_PEDIDO['idInventario']] = pedido.idInventario;
-    _pedido[Setup.COLUMN_PEDIDO['cantidad']] = pedido.cantidad;
-    _pedido[Setup.COLUMN_PEDIDO['valor']] = pedido.valor;
-
-    return _pedido;
-  }
-
-  /**
-   * Función que convierte una lista de Map desordenado a una list de map Estructurados y ordenados
-   */
+  /// Función que convierte una lista de Map desordenado a una list de map Estructurados y ordenados
   static List<Map> _toObject(List list) {
     /* El objetivo de este método es exportar un objeto como el siguiente
       [

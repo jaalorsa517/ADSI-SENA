@@ -62,20 +62,6 @@ class Productos {
     return response;
   }
 
-  /* static Future<List<Producto>> readById(int id) async {
-    Database db = await Crud.conectar();
-    try {
-      List<Map<String, dynamic>> list = await db.query(Setup.PRODUCTO_TABLE,
-          where: '${Setup.COLUMN_PRODUCTO[0]}=$id');
-      return _mapToProducto(list);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    } finally {
-      db.close();
-    }
-  } */
-
   static Future<bool> update(Producto producto) async {
     Database db = await Crud.conectar();
     try {

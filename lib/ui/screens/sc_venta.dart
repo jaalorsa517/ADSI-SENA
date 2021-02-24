@@ -15,6 +15,7 @@ class ScVenta extends StatefulWidget {
 }
 
 class _ScVenta extends State<ScVenta> {
+  final GlobalKey<ScaffoldState> _keyScaffold = GlobalKey<ScaffoldState>();
   List<String> titulo = ['Resumen', 'Inventario', 'Ventas'];
   int _vista = 0;
   List<Widget> _pantalla = [];
@@ -23,9 +24,19 @@ class _ScVenta extends State<ScVenta> {
   _ScVenta(context) {
     _pantalla = [_resumen(context), _inventario(context), _venta(context)];
   }
+
+  void _snackbar(String message) {
+    final snackbar = SnackBar(
+        content: Text(message),
+        backgroundColor: colorGenerico,
+        duration: Duration(seconds: 1));
+    _keyScaffold.currentState.showSnackBar(snackbar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _keyScaffold,
       appBar: AppBar(
         title: Row(children: <Widget>[
           Flexible(
@@ -388,8 +399,8 @@ class _ScVenta extends State<ScVenta> {
                           onPressed: cliente.cliente.id != null
                               ? () async {
                                   if (cliente.cliente.id != null) {
-                                    await inventario
-                                        .saveInventario(cliente.cliente.id);
+                                    _snackbar(await inventario
+                                        .saveInventario(cliente.cliente.id));
                                     inventario.reset();
                                     await inventario
                                         .loadInventario(cliente.cliente.id);
@@ -410,11 +421,30 @@ class _ScVenta extends State<ScVenta> {
                           onPressed: () {
                             cliente.resetClient();
                             inventario.reset();
+                            _snackbar("Pedido limpiado");
                           },
                         ),
                       ),
                     ),
                   ],
+                ),
+              ),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: RaisedButton(
+                    color: colorGenerico,
+                    child: Text(
+                      "Eliminar Pedido",
+                      style: styleSubTitle,
+                      textAlign: TextAlign.center,
+                    ),
+                    onPressed: cliente.cliente.id != null
+                        ? () async {
+                            _snackbar(await inventario.deletePedido(cliente.cliente.id));
+                          }
+                        : null,
+                  ),
                 ),
               )
             ],
