@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:ventas/config/utilidades.dart';
+import 'package:edertiz/config/utilidades.dart';
 
 class WBoton extends StatefulWidget {
   final String nom;

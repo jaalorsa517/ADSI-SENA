@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:ventas/models/cliente/cliente.dart';
-import 'package:ventas/models/cliente/clientes.dart';
+import 'package:edertiz/models/cliente/cliente.dart';
+import 'package:edertiz/models/cliente/clientes.dart';
 
 class ClienteProvider extends ChangeNotifier {
   List<Cliente> _clientes = [];

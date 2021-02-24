@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:ventas/config/setup.dart';
-import 'package:ventas/models/crud.dart';
+import 'package:edertiz/config/setup.dart';
+import 'package:edertiz/models/crud.dart';
 
 class Import {
   static Future<bool> importClientes(List<List> rows) async {

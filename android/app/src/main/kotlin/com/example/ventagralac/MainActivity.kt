@@ -1,4 +1,4 @@
-package com.example.ventagralac
+package com.gralac.edertiz
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

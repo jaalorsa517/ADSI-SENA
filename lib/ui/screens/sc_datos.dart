@@ -1,9 +1,8 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:ventas/config/utilidades.dart';
-import 'package:ventas/logic/datos/backup_logic.dart';
-import 'package:ventas/logic/datos/export_pdf.dart';
-import 'package:ventas/logic/datos/import_csv.dart';
+import 'package:edertiz/config/utilidades.dart';
+import 'package:edertiz/logic/datos/export_pdf.dart';
+import 'package:edertiz/logic/datos/import_csv.dart';
 
 class ScDatos extends StatefulWidget {
   @override
@@ -82,8 +81,7 @@ class _ScDatos extends State<ScDatos> {
                   color: colorGenerico,
                   textColor: Colors.white,
                   onPressed: () async {
-                    writeOfPdf();
-                    await writePdf();
+                    _snackbar(await writePdf());
                   }),
             ),
           ],

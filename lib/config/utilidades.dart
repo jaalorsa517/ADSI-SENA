@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ventas/logic/cliente/cliente_provider.dart';
-import 'package:ventas/logic/producto/producto_provider.dart';
-import 'package:ventas/logic/venta/inventario/inventario_provider.dart';
+import 'package:edertiz/logic/cliente/cliente_provider.dart';
+import 'package:edertiz/logic/producto/producto_provider.dart';
+import 'package:edertiz/logic/venta/inventario/inventario_provider.dart';
 import 'package:intl/intl.dart';
 
 ClienteProvider cliente;

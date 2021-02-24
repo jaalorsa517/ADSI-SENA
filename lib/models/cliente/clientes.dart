@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:ventas/config/setup.dart';
-import 'package:ventas/models/cliente/cliente.dart';
-import 'package:ventas/models/crud.dart';
+import 'package:edertiz/config/setup.dart';
+import 'package:edertiz/models/cliente/cliente.dart';
+import 'package:edertiz/models/crud.dart';
 
 /// Clase driver del modelo cliente
 

@@ -1,12 +1,8 @@
-// import 'package:flutter/services.dart';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqlite_api.dart';
-import 'package:ventas/config/utilidades.dart';
-import 'package:ventas/logic/venta/inventario/inventario_provider.dart';
+import 'package:edertiz/config/utilidades.dart';
+import 'package:edertiz/logic/venta/inventario/inventario_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:ventas/models/crud.dart';
 
 class ScVenta extends StatefulWidget {
   final BuildContext _context;
@@ -156,6 +152,8 @@ class _ScVenta extends State<ScVenta> {
                                     )),
                                     DataCell(TextField(
                                       textAlign: TextAlign.right,
+                                      controller: columnPedido[index],
+                                      keyboardType: TextInputType.number,
                                       onTap: () {
                                         columnPedido[index].selection =
                                             TextSelection(
@@ -165,14 +163,11 @@ class _ScVenta extends State<ScVenta> {
                                                         .text
                                                         .length);
                                       },
-                                      onChanged: (v) {
+                                      onEditingComplete: () {
                                         inventario.setInventario(index,
                                             pedido: int.parse(
                                                 columnPedido[index].text));
                                       },
-                                      controller: columnPedido[index],
-                                      autofocus: false,
-                                      keyboardType: TextInputType.number,
                                     ))
                                   ])),
                         ))))
@@ -292,14 +287,13 @@ class _ScVenta extends State<ScVenta> {
                                                               .text
                                                               .length);
                                             },
-                                            onChanged: (v) {
+                                            onEditingComplete: () {
                                               inventario.setInventario(index,
                                                   cantidad: int.parse(
                                                       columnInventario[index]
                                                           .text));
                                             },
                                             controller: columnInventario[index],
-                                            autofocus: false,
                                             keyboardType: TextInputType.number,
                                           ),
                                           placeholder: true)
@@ -356,11 +350,13 @@ class _ScVenta extends State<ScVenta> {
                           Navigator.of(context).pushNamed("/cliente");
                         },
                       ),
-                      Text(
-                          cliente.cliente.nombre != ''
-                              ? cliente.cliente.nombre
-                              : "Seleccione un cliente",
-                          style: styleSubTitle)
+                      Flexible(
+                        child: Text(
+                            cliente.cliente.nombre != ''
+                                ? cliente.cliente.nombre
+                                : "Seleccione un cliente",
+                            style: styleSubTitle),
+                      )
                     ],
                   )
                 ],
@@ -373,9 +369,10 @@ class _ScVenta extends State<ScVenta> {
                     style: styleTitle,
                   ),
                   Padding(
-                      padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
-                      child: Text("\$ ${filter.format(inventario.total())}",
-                          style: TextStyle(fontSize: 24, color: colorGenerico)))
+                    padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                    child: Text("\$ ${filter.format(inventario.total())}",
+                        style: TextStyle(fontSize: 24, color: colorGenerico)),
+                  )
                 ],
               )),
               Flexible(
@@ -383,31 +380,33 @@ class _ScVenta extends State<ScVenta> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: RaisedButton(
-                            color: colorGenerico,
-                            child: Text("Registrar", style: styleSubTitle),
-                            onPressed: cliente.cliente.id != null
-                                ? () async{
-                                    if (cliente.cliente.id != null) {
-                                      await inventario
-                                          .saveInventario(cliente.cliente.id);
-                                      inventario.reset();
-                                      await inventario
-                                          .loadInventario(cliente.cliente.id);
-                                    }
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: RaisedButton(
+                          color: colorGenerico,
+                          child: Text("Registrar", style: styleSubTitle),
+                          onPressed: cliente.cliente.id != null
+                              ? () async {
+                                  if (cliente.cliente.id != null) {
+                                    await inventario
+                                        .saveInventario(cliente.cliente.id);
+                                    inventario.reset();
+                                    await inventario
+                                        .loadInventario(cliente.cliente.id);
                                   }
-                                : null),
-                      ),
+                                }
+                              : null),
                     ),
                     Flexible(
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: RaisedButton(
                           color: colorGenerico,
-                          child: Text("Limpiar Pedido", style: styleSubTitle),
+                          child: Text(
+                            "Limpiar Pedido",
+                            style: styleSubTitle,
+                            textAlign: TextAlign.center,
+                          ),
                           onPressed: () {
                             cliente.resetClient();
                             inventario.reset();

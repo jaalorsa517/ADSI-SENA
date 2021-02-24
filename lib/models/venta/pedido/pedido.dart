@@ -1,4 +1,4 @@
-import 'package:ventas/models/venta/historial/pedidio_historial.dart';
+import 'package:edertiz/models/venta/historial/pedidio_historial.dart';
 
 class Pedido {
   int _id;

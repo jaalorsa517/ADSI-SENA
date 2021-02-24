@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ventas/logic/cliente/cliente_provider.dart';
-import 'package:ventas/config/utilidades.dart';
-import 'package:ventas/logic/producto/producto_provider.dart';
-import 'package:ventas/logic/venta/inventario/inventario_provider.dart';
-import 'package:ventas/ui/widgets/wboton.dart';
+import 'package:edertiz/logic/cliente/cliente_provider.dart';
+import 'package:edertiz/config/utilidades.dart';
+import 'package:edertiz/logic/producto/producto_provider.dart';
+import 'package:edertiz/logic/venta/inventario/inventario_provider.dart';
+import 'package:edertiz/ui/widgets/wboton.dart';
 
 class ScMain extends StatelessWidget {
   @override
@@ -30,6 +30,10 @@ class ScMain extends StatelessWidget {
                   children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(10.0),
+                  child: new WBoton('VENTA', '/venta'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
                   child: new WBoton('CLIENTES', '/cliente'),
                 ),
                 Padding(
@@ -38,11 +42,7 @@ class ScMain extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: new WBoton('VENTA', '/venta'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: new WBoton('BACKUP', '/datos'),
+                  child: new WBoton('DATOS', '/datos'),
                 )
               ])),
         ));

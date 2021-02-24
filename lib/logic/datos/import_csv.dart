@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:csv/csv.dart';
-import 'package:ventas/models/datos/import.dart';
+import 'package:edertiz/models/datos/import.dart';
 
 Future<List<List>> _fromCsv(String path) async {
   List csvFile = await new File(path).readAsLines();

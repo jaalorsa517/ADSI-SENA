@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:ventas/config/utilidades.dart';
-import 'package:ventas/models/venta/inventario/inventario.dart';
-import 'package:ventas/models/venta/inventario/inventarios.dart';
+import 'package:edertiz/config/utilidades.dart';
+import 'package:edertiz/models/venta/inventario/inventario.dart';
+import 'package:edertiz/models/venta/inventario/inventarios.dart';
 
 class InventarioProvider extends ChangeNotifier {
   Inventario _inventarioModel; //Manejo del modelo Inventario

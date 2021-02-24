@@ -1,8 +1,9 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:ventas/config/setup.dart';
-import 'package:ventas/models/crud.dart';
-import 'package:ventas/models/venta/historial/pedidio_historial.dart';
-import 'package:ventas/models/venta/pedido/pedido.dart';
+import 'package:edertiz/config/setup.dart';
+import 'package:edertiz/config/utilidades.dart';
+import 'package:edertiz/models/crud.dart';
+import 'package:edertiz/models/venta/historial/pedidio_historial.dart';
+import 'package:edertiz/models/venta/pedido/pedido.dart';
 
 class Pedidos {
   static const Map<String, String> _alias = {
@@ -88,26 +89,29 @@ class Pedidos {
         ON ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['id']} = 
           ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE['idCiudad']}
       INNER JOIN ${Setup.CLIENTE_TABLE}
-        ON ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']}
+        ON ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']} =
           ${Setup.CIUDAD_CLIENTE_TABLE}.${Setup.COLUMN_CIUDAD_CLIENTE['idCliente']}
       INNER JOIN ${Setup.INVENTARIO_TABLE}
-        ON ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']}
+        ON ${Setup.CLIENTE_TABLE}.${Setup.COLUMN_CLIENTE['id']} =
           ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['idCliente']}
       INNER JOIN ${Setup.INVENTARIO_PRODUCTO_TABLE}
-        ON ${Setup.INVENTARIO_PRODUCTO_TABLE}.${Setup.COLUMN_INVENTARIO_PRODUCTO['idInventario']}
+        ON ${Setup.INVENTARIO_PRODUCTO_TABLE}.${Setup.COLUMN_INVENTARIO_PRODUCTO['idInventario']} =
           ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['id']}
       INNER JOIN ${Setup.PRODUCTO_TABLE}
-        ON ${Setup.INVENTARIO_PRODUCTO_TABLE}.${Setup.COLUMN_INVENTARIO_PRODUCTO['idProducto']}
-          ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['nombre']}
+        ON ${Setup.INVENTARIO_PRODUCTO_TABLE}.${Setup.COLUMN_INVENTARIO_PRODUCTO['idProducto']} =
+          ${Setup.PRODUCTO_TABLE}.${Setup.COLUMN_PRODUCTO['id']}
       INNER JOIN ${Setup.PEDIDO_TABLE}
-        ON ${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['idInventario']}
+        ON ${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['idInventario']} =
           ${Setup.INVENTARIO_TABLE}.${Setup.COLUMN_INVENTARIO['id']}
+      WHERE ${Setup.PEDIDO_TABLE}.${Setup.COLUMN_PEDIDO['fechaPedido']} = '$fechaHoy'
       ORDER BY ${Setup.CIUDAD_TABLE}.${Setup.COLUMN_CIUDAD['nombre']}
       """);
       return _toObject(list);
     } catch (e) {
       print("select pedido hoy " + e.toString());
       return null;
+    } finally {
+      db.close();
     }
   }
 
@@ -271,59 +275,58 @@ class Pedidos {
       ]
       */
 
-    List<Map> result = List();
-    Map<String, dynamic> datos = {'ciudad': "", "clientes": []};
+    //Establecer los únicos del objeto
+    Set ciudadesSet =
+        Set.from(List.generate(list.length, (i) => list[i]['ciudad']));
 
-    //Crear la lista de ciudades
-    for (int i = 0; i < list.length; i++) {
-      if (list[i]['ciudad'] != datos['ciudad']) {
-        datos['ciudad'] = list[i]['ciudad'];
-        result.add(datos);
-      }
-    }
+    //Paradigma funcional
+    List<Map> result = List<Map>.generate(ciudadesSet.length, (i) {
+      List _clientes = list
+          .where((_cliente) => _cliente['ciudad'] == ciudadesSet.elementAt(i))
+          .toList();
+      Set clientesSet = Set.of(
+          List.generate(_clientes.length, (g) => _clientes[g]['cliente']));
+      Set fechasSet = Set.of(
+          List.generate(_clientes.length, (g) => _clientes[g]['fechaEntrega']));
+      return {
+        'ciudad': ciudadesSet.elementAt(i),
+        'clientes': List.generate(
+            clientesSet.length,
+            (j) => {
+                  'negocio': clientesSet.elementAt(j),
+                  'admin': _clientes.firstWhere((_cliente) =>
+                      _cliente['cliente'] == clientesSet.elementAt(j))['admin'],
+                  'fechaEntrega': List.generate(
+                      fechasSet.length,
+                      (k) => {
+                            'fecha': fechasSet.elementAt(k),
+                            'productos': _clientes
+                                .where((_productos) =>
+                                    _productos['fechaEntrega'] ==
+                                        fechasSet.elementAt(k) &&
+                                    _productos['cliente'] ==
+                                        clientesSet.elementAt(j) &&
+                                    _productos['ciudad'] ==
+                                        ciudadesSet.elementAt(i))
+                                .map((_producto) => {
+                                      _producto['id'],
+                                      _producto['producto'],
+                                      _producto['cantidad']
+                                    })
+                          })
+                })
+      };
+    });
 
-    datos = {};
-
-    // Crear la lista de clientes
+    //Limpiar los pedidos sin producto
     for (int i = 0; i < result.length; i++) {
-      datos = {"negocio": "", "admin": "", "fechaEntrega": []};
-      for (int j = 0; j < list.length; j++) {
-        if (list[j]['cliente'] != datos['negocio']) {
-          datos['negocio'] = list[j]['cliente'];
-          datos['admin'] = list[j]['admin'];
-          result[i]['clientes'].add(datos);
-        }
-      }
-    }
-
-    datos = {};
-
-    // Crear la lista de fecha de entrega
-    for (int i = 0; i < result.length; i++) {
-      for (int j = 0; j < result[i]['clientes']; j++) {
-        datos = {'fecha': '', 'productos': []};
-        for (int k = 0; k < list.length; k++) {
-          if (list[k]['fechaEntrega'] != datos['fecha']) {
-            datos['fecha'] = list[k]['fechaEntrega'];
-            result[i]['clientes'][j]['fechaEntrega'].add(datos);
-          }
-        }
-      }
-    }
-
-    //Crear la lista de productos
-    for (int i = 0; i < result.length; i++) {
-      for (int j = 0; i < result[i]['clientes']; j++) {
-        for (int k = 0; k < result[i]['clientes'][j]['fechaEntrega']; k++) {
-          for (int l = 0; l < list.length; l++) {
-            if (list[l]['fechaEntrega'] ==
-                result[i]['clientes'][j]['fechaEntrega'][k]['fecha']) {
-              result[i]['clientes'][j]['fechaEntrega'][k]['productos'].add({
-                'id': list[l]['id'],
-                'producto': list[l]['producto'],
-                'cantidad': list[l]['cantidad']
-              });
-            }
+      for (int j = 0; j < result[i]['clientes'].length; j++) {
+        for (int k = 0;
+            k < result[i]['clientes'][j]['fechaEntrega'].length;
+            k++) {
+          if (result[i]['clientes'][j]['fechaEntrega'][k]['productos'].length ==
+              0) {
+            result[i]['clientes'][j]['fechaEntrega'].removeAt(k);
           }
         }
       }
@@ -333,7 +336,7 @@ class Pedidos {
 
   static List<PedidoHistorial> _mapToPedidoHistorial(
       List<Map<String, dynamic>> list) {
-    List<PedidoHistorial> _list = [];
+    List<PedidoHistorial> _list = new List();
     list.forEach((element) {
       PedidoHistorial history = PedidoHistorial();
       history.fechaPedido = element[_alias['fecha']];

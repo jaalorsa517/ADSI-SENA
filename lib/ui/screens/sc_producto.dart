@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ventas/config/utilidades.dart';
-import 'package:ventas/logic/producto/producto_provider.dart';
-import 'package:ventas/ui/widgets/dialog_producto.dart';
+import 'package:edertiz/config/utilidades.dart';
+import 'package:edertiz/logic/producto/producto_provider.dart';
+import 'package:edertiz/ui/widgets/dialog_producto.dart';
 
 class ScProducto extends StatefulWidget {
   @override

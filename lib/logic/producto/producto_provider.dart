@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:ventas/models/producto/producto.dart';
-import 'package:ventas/models/producto/productos.dart';
+import 'package:edertiz/models/producto/producto.dart';
+import 'package:edertiz/models/producto/productos.dart';
 
 class ProductoProvider extends ChangeNotifier {
   List<Producto> _productos = [];

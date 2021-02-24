@@ -1,8 +1,8 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:ventas/config/setup.dart';
-import 'package:ventas/models/crud.dart';
-import 'package:ventas/models/venta/historial/inventario_historial.dart';
-import 'package:ventas/models/venta/inventario/inventario.dart';
+import 'package:edertiz/config/setup.dart';
+import 'package:edertiz/models/crud.dart';
+import 'package:edertiz/models/venta/historial/inventario_historial.dart';
+import 'package:edertiz/models/venta/inventario/inventario.dart';
 
 class Inventarios {
   static const Map<String, String> _alias = {
@@ -48,11 +48,6 @@ class Inventarios {
         print("error en insert " + e.toString());
         onError = true;
       });
-      print(await txn.rawQuery(
-          "SELECT * FROM inventario WHERE fk_id_cliente = $idCliente"));
-      print(await txn.rawQuery(
-          "SELECT * FROM inventario_producto WHERE id_Inventario = $idInventario"));
-      print(await txn.rawQuery("SELECT * FROM pedido WHERE id_inventario = $idInventario"));
     });
 
     db.close();

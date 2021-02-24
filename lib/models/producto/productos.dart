@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:ventas/config/setup.dart';
-import 'package:ventas/models/crud.dart';
-import 'package:ventas/models/producto/producto.dart';
+import 'package:edertiz/config/setup.dart';
+import 'package:edertiz/models/crud.dart';
+import 'package:edertiz/models/producto/producto.dart';
 
 class Productos {
   static const Map<String, String> _alias = {

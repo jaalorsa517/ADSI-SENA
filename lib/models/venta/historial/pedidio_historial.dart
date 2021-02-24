@@ -1,4 +1,4 @@
-import 'package:ventas/models/venta/historial/historial.dart';
+import 'package:edertiz/models/venta/historial/historial.dart';
 
 class PedidoHistorial extends Historial {
   PedidoHistorial() : super();

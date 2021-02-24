@@ -1,4 +1,4 @@
-import 'package:ventas/config/utilidades.dart';
+import 'package:edertiz/config/utilidades.dart';
 import 'package:test/test.dart';
 
 main() {

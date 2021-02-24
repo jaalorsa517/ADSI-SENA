@@ -1,47 +1,50 @@
 import 'dart:io';
-import 'dart:ui';
-// import 'package:esys_flutter_share/esys_flutter_share.dart' as sh;
+import 'package:esys_flutter_share/esys_flutter_share.dart' as sh;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:ventas/config/utilidades.dart';
-import 'package:ventas/models/venta/pedido/pedidos.dart';
+import 'package:edertiz/config/utilidades.dart';
+import 'package:edertiz/models/venta/pedido/pedidos.dart';
 
-final pdf = pw.Document();
-
-writeOfPdf() async {
+Future<bool> writeOfPdf(pw.Document document) async {
   List<Map> pedido = await Pedidos.readPedidoToday();
 
-  pdf.addPage(pw.MultiPage(
-      header: (context) => pw.Padding(
-          padding: pw.EdgeInsets.all(15),
-          child: pw.Center(child: pw.Text(fechaHoy))),
-      footer: (context) =>
-          pw.Center(child: pw.Text(context.pageNumber.toString())),
-      pageFormat: PdfPageFormat.letter,
-      margin: pw.EdgeInsets.fromLTRB(60, 40, 60, 40),
-      build: (pw.Context context) {
-        return _toDatos(pedido);
-      }));
+  if (pedido.length > 0) {
+    document.addPage(pw.MultiPage(
+        header: (context) => pw.Padding(
+            padding: pw.EdgeInsets.all(15),
+            child: pw.Center(child: pw.Text(fechaHoy))),
+        footer: (context) =>
+            pw.Center(child: pw.Text(context.pageNumber.toString())),
+        pageFormat: PdfPageFormat.letter,
+        margin: pw.EdgeInsets.fromLTRB(60, 40, 60, 40),
+        build: (pw.Context context) => _toDatos(pedido)));
+    return true;
+  }
+  return false;
 }
 
-Future writePdf() async {
-  // Directory documentDirectory = await getApplicationDocumentsDirectory();
-  Directory documentDirectory = await getExternalStorageDirectory();
-  String documentPath = documentDirectory.path;
-  // sh.Share.file(
-  //     "Prueba", "nombrePrueba.pdf", await pdf.save(), "application/pdf");
-  print(documentPath);
-  File file = File("$documentPath/example.pdf");
-  file.writeAsBytesSync(await pdf.save());
+Future<String> writePdf() async {
+  pw.Document pdf = pw.Document();
+  if (await writeOfPdf(pdf)) {
+    Directory documentDirectory = await getExternalStorageDirectory();
+    String documentPath = documentDirectory.path;
+    File file = File("$documentPath/example.pdf");
+    file.writeAsBytesSync(await pdf.save());
+
+    sh.Share.file("Pedidos Gralac", "Pedidos Gralac.pdf", await pdf.save(),
+        "application/pdf");
+    return "";
+  } else
+    return "No se pudo generar el archivo";
 }
 
-List _toDatos(List<Map> list) {
+List<pw.Widget> _toDatos(List<Map> list) {
   final style = pw.TextStyle(
     fontSize: 12,
     letterSpacing: 1,
   );
-  List datos = [];
+  List<pw.Widget> datos = List();
 
   for (int i = 0; i < list.length; i++) {
     //Ciclo para recorrer por ciudades
@@ -52,15 +55,30 @@ List _toDatos(List<Map> list) {
       //Ciclo para recorrer por clientes
       for (int k = 0; k < list[i]['clientes'][j]['fechaEntrega'].length; k++) {
         //Ciclo para recorrer por fecha de entrega
-        datos.add(pw.Text(list[i]['clientes'][j]['fechaEntrega'][k]['fecha']));
-        datos.add(pw.Text("NEGOCIO: ${list[i]['clientes'][j]['negocio']}"));
-        datos.add(pw.Text("ADMIN: ${list[i]['clientes'][j]['admin']}"));
+        datos.add(pw.Row(children: [
+          pw.Text("FECHA ENTREGA: ",
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+          pw.Text(list[i]['clientes'][j]['fechaEntrega'][k]['fecha'])
+        ]));
+        datos.add(pw.Row(children: [
+          pw.Text("NEGOCIO: ",
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+          pw.Text(list[i]['clientes'][j]['negocio'])
+        ]));
+        datos.add(pw.Row(children: [
+          pw.Text("ADMIN: ",
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+          pw.Text(list[i]['clientes'][j]['admin'])
+        ]));
         datos.add(pw.Table.fromTextArray(
             //Ciclo para recorrer por productos
             data: List.generate(
                 list[i]['clientes'][j]['fechaEntrega'][k]['productos'].length,
-                (l) => list[i]['clientes'][j]['fechaEntrega'][k]['productos'][l]
-                    .values),
+                (l) {
+              return list[i]['clientes'][j]['fechaEntrega'][k]['productos']
+                  .toList()[l]
+                  .toList();
+            }),
             cellStyle: style,
             cellAlignments: {
               0: pw.Alignment.centerLeft,
@@ -68,7 +86,9 @@ List _toDatos(List<Map> list) {
             },
             headers: ['CODIGO', 'PRODUCTO', 'CANTIDAD'],
             headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold)));
+        datos.add(pw.Text("\n"));
       }
     }
   }
+  return datos;
 }
