@@ -29,7 +29,7 @@ Future<String> writePdf() async {
   if (await writeOfPdf(pdf)) {
     Directory documentDirectory = await getExternalStorageDirectory();
     String documentPath = documentDirectory.path;
-    File file = File("$documentPath/example.pdf");
+    File file = File("$documentPath/pedidos gralac.pdf");
     file.writeAsBytesSync(await pdf.save());
 
     sh.Share.file("Pedidos Gralac", "Pedidos Gralac.pdf", await pdf.save(),
