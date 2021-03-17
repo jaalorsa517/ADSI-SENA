@@ -48,6 +48,7 @@ class ProductoProvider extends ChangeNotifier {
 
   Future<bool> productoCrear() async {
     bool respuesta = await Productos.create(_producto) ? true : false;
+    print("provider: $respuesta");
     if (respuesta) await loadProducto();
     return respuesta;
   }

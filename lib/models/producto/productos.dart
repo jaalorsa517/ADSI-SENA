@@ -19,11 +19,11 @@ class Productos {
       ORDER BY ${Setup.COLUMN_PRODUCTO['id']} DESC 
       LIMIT 1
       """);
-      producto.id = _id[0][_alias['id']] + 1 ?? 1;
+      producto.id = _id.length > 0 ? _id[0][_alias['id']] + 1 : 1;
       await db.insert(Setup.PRODUCTO_TABLE, _productoToMap(producto));
       return true;
     } catch (e) {
-      print('Insert producto' + e.toString());
+      print('Insert producto ' + e.toString());
       return false;
     } finally {
       db.close();
