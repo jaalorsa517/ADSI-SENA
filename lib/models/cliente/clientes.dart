@@ -17,6 +17,13 @@ class Clientes {
     'ciudad': 'ciudad',
   };
 
+  static Future<int> getId() async {
+    Database db = await Crud.conectar();
+    List<Map<String, dynamic>> list = await db.rawQuery(
+        " SELECT ${Setup.COLUMN_CLIENTE['id']} FROM ${Setup.CLIENTE_TABLE} ORDER BY ${_alias['id']} DESC LIMIT 1");
+    return list[0][_alias['id']];
+  }
+
   static Future<bool> create(Cliente cliente) async {
     Database db = await Crud.conectar();
     try {
@@ -26,6 +33,7 @@ class Clientes {
           "${Setup.COLUMN_CLIENTE['email']},${Setup.COLUMN_CLIENTE['direccion']}) " +
           "VALUES('${cliente.nit}','${cliente.nombre}','${cliente.representante}'," +
           "'${cliente.telefono}','${cliente.email}','${cliente.direccion}')");
+      db = await Crud.conectar();
       await db.rawInsert("INSERT INTO ${Setup.CIUDAD_CLIENTE_TABLE} " +
           "VALUES ((SELECT ${Setup.COLUMN_CLIENTE['id']} FROM ${Setup.CLIENTE_TABLE} " +
           "WHERE ${Setup.COLUMN_CLIENTE['nombre']}= \'${cliente.nombre}\')," +

@@ -1,5 +1,5 @@
 class Setup {
-  static const String DB_NAME = 'pedidoDB.db';
+  static const String DB_NAME = 'pedidoDB_Test.db';
 
   static const String CLIENTE_TABLE = 'cliente';
   static const Map<String, String> COLUMN_CLIENTE = {

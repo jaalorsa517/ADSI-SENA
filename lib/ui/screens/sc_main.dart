@@ -1,3 +1,4 @@
+import 'package:edertiz/models/datos/import.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:edertiz/logic/cliente/cliente_provider.dart';
@@ -43,6 +44,10 @@ class ScMain extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: new WBoton('DATOS', '/datos'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: new WBoton('TEST', '/test'),
                 )
               ])),
         ));

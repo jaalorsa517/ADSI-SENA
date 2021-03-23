@@ -4,6 +4,8 @@ class Producto {
   int _precio;
   double _iva;
 
+  Producto([this._id, this._nombre, this._precio, this._iva]);
+
   // ignore: unnecessary_getters_setters
   int get id => _id;
 

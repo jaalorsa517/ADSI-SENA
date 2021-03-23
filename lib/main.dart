@@ -1,3 +1,4 @@
+import 'package:edertiz/ui/screens/sc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:edertiz/config/utilidades.dart';
@@ -38,6 +39,7 @@ class Principal extends StatelessWidget {
             '/producto': (context) => ScProducto(),
             '/venta': (context) => ScVenta(context),
             '/datos': (context) => ScDatos(),
+            '/test':(context) => ScTest(),
           },
           home: ScMain(),
         ));

@@ -10,6 +10,14 @@ class Productos {
     'precio': 'precio',
     'iva': 'iva'
   };
+
+  static Future<int> getId() async {
+    Database db = await Crud.conectar();
+    List<Map<String, dynamic>> list = await db.rawQuery(
+        " SELECT ${Setup.COLUMN_PRODUCTO['id']} FROM ${Setup.PRODUCTO_TABLE} ORDER BY ${_alias['id']} DESC LIMIT 1");
+    return list[0][_alias['id']];
+  }
+
   static Future<bool> create(Producto producto) async {
     Database db = await Crud.conectar();
     try {

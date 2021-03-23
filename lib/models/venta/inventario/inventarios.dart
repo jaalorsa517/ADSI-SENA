@@ -17,6 +17,7 @@ class Inventarios {
     'fechaEntrega': 'fechaEntrega'
   };
 
+  
   static Future<bool> create(String fechaPedido, int cantidad, int idCliente,
       int idProducto, String fechaEntrega, int pedido, int valor) async {
     bool onError = false;
