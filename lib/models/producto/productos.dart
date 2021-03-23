@@ -27,6 +27,7 @@ class Productos {
       ORDER BY ${Setup.COLUMN_PRODUCTO['id']} DESC 
       LIMIT 1
       """);
+      db = await Crud.conectar();
       producto.id = _id.length > 0 ? _id[0][_alias['id']] + 1 : 1;
       await db.insert(Setup.PRODUCTO_TABLE, _productoToMap(producto));
       return true;
